@@ -1,4 +1,4 @@
-# Pinezka — codzienna podróż po Polsce
+# Gdzie w Polsce? — codzienna gra o Polsce
 
 Przeglądarkowa gra o Polsce. Codziennie **10 zdjęć** zabytków i atrakcji, takich samych dla wszystkich graczy.
 Dla każdego zdjęcia gracz:
@@ -13,7 +13,7 @@ Na koniec widzi podsumowanie z mapą „dzisiejszej trasy” i wynik do udostęp
 - **Bez reklam, bez logowania, bez ciasteczek.** Wynik i seria są zapisywane tylko w przeglądarce (`localStorage`).
 - **Model finansowania: zagadki sponsorowane.** Miasto lub region staje się partnerem, a jego obiekt trafia do wyzwania jako wyraźnie oznaczona zagadka z zachętą do odwiedzin. Szczegóły: [docs/PARTNERZY.md](docs/PARTNERZY.md).
 
-> „Pinezka” to nazwa robocza, którą zmienia się w `src/config.ts`.
+Gra jest publikowana na GitHub Pages: https://fredtestujeai-hash.github.io/gdziewpolsce/
 
 ## Uruchomienie
 

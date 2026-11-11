@@ -49,6 +49,19 @@ describe("wyzwanie dnia", () => {
     expect(demo.puzzles[4].sponsor?.name).toBeTruthy();
     expect(demo.puzzles.filter((p) => p.sponsor)).toHaveLength(1);
   });
+  it("obiekt kampanii w zwykłym harmonogramie nie dostaje oznaczenia partnera poza kampanią", () => {
+    const sp = campaigns[0].puzzles[0];
+    const day = schedule.days.findIndex((d) => d.includes(sp.id));
+    expect(day).toBeGreaterThanOrEqual(0); // w obecnych danych obiekt demo jest też w harmonogramie
+    const key = new Date(Date.parse(schedule.start + "T00:00:00Z") + day * 86_400_000).toISOString().slice(0, 10);
+    const normal = buildChallenge(pool, schedule, campaigns, key);
+    expect(normal.puzzles.some((p) => p.id === sp.id)).toBe(true);
+    expect(normal.puzzles.some((p) => p.sponsor)).toBe(false);
+    const demo = buildChallenge(pool, schedule, campaigns, key, { demo: true });
+    expect(demo.puzzles).toHaveLength(10);
+    expect(demo.puzzles.filter((p) => p.id === sp.id)).toHaveLength(1);
+    expect(demo.puzzles[4].sponsor).toBeTruthy();
+  });
   it("zapisana lista wygrywa z harmonogramem (aktualizacja danych w trakcie dnia)", () => {
     const saved = schedule.days[0].slice().reverse();
     const c = buildChallenge(pool, schedule, campaigns, "2026-11-11", { savedIds: saved });

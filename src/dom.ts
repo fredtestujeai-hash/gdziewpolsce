@@ -41,7 +41,7 @@ export const PIN_SVG = `<svg class="logo-pin" viewBox="0 0 32 44" aria-hidden="t
 export function partnerLink(url: string, campaign: string): string {
   try {
     const u = new URL(url);
-    u.searchParams.set("utm_source", "pinezka");
+    u.searchParams.set("utm_source", "gdziewpolsce");
     u.searchParams.set("utm_medium", "gra");
     u.searchParams.set("utm_campaign", campaign);
     return u.toString();

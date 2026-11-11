@@ -89,25 +89,28 @@ export function buildChallenge(
   opts: { demo?: boolean; savedIds?: string[] } = {},
 ): Challenge {
   const byId = new Map(pool.map((p) => [p.id, p]));
-  const sponsored = new Map<string, Puzzle>();
-  const campaign = activeCampaign(campaigns, key, !!opts.demo);
-  for (const c of campaigns) for (const p of c.puzzles) sponsored.set(p.id, { ...p, sponsor: c.sponsor, campaign: c.id });
-
   const index = daysBetween(schedule.start, key);
   const number = index + 1;
 
+  // Oznaczenie „sponsorowana” dostaje WYŁĄCZNIE dzisiejsza zagadka aktywnej kampanii —
+  // ten sam obiekt w zwykłym harmonogramie (poza kampanią) pozostaje zwykłą zagadką.
+  const campaign = activeCampaign(campaigns, key, !!opts.demo);
+  const cp = campaign ? campaign.puzzles[Math.abs(index) % campaign.puzzles.length] : undefined;
+  const sponsoredToday: Puzzle | undefined = cp && campaign ? { ...cp, sponsor: campaign.sponsor, campaign: campaign.id } : undefined;
+
   let ids: string[];
-  if (opts.savedIds?.length && opts.savedIds.every((id) => byId.has(id) || sponsored.has(id))) {
+  if (opts.savedIds?.length && opts.savedIds.every((id) => byId.has(id) || id === sponsoredToday?.id)) {
     ids = opts.savedIds;
   } else {
     ids = index >= 0 && index < schedule.days.length ? [...schedule.days[index]] : fallbackIds(pool, key);
     ids = ids.filter((id) => byId.has(id));
-    if (campaign) {
-      const sp = campaign.puzzles[Math.abs(index) % campaign.puzzles.length];
-      ids = ids.filter((id) => id !== sp.id);
-      ids.splice(Math.min(SPONSOR_SLOT, ids.length), ids.length >= CONFIG.rounds ? 1 : 0, sp.id);
+    if (sponsoredToday) {
+      ids = ids.filter((id) => id !== sponsoredToday.id);
+      ids.splice(Math.min(SPONSOR_SLOT, ids.length), ids.length >= CONFIG.rounds ? 1 : 0, sponsoredToday.id);
     }
   }
-  const puzzles = ids.map((id) => sponsored.get(id) ?? byId.get(id)).filter((p): p is Puzzle => !!p);
+  const puzzles = ids
+    .map((id) => (id === sponsoredToday?.id ? sponsoredToday : byId.get(id)))
+    .filter((p): p is Puzzle => !!p);
   return { key, number, puzzles };
 }

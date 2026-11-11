@@ -41,8 +41,8 @@ jobs:
       - run: npm test
       - name: Commit
         run: |
-          git config user.name "pinezka-bot"
-          git config user.email "pinezka-bot@users.noreply.github.com"
+          git config user.name "gdziewpolsce-bot"
+          git config user.email "gdziewpolsce-bot@users.noreply.github.com"
           git add data public/data public/map
           git diff --cached --quiet || git commit -m "Dane: odświeżenie puli i harmonogramu"
           git push

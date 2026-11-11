@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "raw" / "wikidata.json"
 ENDPOINT = "https://query.wikidata.org/sparql"
-UA = "PinezkaDataBuilder/0.1 (open-source educational game; data build script)"
+UA = "GdzieWPolsceDataBuilder/0.1 (open-source educational game; data build script)"
 
 # QID klasy -> kategoria wyświetlana w grze
 CLASSES = {

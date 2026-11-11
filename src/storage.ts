@@ -2,8 +2,8 @@ import type { DayState } from "./types";
 import { addDays } from "./daily";
 
 // Wszystko trzymamy wyłącznie w przeglądarce gracza: bez kont, bez ciasteczek, bez serwera.
-const KEY_DAY = "pinezka:day";
-const KEY_STATS = "pinezka:stats";
+const KEY_DAY = "gdziewpolsce:day";
+const KEY_STATS = "gdziewpolsce:stats";
 
 export interface Stats {
   played: number;

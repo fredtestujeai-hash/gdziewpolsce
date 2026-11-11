@@ -52,7 +52,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--start", default=None, help="data wyzwania #1 (domyślnie: dziś lub z istniejącego pliku)")
     ap.add_argument("--days", type=int, default=120, help="ile dni zaplanować naprzód od dziś")
-    ap.add_argument("--seed", default="pinezka")
+    ap.add_argument("--seed", default="gdziewpolsce")
     args = ap.parse_args()
 
     pool = {p["id"]: p for p in json.loads(POOL.read_text())["puzzles"]}

@@ -1,6 +1,6 @@
 // Ustawienia gry — jedno miejsce do zmiany nazwy, adresu i reguł.
 export const CONFIG = {
-  name: "Pinezka",
+  name: "Gdzie w Polsce?",
   tagline: "Codzienna podróż po Polsce",
   /** Adres publiczny gry — trafia do tekstu udostępniania wyniku. */
   siteUrl: "",

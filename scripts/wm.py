@@ -8,7 +8,7 @@ import urllib.parse
 import urllib.request
 from html import unescape
 
-UA = "PinezkaDataBuilder/0.1 (open-source educational game; data build script)"
+UA = "GdzieWPolsceDataBuilder/0.1 (open-source educational game; data build script)"
 
 
 def get_json(url: str, params: dict, retries: int = 8) -> dict:
