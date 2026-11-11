@@ -59,7 +59,7 @@ export function renderSummary(game: Game): void {
               const g = state.guesses[i];
               const pts = g ? g.locPts + g.yearPts : 0;
               return `<li class="place${p.sponsor ? " is-sponsored" : ""}">
-                <img src="${esc(p.img)}" alt="" loading="lazy" />
+                <span class="thumb"><img src="${esc(p.img)}" alt="" loading="lazy" onerror="this.remove()" /></span>
                 <div class="place-body">
                   <a href="${esc(p.wiki)}" target="_blank" rel="noopener"><b>${esc(p.name)}</b></a>
                   <span class="muted">${p.place ? esc(p.place) + " · " : ""}${p.year}</span>

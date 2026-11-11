@@ -240,8 +240,6 @@ function resultCard(p: Puzzle, g: Guess, last: boolean, key: string): string {
         <div class="chip"><span class="lbl">📍 Miejsce</span><b>+${g.locPts}</b><span>${formatKm(g.km)} od celu</span></div>
         <div class="chip"><span class="lbl">📅 Rok</span><b>+${g.yearPts}</b><span>${g.year} · ${yearText}</span></div>
       </div>
-      ${p.extract ? `<p class="extract">${esc(p.extract)}</p>` : ""}
-      <p class="more"><a href="${esc(p.wiki)}" target="_blank" rel="noopener">Czytaj więcej w Wikipedii ↗</a></p>
       ${
         s
           ? `<aside class="partner">
@@ -252,6 +250,8 @@ function resultCard(p: Puzzle, g: Guess, last: boolean, key: string): string {
             </aside>`
           : ""
       }
+      ${p.extract ? `<p class="extract">${esc(p.extract)}</p>` : ""}
+      <p class="more"><a href="${esc(p.wiki)}" target="_blank" rel="noopener">Czytaj więcej w Wikipedii ↗</a></p>
       <p class="credit-full">Zdjęcie: ${
         p.filePage ? `<a href="${esc(p.filePage)}" target="_blank" rel="noopener">${esc(p.author)}</a>` : esc(p.author)
       }, ${p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" target="_blank" rel="noopener license">${esc(p.license)}</a>` : esc(p.license)}</p>

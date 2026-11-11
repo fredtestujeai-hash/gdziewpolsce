@@ -122,7 +122,7 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
       const m = L.marker(a, { icon: pinIcon("pin-answer", "Poprawna odpowiedź"), interactive: false, zIndexOffset: 1000 }).addTo(map);
       extra.push(line, m);
       const b = L.latLngBounds([a, [g.lat, g.lon]]);
-      map.flyToBounds(b, { padding: [60, 60], maxZoom: 9, duration: 0.8 });
+      map.flyToBounds(b, { paddingTopLeft: [50, 70], paddingBottomRight: [50, 30], maxZoom: 9, duration: 0.8 });
     },
     showMany(points) {
       for (const p of points) {
