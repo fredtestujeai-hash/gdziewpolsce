@@ -1,6 +1,7 @@
 import { CONFIG } from "../config";
 import { esc, mount, PIN_SVG } from "../dom";
 import type { Game } from "../main";
+import { preloadMap } from "../map";
 import { loadStats } from "../storage";
 import { formatDayLong, topbar } from "./common";
 
@@ -19,7 +20,7 @@ export function renderStart(game: Game): void {
 
         <ol class="steps">
           <li><span class="step-n">1</span><div><b>Obejrzyj zdjęcie</b><span>zamek, kościół, ratusz, latarnia…</span></div></li>
-          <li><span class="step-n">2</span><div><b>Wbij pinezkę</b><span>na mapie są tylko rzeki i jeziora</span></div></li>
+          <li><span class="step-n">2</span><div><b>Wbij pinezkę</b><span>mapa bez nazw — przybliżaj aż do ulic</span></div></li>
           <li><span class="step-n">3</span><div><b>Ustaw rok</b><span>im bliżej, tym więcej punktów</span></div></li>
         </ol>
 
@@ -30,4 +31,5 @@ export function renderStart(game: Game): void {
       </section>
     </main>`);
   app.querySelector("#play")!.addEventListener("click", () => game.go("round"));
+  setTimeout(preloadMap, 300);
 }

@@ -74,3 +74,19 @@ describe("wyzwanie dnia", () => {
     expect(c.puzzles).toHaveLength(10);
   });
 });
+
+describe("warstwa miejscowości", () => {
+  const places: [number, number, number][] = JSON.parse(readFileSync("public/map/places.json", "utf8")).places;
+  it("18 miast wojewódzkich, kilkaset powiatowych, ok. 2 tys. gminnych — wszystkie w Polsce", () => {
+    const n = (r: number) => places.filter((p) => p[2] === r).length;
+    expect(n(1)).toBe(18);
+    expect(n(2)).toBeGreaterThan(280);
+    expect(n(3)).toBeGreaterThan(1800);
+    for (const [lon, lat] of places) {
+      expect(lon).toBeGreaterThan(14);
+      expect(lon).toBeLessThan(24.2);
+      expect(lat).toBeGreaterThan(49);
+      expect(lat).toBeLessThan(54.9);
+    }
+  });
+});

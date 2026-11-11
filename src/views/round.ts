@@ -31,7 +31,12 @@ export async function renderRound(game: Game): Promise<void> {
 
       <section class="map-pane">
         <div class="map-wrap"><div id="map" class="map" aria-label="Mapa Polski — kliknij, aby wbić pinezkę"></div>
-          <p class="map-hint" id="map-hint">Wskaż miejsce na mapie</p>
+          <p class="map-hint" id="map-hint">Wskaż miejsce na mapie — możesz przybliżyć aż do ulic</p>
+          <ul class="map-legend" aria-label="Legenda: miejscowości bez nazw">
+            <li><i class="lg lg-1"></i>wojewódzkie</li>
+            <li><i class="lg lg-2"></i>powiatowe</li>
+            <li><i class="lg lg-3"></i>gminne</li>
+          </ul>
         </div>
 
         <div class="controls" id="controls">

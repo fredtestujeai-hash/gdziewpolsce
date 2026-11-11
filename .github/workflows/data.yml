@@ -33,6 +33,7 @@ jobs:
         if: ${{ inputs.full }}
         run: |
           npm run map
+          python3 scripts/fetch_places.py
           python3 scripts/fetch_wikidata.py
           python3 scripts/fetch_commons.py
           python3 scripts/build_puzzles.py

@@ -16,7 +16,7 @@ export function openAbout(section?: string): void {
       <p>Codziennie o północy czeka nowe wyzwanie: <b>${CONFIG.rounds} miejsc z całej Polski</b> — zamki, kościoły, ratusze, latarnie, dworce, wieżowce… Takie samo dla wszystkich graczy.</p>
       <ol>
         <li>Obejrzyj zdjęcie (możesz je powiększyć).</li>
-        <li>Wbij pinezkę na mapie. Mapa nie pokazuje miast — tylko granice, rzeki i jeziora. Możesz ją przybliżać i przesuwać pinezkę.</li>
+        <li>Wbij pinezkę na mapie. Mapa nie ma <b>żadnych nazw</b>, ale pokazuje rzeki, jeziora, lasy, drogi i tory, a kropki oznaczają miasta wojewódzkie, powiatowe i siedziby gmin. Możesz ją przybliżyć aż do pojedynczych ulic i budynków, a pinezkę przesuwać.</li>
         <li>Ustaw na suwaku rok powstania obiektu i kliknij <b>Sprawdź</b>.</li>
       </ol>
       <h3>Punktacja</h3>
@@ -31,7 +31,7 @@ export function openAbout(section?: string): void {
       <ul class="small">
         <li>Opisy obiektów i daty: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0) i <a href="https://pl.wikipedia.org" target="_blank" rel="noopener">polska Wikipedia</a> (CC BY-SA 4.0).</li>
         <li>Zdjęcia: <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a> — autor i licencja podane przy każdym zdjęciu.</li>
-        <li>Granice, rzeki i jeziora: <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a> (domena publiczna).</li>
+        <li>Mapa: © autorzy <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, kafelki <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> / <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a>; miejscowości: Wikidata; obrys kraju i mapa awaryjna: <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a>.</li>
       </ul>
       <p class="small">Daty pochodzą z otwartych baz i bywają umowne (np. rozpoczęcie budowy albo pierwsza wzmianka). Widzisz błąd? Popraw go w Wikidata — skorzystają wszyscy.</p>
 

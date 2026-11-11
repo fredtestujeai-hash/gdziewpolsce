@@ -1,5 +1,7 @@
-// Buduje warstwy mapy (granice państw, rzeki, jeziora) z Natural Earth
-// (domena publiczna) do public/map/*.json. Celowo BEZ miejscowości, dróg i etykiet.
+// Buduje pomocnicze warstwy mapy z Natural Earth (domena publiczna) do public/map/*.json:
+//  - poland.json: obrys Polski (maska „poza krajem”),
+//  - countries/rivers/lakes.json: uproszczona mapa awaryjna, gdy kafelki OSM nie odpowiadają.
+// Właściwa mapa (ulice, rzeki, budynki — bez nazw) to kafelki wektorowe, patrz src/mapstyle.ts.
 //
 // Użycie: npm run map
 import { mkdir, writeFile, access } from "node:fs/promises";
@@ -50,6 +52,12 @@ await run(
   `-i ${s("ne_10m_admin_0_countries")} -clip bbox=${LAND_BBOX} ` +
     `-filter-fields ADM0_A3 -rename-fields id=ADM0_A3 ` +
     `-simplify 20% keep-shapes -o precision=0.001 format=geojson ${join(OUT, "countries.json")}`,
+);
+
+// Dokładny obrys Polski — do przygaszenia terenów za granicą na mapie wektorowej
+await run(
+  `-i ${s("ne_10m_admin_0_countries")} -filter "ADM0_A3 == 'POL'" -filter-fields ADM0_A3 ` +
+    `-o precision=0.0001 format=geojson geojson-type=Feature ${join(OUT, "poland.json")}`,
 );
 
 await run(

@@ -61,7 +61,11 @@ async function boot() {
     },
     go(view) {
       if (view === "start") renderStart(game);
-      else if (view === "round") renderRound(game);
+      else if (view === "round")
+        renderRound(game).catch((err) => {
+          console.error(err);
+          mount(`<main class="center"><div class="card narrow"><h1>Ups…</h1><p>Nie udało się uruchomić mapy. Gra wymaga przeglądarki z obsługą WebGL — spróbuj ją zaktualizować albo otwórz grę w innej.</p><button class="btn primary" onclick="location.reload()">Spróbuj ponownie</button></div></main>`);
+        });
       else renderSummary(game);
     },
   };

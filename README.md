@@ -3,7 +3,7 @@
 Przeglądarkowa gra o Polsce. Codziennie **10 zdjęć** zabytków i atrakcji, takich samych dla wszystkich graczy.
 Dla każdego zdjęcia gracz:
 
-1. **wbija pinezkę** na mapie Polski, na której nie ma miejscowości: są tylko granice, rzeki i jeziora (mapę można przybliżać),
+1. **wbija pinezkę** na mapie Polski **bez żadnych nazw**: widać rzeki, jeziora, lasy, drogi i tory, a kropki oznaczają miasta wojewódzkie, powiatowe i siedziby gmin. Mapę można przybliżyć aż do pojedynczych ulic i budynków,
 2. **ustawia na suwaku rok powstania** obiektu.
 
 Im bliżej prawdy, tym więcej punktów: do 500 za miejsce i do 500 za rok, czyli maks. 10 000 dziennie.
@@ -40,7 +40,8 @@ src/
   main.ts          start aplikacji, wczytanie danych, przełączanie ekranów
   daily.ts         data w czasie polskim, wyzwanie dnia, wstawianie zagadki sponsorowanej
   score.ts         punktacja (odległość po kole wielkim, różnica lat), odmiana „rok/lata/lat”
-  map.ts           mapa Leaflet BEZ podkładu kafelkowego: granice, rzeki, jeziora z GeoJSON
+  map.ts           mapa MapLibre GL: pinezki, przybliżanie, tryb awaryjny przy braku kafelków
+  mapstyle.ts      styl mapy bez napisów (kafelki wektorowe OpenStreetMap) + kropki miejscowości
   storage.ts       zapis postępu i statystyk w localStorage
   track.ts         opcjonalne anonimowe liczniki dla raportów partnerów (domyślnie wyłączone)
   views/           ekrany: start, runda, podsumowanie, „o grze”
@@ -48,10 +49,19 @@ public/
   data/puzzles.json     pula zagadek (generowana)
   data/schedule.json    harmonogram: dzień -> 10 id zagadek (generowany, tylko dopisywany)
   data/sponsored.json   kampanie partnerów (edytowane ręcznie)
-  map/*.json            warstwy mapy (generowane)
+  map/places.json       miejscowości bez nazw: [długość, szerokość, ranga 1–3] (generowane)
+  map/*.json            obrys Polski i uproszczona mapa awaryjna (generowane)
 scripts/                pipeline danych (Python 3 bez zależności + Node dla mapy)
 data/                   surowe dane z Wikidata/Commons/Wikipedii, ręczne poprawki
 ```
+
+## Mapa
+
+Mapa to kafelki wektorowe z danymi OpenStreetMap, rysowane w przeglądarce własnym stylem (`src/mapstyle.ts`). Styl **nie ma ani jednej warstwy tekstowej** i nie pobiera czcionek, więc na mapie nie może pojawić się żadna nazwa; pilnuje tego test `tests/mapstyle.test.ts`.
+
+- Przy oddaleniu widać granice, województwa (linia przerywana), ok. 25 głównych rzek, jeziora i kropki miejscowości w trzech rangach.
+- Po przybliżeniu dochodzą lasy, zabudowa, drogi i tory, a od ok. 13. poziomu pojedyncze budynki.
+- Kropki miejscowości (`public/map/places.json`): 18 miast wojewódzkich, 316 powiatowych i 1984 siedziby gmin.
 
 ## Dane
 
@@ -62,12 +72,15 @@ Wszystkie dane pochodzą z otwartych źródeł:
 | obiekty, współrzędne, daty powstania | Wikidata | CC0 |
 | zdjęcia | Wikimedia Commons | różne (CC BY, CC BY-SA, PD); autor i licencja przy każdym zdjęciu |
 | krótkie opisy | polska Wikipedia | CC BY-SA 4.0 (z linkiem do artykułu) |
-| granice, rzeki, jeziora | Natural Earth | domena publiczna |
+| mapa: ulice, rzeki, jeziora, lasy, budynki | OpenStreetMap, kafelki wektorowe OpenFreeMap (schemat OpenMapTiles) | ODbL, z podpisem na mapie |
+| miejscowości: wojewódzkie, powiatowe, gminne | Wikidata | CC0 |
+| główne rzeki przy oddaleniu, obrys kraju, mapa awaryjna | Natural Earth | domena publiczna |
 
 Pipeline:
 
 ```bash
-npm run map                               # warstwy mapy z Natural Earth
+npm run map                               # obrys Polski, główne rzeki i mapa awaryjna z Natural Earth
+python3 scripts/fetch_places.py           # miejscowości w trzech rangach z Wikidata -> public/map/places.json
 python3 scripts/fetch_wikidata.py         # kandydaci: ~40 klas obiektów w Polsce (zamki, kościoły, ratusze…)
 python3 scripts/fetch_commons.py          # licencje i miniatury zdjęć + wstępy artykułów z plwiki
 python3 scripts/build_puzzles.py          # filtrowanie i pula -> public/data/puzzles.json
@@ -124,6 +137,6 @@ Kampanie partnerów są w `public/data/sponsored.json`:
 
 - **Zdjęcia są ładowane prosto z Wikimedia (hotlinking).** Nazwa pliku w adresie bywa podpowiedzią („Zamek_w_Malborku.jpg”). Przed startem warto kopiować miniatury najbliższych dni na własny CDN pod zanonimizowanymi nazwami, np. w workflow publikacji. Przy okazji gra przestanie zależeć od limitów Wikimedia.
 - **Odpowiedzi są w publicznym `puzzles.json`.** To normalne dla gier bez serwera (Wordle działał tak samo). Jeśli pojawią się rankingi, potrzebny będzie mały backend.
-- **Rzeki z Natural Earth to ok. 25 głównych rzek Polski.** Dokładniejsza sieć z OpenStreetMap (np. Brda, Wda, Raba, Biebrza) wymaga pobrania ekstraktu OSM (Geofabrik / Overpass). Najwygodniej zrobić to w GitHub Actions, gdzie sieć jest otwarta.
+- **Mapa zależy od publicznego serwera OpenFreeMap** (darmowy, bez klucza i limitów, dozwolony komercyjnie, ale bez gwarancji dostępności). Gdy nie odpowiada, gra sama przełącza się na uproszczoną mapę z głównymi rzekami i kropkami miejscowości. Przy większym ruchu warto przenieść kafelki Polski na własny hosting (np. plik PMTiles na Cloudflare R2).
 - **Daty z Wikidata bywają umowne:** początek budowy, ukończenie albo pierwsza wzmianka; dla instytucji (muzeum, teatr) czasem data założenia zamiast budowy. Pulę warto przejrzeć redakcyjnie, przynajmniej poziom „łatwy”, zaczynając od najbliższych tygodni harmonogramu.
 - **Kategoria „zabytek”** (ok. 200 obiektów) jest ogólna. Można ją doprecyzować, pobierając drugie P31.
