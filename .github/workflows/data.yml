@@ -1,0 +1,48 @@
+name: Odświeżenie danych i harmonogramu
+
+# Raz w miesiącu dopisuje kolejne dni do harmonogramu (dni już ułożone się nie zmieniają)
+# i dociąga nowe obiekty z Wikidata. Można też uruchomić ręcznie.
+on:
+  schedule:
+    - cron: "17 2 1 * *"
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Pobierz dane od nowa z Wikidata/Commons (trwa ~20 min)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Pobranie danych (opcjonalnie)
+        if: ${{ inputs.full }}
+        run: |
+          npm run map
+          python3 scripts/fetch_wikidata.py
+          python3 scripts/fetch_commons.py
+          python3 scripts/build_puzzles.py
+      - name: Harmonogram na kolejne miesiące
+        run: python3 scripts/build_schedule.py --days 120
+      - run: npm test
+      - name: Commit
+        run: |
+          git config user.name "pinezka-bot"
+          git config user.email "pinezka-bot@users.noreply.github.com"
+          git add data public/data public/map
+          git diff --cached --quiet || git commit -m "Dane: odświeżenie puli i harmonogramu"
+          git push

@@ -1,0 +1,38 @@
+{
+  "_comment": "Kampanie partnerów. 'demo': true działa tylko z ?demo w adresie. Zagadka sponsorowana zastępuje 5. rundę (maks. 1 dziennie). Zagadka może mieć własne zdjęcie partnera (pole img) — wtedy author/license dotyczą tego zdjęcia.",
+  "campaigns": [
+    {
+      "id": "demo-sandomierz",
+      "demo": true,
+      "from": "2026-01-01",
+      "to": "2027-12-31",
+      "sponsor": {
+        "name": "Partner demonstracyjny",
+        "url": "https://example.org/",
+        "cta": "Zaplanuj wizytę"
+      },
+      "puzzles": [
+        {
+          "id": "Q3405312",
+          "name": "Bazylika Katedralna Narodzenia Najświętszej Maryi Panny w Sandomierzu",
+          "category": "katedra",
+          "place": "Sandomierz",
+          "lat": 50.67658,
+          "lon": 21.74946,
+          "year": 1361,
+          "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sandomierz_Katedra1.jpg/1280px-Sandomierz_Katedra1.jpg",
+          "imgW": 1280,
+          "imgH": 960,
+          "author": "WM4034",
+          "license": "Public domain",
+          "licenseUrl": "",
+          "filePage": "https://commons.wikimedia.org/wiki/File:Sandomierz_Katedra1.jpg",
+          "wiki": "https://pl.wikipedia.org/wiki/Bazylika_Katedralna_Narodzenia_Naj%C5%9Bwi%C4%99tszej_Maryi_Panny_w_Sandomierzu",
+          "extract": "Bazylika Katedralna Narodzenia Najświętszej Maryi Panny w Sandomierzu – kościół gotycki wzniesiony ok. 1350-1370, rozbudowany w poł. XV w. Barokowa fasada świątyni pochodzi z 1670 roku. W latach 1708–1776 nastąpiła barokizacja wnętrza. Pod koniec XIX w. katedrę odnowiono według wytycznych ks. Józefa Karsznickiego. Katedra od 1818 roku, bazylika mniejsza od 1960 roku.",
+          "difficulty": 1,
+          "sponsorNote": "Tak wyglądałaby zachęta partnera: np. zaproszenie na festiwal, trasę spacerową albo do punktu informacji turystycznej."
+        }
+      ]
+    }
+  ]
+}

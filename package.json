@@ -1,0 +1,28 @@
+{
+  "name": "pinezka",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Codzienna gra o Polsce: zgadnij gdzie i kiedy powstał obiekt ze zdjęcia",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "data": "python3 scripts/fetch_wikidata.py && python3 scripts/fetch_commons.py && python3 scripts/build_puzzles.py && python3 scripts/build_schedule.py",
+    "map": "node scripts/build_map.mjs",
+    "schedule": "python3 scripts/build_schedule.py"
+  },
+  "dependencies": {
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.22",
+    "mapshaper": "^0.7.101",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.6",
+    "vitest": "^3.2.7"
+  }
+}
