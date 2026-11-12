@@ -52,7 +52,8 @@ export function fallbackIds(pool: Puzzle[], key: string, n = CONFIG.rounds): str
   const rand = rng(hash("fallback:" + key));
   const tiers: Record<number, Puzzle[]> = { 1: [], 2: [], 3: [] };
   for (const p of [...pool].sort((a, b) => a.id.localeCompare(b.id))) tiers[p.difficulty].push(p);
-  const layout = [1, 2, 1, 2, 2, 3, 2, 3, 3, 3].slice(0, n);
+  // łatwa, średnia, trudna — tak samo jak LAYOUT w scripts/build_schedule.py
+  const layout = Array.from({ length: n }, (_, i) => [1, 2, 3][i % 3]);
   const out: string[] = [];
   for (const t of layout) {
     const list = tiers[t].filter((p) => !out.includes(p.id));
@@ -68,8 +69,8 @@ export function activeCampaign(campaigns: Campaign[], key: string, demo: boolean
   return active[hash(key) % active.length];
 }
 
-/** Slot, w którym pojawia się zagadka sponsorowana (środek wyzwania). */
-export const SPONSOR_SLOT = 4;
+/** Slot, w którym pojawia się zagadka sponsorowana: 2. runda (środek wyzwania), liczone od zera. */
+export const SPONSOR_SLOT = 1;
 
 export interface Challenge {
   key: string;
@@ -99,11 +100,12 @@ export function buildChallenge(
   const sponsoredToday: Puzzle | undefined = cp && campaign ? { ...cp, sponsor: campaign.sponsor, campaign: campaign.id } : undefined;
 
   let ids: string[];
-  if (opts.savedIds?.length && opts.savedIds.every((id) => byId.has(id) || id === sponsoredToday?.id)) {
+  // Zapis o innej liczbie rund (np. sprzed zmiany reguł) jest ignorowany
+  if (opts.savedIds?.length === CONFIG.rounds && opts.savedIds.every((id) => byId.has(id) || id === sponsoredToday?.id)) {
     ids = opts.savedIds;
   } else {
     ids = index >= 0 && index < schedule.days.length ? [...schedule.days[index]] : fallbackIds(pool, key);
-    ids = ids.filter((id) => byId.has(id));
+    ids = ids.filter((id) => byId.has(id)).slice(0, CONFIG.rounds);
     if (sponsoredToday) {
       ids = ids.filter((id) => id !== sponsoredToday.id);
       ids.splice(Math.min(SPONSOR_SLOT, ids.length), ids.length >= CONFIG.rounds ? 1 : 0, sponsoredToday.id);

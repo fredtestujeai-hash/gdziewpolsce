@@ -1,4 +1,5 @@
 import { CONFIG } from "./config";
+import type { Guess } from "./types";
 
 /** Odległość po kole wielkim w km. */
 export function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -28,6 +29,24 @@ export function yearPoints(diff: number, max = CONFIG.maxYearPoints): number {
   return Math.round(max * Math.exp(-d / 35));
 }
 
+/** Punkty po odjęciu kosztu podpowiedzi (CONFIG.hintCost), jeśli jej użyto. */
+export function afterHint(points: number, used: boolean | undefined, cost = CONFIG.hintCost): number {
+  return used ? Math.round(points * (1 - cost)) : points;
+}
+
+/** Koszt podpowiedzi jako tekst, np. „30%”. */
+export function hintCostText(cost = CONFIG.hintCost): string {
+  return `${Math.round(cost * 100)}%`;
+}
+
+/** Suma punktów z rund. */
+export function totalPoints(guesses: { locPts: number; yearPts: number }[]): number {
+  return guesses.reduce((s, g) => s + g.locPts + g.yearPts, 0);
+}
+
+/** Kafelek rundy, z której gracz zrezygnował. */
+export const TILE_GAVE_UP = "⬛";
+
 /** Kafelek do udostępniania wyniku (jak w Wordle). */
 export function tile(points: number, max: number): string {
   const r = points / max;
@@ -36,6 +55,29 @@ export function tile(points: number, max: number): string {
   if (r >= 0.2) return "🟧";
   return "🟥";
 }
+
+/** Kafelki rundy: za miejsce i za rok (⬛ = runda bez odpowiedzi). */
+export const locTile = (g: Guess) => (g.gaveUp ? TILE_GAVE_UP : tile(g.locPts, CONFIG.maxLocationPoints));
+export const yearTile = (g: Guess) => (g.gaveUp ? TILE_GAVE_UP : tile(g.yearPts, CONFIG.maxYearPoints));
+const hintsWord = (n: number) => (n === 1 ? "podpowiedź" : "podpowiedzi");
+
+/** Tekst do udostępnienia wyniku: kafelki, liczba podpowiedzi i rund bez odpowiedzi. */
+export function shareLines(number: number, guesses: Guess[], rounds: number, url: string): string {
+  const max = rounds * (CONFIG.maxLocationPoints + CONFIG.maxYearPoints);
+  const hints = guesses.reduce((s, g) => s + (g.hintLoc ? 1 : 0) + (g.hintYear ? 1 : 0), 0);
+  const skipped = guesses.filter((g) => g.gaveUp).length;
+  const notes = [hints ? `💡 ${hints} ${hintsWord(hints)}` : "", skipped ? `⬛ ${skipped} bez odpowiedzi` : ""].filter(Boolean).join(" · ");
+  return [
+    `${CONFIG.name} #${number} — ${formatPoints(totalPoints(guesses))}/${formatPoints(max)}`,
+    `📍 ${guesses.map(locTile).join("")}`,
+    `📅 ${guesses.map(yearTile).join("")}`,
+    notes,
+    url,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 
 export function formatKm(km: number): string {
   if (km < 1) return `${Math.round(km * 1000)} m`;
@@ -50,6 +92,20 @@ export function formatPoints(n: number): string {
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "XXII"];
 export function century(year: number): string {
   return `${ROMAN[Math.floor((year - 1) / 100)] ?? "?"} w.`;
+}
+
+/** Stulecie jako podpowiedź: nazwa i zakres lat, np. 1364 -> „XIV wiek”, 1301–1400. */
+export function centuryRange(year: number): { label: string; from: number; to: number } {
+  const c = Math.floor((year - 1) / 100);
+  return { label: `${ROMAN[c] ?? "?"} wiek`, from: c * 100 + 1, to: (c + 1) * 100 };
+}
+
+/** „miejsc” z poprawną polską odmianą: 1 miejsce, 3 miejsca, 5 miejsc. */
+export function placesWord(n: number): string {
+  if (n === 1) return "miejsce";
+  const u = n % 10;
+  const t = n % 100;
+  return u >= 2 && u <= 4 && !(t >= 12 && t <= 14) ? "miejsca" : "miejsc";
 }
 
 /** „lat” z poprawną polską odmianą: 1 rok, 2 lata, 5 lat, 22 lata. */

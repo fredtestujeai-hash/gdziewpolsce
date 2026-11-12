@@ -1,6 +1,6 @@
 import { CONFIG } from "../config";
 import { esc } from "../dom";
-import { locationPoints, yearPoints } from "../score";
+import { hintCostText, locationPoints, placesWord, yearPoints } from "../score";
 
 export function openAbout(section?: string): void {
   document.querySelector("dialog.about")?.remove();
@@ -13,7 +13,7 @@ export function openAbout(section?: string): void {
     <div class="about-body">
       <button class="icon-btn about-close" aria-label="Zamknij">✕</button>
       <h2>Jak grać</h2>
-      <p>Codziennie o północy czeka nowe wyzwanie: <b>${CONFIG.rounds} miejsc z całej Polski</b> — zamki, kościoły, ratusze, latarnie, dworce, wieżowce… Takie samo dla wszystkich graczy.</p>
+      <p>Codziennie o północy czeka nowe wyzwanie: <b>${CONFIG.rounds} ${placesWord(CONFIG.rounds)} z całej Polski</b> — zamki, kościoły, ratusze, latarnie, dworce, wieżowce… Zagadki są coraz trudniejsze: łatwa, średnia i trudna. Wyzwanie jest takie samo dla wszystkich graczy i można je rozegrać tylko raz.</p>
       <ol>
         <li>Obejrzyj zdjęcie (możesz je powiększyć).</li>
         <li>Wbij pinezkę na mapie. Mapa nie ma <b>żadnych nazw</b>, ale pokazuje rzeki, jeziora, lasy, drogi i tory, a kropki oznaczają miasta wojewódzkie, powiatowe i siedziby gmin. Możesz ją przybliżyć aż do pojedynczych ulic i budynków, a pinezkę przesuwać.</li>
@@ -22,6 +22,17 @@ export function openAbout(section?: string): void {
       <h3>Punktacja</h3>
       <p>Za każde miejsce do <b>${CONFIG.maxLocationPoints}</b> pkt za lokalizację i do <b>${CONFIG.maxYearPoints}</b> pkt za rok — razem maks. ${(CONFIG.rounds * (CONFIG.maxLocationPoints + CONFIG.maxYearPoints)).toLocaleString("pl-PL")} pkt dziennie.</p>
       <p class="muted small">Lokalizacja: ${[ex(2), ex(25), ex(50), ex(100), ex(200)].join(" · ")}<br/>Rok: ${[ey(0), ey(10), ey(25), ey(50), ey(100)].join(" · ")}</p>
+
+      <h3>Podpowiedzi</h3>
+      <p>W każdej rundzie możesz wziąć dwie podpowiedzi. Każda kosztuje <b>${hintCostText()}</b> punktów z tej części rundy, której dotyczy:</p>
+      <ul>
+        <li><b>Województwo</b> — poznajesz nazwę województwa, a jego obszar podświetla się na mapie. Punkty za miejsce w tej rundzie są niższe o ${hintCostText()}.</li>
+        <li><b>Wiek</b> — poznajesz stulecie, np. „XIV wiek (1301–1400)”, zaznaczone też na suwaku. Punkty za rok w tej rundzie są niższe o ${hintCostText()}.</li>
+      </ul>
+      <p class="small">Użyte podpowiedzi są zaznaczone w wyniku rundy, w podsumowaniu i w udostępnianym wyniku (💡).</p>
+
+      <h3>Rezygnacja</h3>
+      <p>Przycisk <b>Rezygnuję</b> pozwala <b>pominąć zagadkę</b> (0 punktów, zobaczysz poprawną odpowiedź) albo <b>zakończyć dzisiejsze wyzwanie</b> (pozostałe zagadki dostają 0 punktów). Zakończonego wyzwania nie da się powtórzyć — nowe czeka następnego dnia. Po każdej zagadce, także pominiętej, dostajesz link do Wikipedii.</p>
 
       <h3 id="about-partnerzy">Dla miast i regionów</h3>
       <p>Gra jest <b>bez reklam</b>. Utrzymują ją partnerzy — samorządy, lokalne organizacje turystyczne i instytucje kultury — których miejsca pojawiają się jako <b>zagadki sponsorowane</b>. Każda taka zagadka jest wyraźnie oznaczona, a po odpowiedzi gracz dostaje krótką zachętę do odwiedzin i link do strony partnera.</p>

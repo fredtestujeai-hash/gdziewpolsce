@@ -339,3 +339,49 @@ dialog.about::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter: blur(2
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ---------- Podpowiedzi i rezygnacja ---------- */
+.hints { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.hint-btn {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; text-align: left; line-height: 1.2;
+  font: inherit; color: var(--ink); background: var(--surface); border: 1px dashed color-mix(in srgb, var(--gold) 70%, var(--line));
+  border-radius: 10px; padding: 6px 10px; cursor: pointer;
+}
+.hint-btn[hidden] { display: none; }
+.hint-btn b { font-size: .85rem; font-weight: 650; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hint-btn span { font-size: .72rem; color: var(--muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hint-btn:hover:not(:disabled) { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, var(--surface)); }
+.hint-btn.used { cursor: default; border-style: solid; border-color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, var(--surface)); }
+.hint-band-wrap { position: absolute; left: 13px; right: 13px; top: 6px; height: 16px; pointer-events: none; }
+.hint-band { position: absolute; top: 0; bottom: 0; min-width: 6px; border-radius: 4px; background: color-mix(in srgb, var(--gold) 55%, transparent); border: 1px solid var(--gold); }
+.hint-band[hidden] { display: none; }
+.range-wrap input[type="range"] { position: relative; }
+.submit-row { display: flex; gap: 8px; align-items: stretch; }
+.submit-row .submit { flex: 1; width: auto; }
+.giveup-btn { flex: none; font-size: .9rem; padding: .7em 1.1em; color: var(--muted); }
+.hint-tag { font-style: normal; font-weight: 600; margin-left: 6px; color: color-mix(in srgb, var(--gold) 65%, var(--ink)); white-space: nowrap; }
+.chip .lbl { display: flex; flex-wrap: wrap; align-items: baseline; }
+
+dialog.giveup { border: 0; padding: 0; border-radius: var(--radius); background: var(--surface); color: var(--ink); width: min(420px, calc(100vw - 32px)); box-shadow: var(--shadow); }
+dialog.giveup::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter: blur(2px); }
+.giveup-body { padding: 20px; display: grid; gap: 10px; }
+.giveup-body h2 { font-size: 1.3rem; margin: 0 0 2px; }
+.choice { display: flex; flex-direction: column; gap: 2px; text-align: left; font: inherit; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; cursor: pointer; line-height: 1.35; }
+.choice span { font-size: .85rem; color: var(--muted); }
+.choice:hover { border-color: var(--ink); }
+.choice.danger b { color: var(--accent); }
+.choice.danger:hover { border-color: var(--accent); }
+
+/* Przycisk „Wikipedia” */
+.wiki-btn { display: inline-flex; align-items: center; gap: .5em; font-weight: 600; font-size: .92rem; text-decoration: none; color: var(--ink); background: var(--surface); border: 1.5px solid var(--ink); border-radius: 999px; padding: .45em 1.1em .45em .5em; margin: 0 0 12px; }
+.wiki-btn:hover { color: var(--accent); border-color: var(--accent); }
+.wiki-w { display: grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 50%; background: var(--ink); color: var(--surface); font: 700 .95em Georgia, "Times New Roman", serif; }
+.wiki-btn:hover .wiki-w { background: var(--accent); }
+.wiki-btn.small { font-size: .78rem; margin: 0; border-width: 1px; padding: .2em .8em .2em .25em; }
+
+/* Podsumowanie: znaczniki rund */
+.hint-note { font-size: .85rem; color: var(--muted); margin: -8px 0 16px; }
+.place-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.place-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; }
+.tag { font-size: .72rem; font-weight: 600; padding: .15em .6em; border-radius: 999px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
+.tag.hint { background: color-mix(in srgb, var(--gold) 16%, var(--surface)); color: color-mix(in srgb, var(--gold) 60%, var(--ink)); }

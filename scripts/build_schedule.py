@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
-"""Krok 4: układa harmonogram wyzwań dnia (10 zagadek na dzień).
+"""Krok 4: układa harmonogram wyzwań dnia (3 zagadki na dzień).
 
 Harmonogram jest *dopisywany* — dni już ułożone (w tym przeszłe) nie zmieniają się,
 więc odświeżenie puli danych nigdy nie podmieni graczom dzisiejszego wyzwania.
+Wyjątek: `--rebuild` układa cały plik od nowa (tylko przed premierą albo po zmianie reguł).
 
 Zasady doboru na dzień:
-  * 2 łatwe, 4 średnie, 4 trudne (wg rozpoznawalności), mniej więcej rosnąco
+  * 1 łatwa, 1 średnia, 1 trudna (wg rozpoznawalności), w tej kolejności
   * bez powtórek, dopóki dany poziom trudności się nie wyczerpie
-  * maks. 3 obiekty tej samej kategorii, maks. 1 z tej samej miejscowości
+  * trzy różne kategorie, trzy różne województwa i trzy różne stulecia
   * zagadki w promieniu 15 km od siebie nie trafiają na ten sam dzień
-  * maks. 4 obiekty z tego samego stulecia
+  (gdy żadna zagadka nie spełnia warunków różnorodności, są one luzowane)
 
-Wyjście: public/data/schedule.json  {"start": "YYYY-MM-DD", "days": [[id × 10], ...]}
+Wyjście: public/data/schedule.json  {"start": "YYYY-MM-DD", "days": [[id × 3], ...]}
 """
 import argparse
 import json
@@ -25,7 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 POOL = ROOT / "public" / "data" / "puzzles.json"
 OUT = ROOT / "public" / "data" / "schedule.json"
-LAYOUT = [1, 2, 1, 2, 2, 3, 2, 3, 3, 3]  # poziomy trudności kolejnych rund: 2 łatwe, 4 średnie, 4 trudne
+LAYOUT = [1, 2, 3]  # poziomy trudności kolejnych rund: łatwa, średnia, trudna
 
 
 def km(a, b):
@@ -36,11 +37,11 @@ def km(a, b):
 
 
 def fits(p, chosen):
-    cats = Counter(c["category"] for c in chosen)
-    cents = Counter(c["year"] // 100 for c in chosen)
-    if cats[p["category"]] >= 3 or cents[p["year"] // 100] >= 4:
-        return False
     for c in chosen:
+        if p["category"] == c["category"] or p["year"] // 100 == c["year"] // 100:
+            return False
+        if p.get("woj") and p.get("woj") == c.get("woj"):
+            return False
         if p["place"] and p["place"] == c["place"]:
             return False
         if km(p, c) < 15:
@@ -53,10 +54,15 @@ def main():
     ap.add_argument("--start", default=None, help="data wyzwania #1 (domyślnie: dziś lub z istniejącego pliku)")
     ap.add_argument("--days", type=int, default=120, help="ile dni zaplanować naprzód od dziś")
     ap.add_argument("--seed", default="gdziewpolsce")
+    ap.add_argument("--rebuild", action="store_true", help="ułóż cały harmonogram od nowa (zachowuje datę startu)")
     args = ap.parse_args()
 
     pool = {p["id"]: p for p in json.loads(POOL.read_text())["puzzles"]}
     sched = json.loads(OUT.read_text()) if OUT.exists() else {"start": args.start or date.today().isoformat(), "days": []}
+    if args.start:
+        sched["start"] = args.start
+    if args.rebuild:
+        sched["days"] = []
     start = date.fromisoformat(sched["start"])
     today_idx = (date.today() - start).days
 

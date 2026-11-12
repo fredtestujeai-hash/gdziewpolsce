@@ -2,9 +2,9 @@ import { CONFIG } from "../config";
 import { $, esc, mount, partnerLink } from "../dom";
 import type { Game } from "../main";
 import { createMap, type GameMap } from "../map";
-import { century, formatKm, formatPoints, haversineKm, locationPoints, yearPoints, yearsWord } from "../score";
+import { afterHint, century, centuryRange, formatKm, formatPoints, haversineKm, hintCostText, locationPoints, totalPoints, yearPoints, yearsWord } from "../score";
 import type { Guess, Puzzle } from "../types";
-import { topbar } from "./common";
+import { topbar, wikiButton } from "./common";
 import { track } from "../track";
 
 const TICKS = [1000, 1200, 1400, 1600, 1800, 2000];
@@ -40,6 +40,10 @@ export async function renderRound(game: Game): Promise<void> {
         </div>
 
         <div class="controls" id="controls">
+          <div class="hints" aria-label="Podpowiedzi (obniżają punkty)">
+            <button class="hint-btn" id="hint-loc" type="button"></button>
+            <button class="hint-btn" id="hint-year" type="button"></button>
+          </div>
           <div class="year">
             <div class="year-top">
               <label for="year-range">Rok powstania</label>
@@ -51,18 +55,37 @@ export async function renderRound(game: Game): Promise<void> {
             <div class="year-row">
               <button class="step-btn" data-step="-1" aria-label="Rok wcześniej (z Shift: 10 lat)">−</button>
               <div class="range-wrap">
+<div class="hint-band-wrap" aria-hidden="true"><div class="hint-band" id="hint-band" hidden></div></div>
                 <input id="year-range" type="range" min="${CONFIG.minYear}" max="${CONFIG.maxYear}" step="1" />
                 <div class="ticks" aria-hidden="true">${TICKS.map((t) => `<span style="left:${((t - CONFIG.minYear) / span) * 100}%">${t}</span>`).join("")}</div>
               </div>
               <button class="step-btn" data-step="1" aria-label="Rok później (z Shift: 10 lat)">+</button>
             </div>
           </div>
-          <button class="btn primary submit" id="submit" disabled>Wbij pinezkę na mapie</button>
+          <div class="submit-row">
+            <button class="btn secondary giveup-btn" id="giveup-open" type="button">Rezygnuję</button>
+            <button class="btn primary submit" id="submit" disabled>Wbij pinezkę na mapie</button>
+          </div>
         </div>
 
         <div class="result" id="result" hidden></div>
       </section>
     </main>
+
+    <dialog class="giveup" id="giveup" aria-labelledby="giveup-title">
+      <div class="giveup-body">
+        <h2 id="giveup-title">Rezygnujesz?</h2>
+        <button class="choice" data-act="skip" type="button">
+          <b>Pomiń tę zagadkę</b>
+          <span>0 punktów za tę rundę. Zobaczysz poprawną odpowiedź i zagrasz dalej.</span>
+        </button>
+        <button class="choice danger" data-act="quit" type="button">
+          <b>Zakończ dzisiejsze wyzwanie</b>
+          <span id="giveup-quit-text"></span>
+        </button>
+        <button class="btn primary" data-act="stay" type="button">Gram dalej</button>
+      </div>
+    </dialog>
 
     <dialog class="lightbox" id="lightbox" aria-label="Powiększone zdjęcie">
       <img id="lightbox-img" alt="" />
@@ -79,6 +102,11 @@ export async function renderRound(game: Game): Promise<void> {
     yearInput: $("#year-input", app) as HTMLInputElement,
     century: $("#century", app),
     submit: $("#submit", app) as HTMLButtonElement,
+    hintLoc: $("#hint-loc", app) as HTMLButtonElement,
+    hintYear: $("#hint-year", app) as HTMLButtonElement,
+    hintBand: $("#hint-band", app),
+    giveup: $("#giveup", app) as HTMLDialogElement,
+    giveupQuitText: $("#giveup-quit-text", app),
     controls: $("#controls", app),
     result: $("#result", app),
     hint: $("#map-hint", app),
@@ -131,8 +159,44 @@ export async function renderRound(game: Game): Promise<void> {
   els.img.addEventListener("click", openLightbox);
   els.lightbox.addEventListener("click", () => els.lightbox.close());
 
+  // --- podpowiedzi ---------------------------------------------------------
+  // Użyte podpowiedzi trzymamy w zapisie dnia, więc odświeżenie strony ich nie cofa.
+  const hints = () => (state.hints?.round === index ? state.hints : { round: index });
+  const cost = hintCostText();
+  function renderHints() {
+    const p = challenge.puzzles[index];
+    const h = hints();
+    els.hintLoc.hidden = !p.woj;
+    els.hintLoc.disabled = !!h.loc;
+    els.hintLoc.classList.toggle("used", !!h.loc);
+    els.hintLoc.innerHTML = h.loc
+      ? `<b>Województwo: ${esc(p.woj)}</b><span>podpowiedź · −${cost} pkt za miejsce</span>`
+      : `<b>💡 Województwo</b><span>kosztuje ${cost} pkt za miejsce</span>`;
+    const c = centuryRange(p.year);
+    els.hintYear.disabled = !!h.year;
+    els.hintYear.classList.toggle("used", !!h.year);
+    els.hintYear.innerHTML = h.year
+      ? `<b>${c.label} (${c.from}–${c.to})</b><span>podpowiedź · −${cost} pkt za rok</span>`
+      : `<b>💡 Wiek</b><span>kosztuje ${cost} pkt za rok</span>`;
+    const from = Math.max(c.from, CONFIG.minYear);
+    const to = Math.min(c.to, CONFIG.maxYear);
+    els.hintBand.hidden = !h.year;
+    els.hintBand.style.left = `${((from - CONFIG.minYear) / span) * 100}%`;
+    els.hintBand.style.width = `${((to - from) / span) * 100}%`;
+    if (h.year && (year() < from || year() > to)) setYear(Math.round((from + to) / 2));
+  }
+  function useHint(kind: "loc" | "year") {
+    if (revealed || hints()[kind]) return;
+    state.hints = { ...hints(), [kind]: true };
+    game.save();
+    renderHints();
+    if (kind === "loc") void gm.highlightRegion(challenge.puzzles[index].woj ?? "");
+  }
+  els.hintLoc.addEventListener("click", () => useHint("loc"));
+  els.hintYear.addEventListener("click", () => useHint("year"));
+
   function header() {
-    const total = state.guesses.reduce((s, g) => s + g.locPts + g.yearPts, 0);
+    const total = totalPoints(state.guesses);
     els.roundLabel.textContent = `${Math.min(index + 1, n)}/${n}`;
     els.scoreLabel.textContent = `${formatPoints(total)} pkt`;
     els.dots.innerHTML = challenge.puzzles
@@ -165,10 +229,20 @@ export async function renderRound(game: Game): Promise<void> {
     setYear(CONFIG.defaultYear);
     gm.reset();
     gm.lock(false);
+    renderHints();
+    if (hints().loc && p.woj) void gm.highlightRegion(p.woj);
     header();
     requestAnimationFrame(() => gm.invalidate());
     const next = challenge.puzzles[i + 1];
     if (next) new Image().src = next.img; // wczytaj z wyprzedzeniem
+  }
+
+  /** Wynik rundy, z której gracz zrezygnował: 0 punktów, bez pinezki i roku. */
+  function gaveUpGuess(kind: "round" | "day", h: { loc?: boolean; year?: boolean } = {}): Guess {
+    const g: Guess = { lat: 0, lon: 0, year: 0, km: 0, yearDiff: 0, locPts: 0, yearPts: 0, gaveUp: kind };
+    if (h.loc) g.hintLoc = true;
+    if (h.year) g.hintYear = true;
+    return g;
   }
 
   function submit() {
@@ -177,16 +251,41 @@ export async function renderRound(game: Game): Promise<void> {
     const p = challenge.puzzles[index];
     const km = haversineKm(pos.lat, pos.lng, p.lat, p.lon);
     const y = year();
+    const h = hints();
     const g: Guess = {
       lat: pos.lat,
       lon: pos.lng,
       year: y,
       km,
       yearDiff: y - p.year,
-      locPts: locationPoints(km),
-      yearPts: yearPoints(y - p.year),
+      locPts: afterHint(locationPoints(km), h.loc),
+      yearPts: afterHint(yearPoints(y - p.year), h.year),
     };
+    if (h.loc) g.hintLoc = true;
+    if (h.year) g.hintYear = true;
+    finishRound(g);
+  }
+
+  /** „Pomiń tę zagadkę”: 0 punktów, mapa leci do celu, zwykła karta wyniku. */
+  function skip() {
+    if (revealed) return;
+    finishRound(gaveUpGuess("round", hints()));
+  }
+
+  /** „Zakończ dzisiejsze wyzwanie”: ta i wszystkie następne zagadki dostają 0 punktów. */
+  function quit() {
+    if (revealed) return;
+    for (let i = index; i < n; i++) state.guesses[i] = gaveUpGuess("day", i === index ? hints() : {});
+    delete state.hints;
+    game.save();
+    if (!game.preview) track("finish", { day: challenge.key, score: totalPoints(state.guesses) });
+    game.go("summary");
+  }
+
+  function finishRound(g: Guess) {
+    const p = challenge.puzzles[index];
     state.guesses[index] = g;
+    delete state.hints;
     game.save();
     revealed = true;
     gm.lock(true);
@@ -198,7 +297,7 @@ export async function renderRound(game: Game): Promise<void> {
     header();
     setTimeout(() => {
       gm.invalidate();
-      gm.reveal({ lat: p.lat, lon: p.lon }, { lat: g.lat, lon: g.lon });
+      gm.reveal({ lat: p.lat, lon: p.lon }, g.gaveUp ? null : { lat: g.lat, lon: g.lon });
     }, 60);
     $("#next", els.result).addEventListener("click", next);
     els.result.querySelector(".partner a")?.addEventListener("click", () => {
@@ -210,13 +309,31 @@ export async function renderRound(game: Game): Promise<void> {
   function next() {
     index += 1;
     if (index >= n) {
-      if (!game.preview) track("finish", { day: challenge.key, score: state.guesses.reduce((s, g) => s + g.locPts + g.yearPts, 0) });
+      if (!game.preview) track("finish", { day: challenge.key, score: totalPoints(state.guesses) });
       game.go("summary");
     }
     else showRound(index);
   }
 
   els.submit.addEventListener("click", submit);
+
+  // --- rezygnacja ----------------------------------------------------------
+  $("#giveup-open", app).addEventListener("click", () => {
+    const left = n - index - 1;
+    els.giveupQuitText.textContent =
+      (left > 0
+        ? `Ta zagadka i ${left === 1 ? "następna" : `${left} następne`} dostaną 0 punktów, a Ty zobaczysz podsumowanie. `
+        : "Ta zagadka dostanie 0 punktów, a Ty zobaczysz podsumowanie. ") +
+      "Dzisiejszego wyzwania nie da się powtórzyć — nowe będzie jutro.";
+    els.giveup.showModal();
+  });
+  els.giveup.addEventListener("click", (e) => {
+    const act = (e.target as HTMLElement).closest<HTMLElement>("[data-act]")?.dataset.act;
+    if (!act && e.target !== els.giveup) return; // klik w tło zamyka jak „Gram dalej”
+    els.giveup.close();
+    if (act === "skip") skip();
+    else if (act === "quit") quit();
+  });
   const onKey = (e: KeyboardEvent) => {
     if (!document.body.contains(els.game)) return document.removeEventListener("keydown", onKey);
     if (e.key !== "Enter" || els.lightbox.open || document.querySelector("dialog[open]")) return;
@@ -234,6 +351,7 @@ function resultCard(p: Puzzle, g: Guess, last: boolean, key: string): string {
   const yearText =
     diff === 0 ? "co do roku!" : `${Math.abs(diff)} ${yearsWord(diff)} ${diff > 0 ? "za późno" : "za wcześnie"}`;
   const s = p.sponsor;
+  const hintTag = (used?: boolean) => (used ? `<em class="hint-tag">💡 podpowiedź −${hintCostText()}</em>` : "");
   return `
     <div class="result-scroll">
       <div class="result-head">
@@ -242,8 +360,8 @@ function resultCard(p: Puzzle, g: Guess, last: boolean, key: string): string {
         <p class="where">${p.place ? `${esc(p.place)} · ` : ""}<b>${p.year}</b> <span class="muted">(${century(p.year)})</span></p>
       </div>
       <div class="score-row">
-        <div class="chip"><span class="lbl">📍 Miejsce</span><b>+${g.locPts}</b><span>${formatKm(g.km)} od celu</span></div>
-        <div class="chip"><span class="lbl">📅 Rok</span><b>+${g.yearPts}</b><span>${g.year} · ${yearText}</span></div>
+        <div class="chip"><span class="lbl">📍 Miejsce${hintTag(g.hintLoc)}</span><b>+${g.locPts}</b><span>${g.gaveUp ? "zagadka pominięta" : `${formatKm(g.km)} od celu`}</span></div>
+        <div class="chip"><span class="lbl">📅 Rok${hintTag(g.hintYear)}</span><b>+${g.yearPts}</b><span>${g.gaveUp ? "zagadka pominięta" : `${g.year} · ${yearText}`}</span></div>
       </div>
       ${
         s
@@ -256,7 +374,7 @@ function resultCard(p: Puzzle, g: Guess, last: boolean, key: string): string {
           : ""
       }
       ${p.extract ? `<p class="extract">${esc(p.extract)}</p>` : ""}
-      <p class="more"><a href="${esc(p.wiki)}" target="_blank" rel="noopener">Czytaj więcej w Wikipedii ↗</a></p>
+      ${wikiButton(p)}
       <p class="credit-full">Zdjęcie: ${
         p.filePage ? `<a href="${esc(p.filePage)}" target="_blank" rel="noopener">${esc(p.author)}</a>` : esc(p.author)
       }, ${p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" target="_blank" rel="noopener license">${esc(p.license)}</a>` : esc(p.license)}</p>

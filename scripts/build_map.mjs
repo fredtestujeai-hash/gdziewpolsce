@@ -1,6 +1,8 @@
 // Buduje pomocnicze warstwy mapy z Natural Earth (domena publiczna) do public/map/*.json:
 //  - poland.json: obrys Polski (maska „poza krajem”),
-//  - countries/rivers/lakes.json: uproszczona mapa awaryjna, gdy kafelki OSM nie odpowiadają.
+//  - countries/rivers/lakes.json: uproszczona mapa awaryjna, gdy kafelki OSM nie odpowiadają,
+//  - wojewodztwa.json: granice województw (z Państwowego Rejestru Granic) do podpowiedzi „Województwo”
+//    i do przypisania województwa każdej zagadce w scripts/build_puzzles.py.
 // Właściwa mapa (ulice, rzeki, budynki — bez nazw) to kafelki wektorowe, patrz src/mapstyle.ts.
 //
 // Użycie: npm run map
@@ -20,6 +22,11 @@ const FILES = [
   "ne_10m_lakes",
   "ne_10m_lakes_europe",
 ];
+// Granice województw: Państwowy Rejestr Granic (GUGiK, dane bez opłat) w wersji GeoJSON.
+// Natural Earth (admin_1) ma tylko ok. 200 punktów na województwo i myli się przy granicach o kilka km,
+// przez co ok. 1% zagadek dostawało złe województwo — stąd dokładniejsze źródło.
+const WOJ_URL = "https://raw.githubusercontent.com/ppatrzyk/polska-geojson/master/wojewodztwa/wojewodztwa-medium.geojson";
+const WOJ_SRC = join(SRC, "wojewodztwa-prg.geojson");
 // Okno mapy: Polska + sąsiedzi (ląd szerzej, żeby na szerokich ekranach nie było „dziur”)
 const BBOX = "12.0,47.8,26.0,56.2";
 const LAND_BBOX = "4.0,44.0,34.0,60.0";
@@ -36,6 +43,14 @@ async function ensureSources() {
       if (!res.ok) throw new Error(`${f}: HTTP ${res.status}`);
       await writeFile(path, Buffer.from(await res.arrayBuffer()));
     }
+  }
+  try {
+    await access(WOJ_SRC);
+  } catch {
+    console.log("pobieram granice województw");
+    const res = await fetch(WOJ_URL);
+    if (!res.ok) throw new Error(`województwa: HTTP ${res.status}`);
+    await writeFile(WOJ_SRC, Buffer.from(await res.arrayBuffer()));
   }
 }
 
@@ -72,6 +87,12 @@ await run(
   `-i ${s("ne_10m_lakes")} ${s("ne_10m_lakes_europe")} combine-files ` +
     `-merge-layers force -clip bbox=${BBOX} -each "name = name_pl || name || ''" ` +
     `-filter-fields name -simplify 50% -o precision=0.001 format=geojson ${join(OUT, "lakes.json")}`,
+);
+
+// Województwa: wspólne granice upraszczane razem (bez szczelin), nazwa w polu `name` (np. „małopolskie”)
+await run(
+  `-i ${WOJ_SRC} -each "name = nazwa" -filter-fields name -simplify 10% keep-shapes ` +
+    `-o precision=0.001 format=geojson ${join(OUT, "wojewodztwa.json")}`,
 );
 
 // Natural Earth ma część nazw tylko po angielsku — ujednolicamy na polskie

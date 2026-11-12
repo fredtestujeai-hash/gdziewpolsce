@@ -2,6 +2,7 @@ import { CONFIG } from "../config";
 import { esc, mount, PIN_SVG } from "../dom";
 import type { Game } from "../main";
 import { preloadMap } from "../map";
+import { placesWord } from "../score";
 import { loadStats } from "../storage";
 import { formatDayLong, topbar } from "./common";
 import { attachRankingLink } from "./ranking";
@@ -17,7 +18,7 @@ export function renderStart(game: Game): void {
         <div class="hero-pin">${PIN_SVG}</div>
         <p class="eyebrow">Wyzwanie #${challenge.number} · ${esc(formatDayLong(challenge.key))}</p>
         <h1>${esc(CONFIG.name)}</h1>
-        <p class="lead">${CONFIG.rounds} miejsc z całej Polski. Rozpoznaj je na zdjęciu, wbij pinezkę na mapie i zgadnij, w którym roku powstały.</p>
+        <p class="lead">${CONFIG.rounds} ${placesWord(CONFIG.rounds)} z całej Polski, od łatwego do trudnego. Rozpoznaj je na zdjęciu, wbij pinezkę na mapie i zgadnij, w którym roku powstały.</p>
 
         <ol class="steps">
           <li><span class="step-n">1</span><div><b>Obejrzyj zdjęcie</b><span>zamek, kościół, ratusz, latarnia…</span></div></li>

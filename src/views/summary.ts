@@ -3,26 +3,22 @@ import { msUntilNextChallenge } from "../daily";
 import { $, esc, mount, partnerLink, toast } from "../dom";
 import type { Game } from "../main";
 import { createMap } from "../map";
-import { formatPoints, rating, tile } from "../score";
+import { formatPoints, hintCostText, locTile, rating, shareLines, totalPoints, yearTile } from "../score";
 import { loadStats, recordResult } from "../storage";
-import { formatDayLong, topbar } from "./common";
+import { formatDayLong, topbar, wikiButton } from "./common";
 import { track } from "../track";
 import { attachRanking } from "./ranking";
 
 export function shareText(game: Game): string {
   const { challenge, state } = game;
-  const total = state.guesses.reduce((s, g) => s + g.locPts + g.yearPts, 0);
-  const max = challenge.puzzles.length * (CONFIG.maxLocationPoints + CONFIG.maxYearPoints);
-  const loc = state.guesses.map((g) => tile(g.locPts, CONFIG.maxLocationPoints)).join("");
-  const yr = state.guesses.map((g) => tile(g.yearPts, CONFIG.maxYearPoints)).join("");
-  const url = CONFIG.siteUrl || location.origin + location.pathname;
-  return `${CONFIG.name} #${challenge.number} — ${formatPoints(total)}/${formatPoints(max)}\n📍 ${loc}\n📅 ${yr}\n${url}`;
+  return shareLines(challenge.number, state.guesses, challenge.puzzles.length, CONFIG.siteUrl || location.origin + location.pathname);
 }
 
 export function renderSummary(game: Game): void {
   const { challenge, state } = game;
-  const total = state.guesses.reduce((s, g) => s + g.locPts + g.yearPts, 0);
+  const total = totalPoints(state.guesses);
   const max = challenge.puzzles.length * (CONFIG.maxLocationPoints + CONFIG.maxYearPoints);
+  const anyHint = state.guesses.some((g) => g.hintLoc || g.hintYear);
   const stats = game.preview ? loadStats() : recordResult(challenge.key, total);
   const avg = stats.played ? Math.round(stats.total / stats.played) : 0;
   const sponsors = challenge.puzzles.filter((p) => p.sponsor);
@@ -35,9 +31,10 @@ export function renderSummary(game: Game): void {
         <div class="total"><span class="total-n" id="total-n">0</span><span class="total-max">/ ${formatPoints(max)}</span></div>
         <p class="rating">${esc(rating(total, max))}</p>
         <div class="tiles" aria-label="Wyniki rund">
-          <div><span>📍</span>${state.guesses.map((g) => `<i>${tile(g.locPts, CONFIG.maxLocationPoints)}</i>`).join("")}</div>
-          <div><span>📅</span>${state.guesses.map((g) => `<i>${tile(g.yearPts, CONFIG.maxYearPoints)}</i>`).join("")}</div>
+          <div><span>📍</span>${state.guesses.map((g) => `<i>${locTile(g)}</i>`).join("")}</div>
+          <div><span>📅</span>${state.guesses.map((g) => `<i>${yearTile(g)}</i>`).join("")}</div>
         </div>
+        ${anyHint ? `<p class="hint-note">💡 Z podpowiedzią (−${hintCostText()} pkt): ${state.guesses.map((g, i) => (g.hintLoc || g.hintYear ? `runda ${i + 1}` : "")).filter(Boolean).join(", ")}</p>` : ""}
         <button class="btn primary big" id="share">Udostępnij wynik</button>
         <p class="countdown">Następne wyzwanie za <b id="countdown">--:--:--</b></p>
       </section>
@@ -59,11 +56,17 @@ export function renderSummary(game: Game): void {
             .map((p, i) => {
               const g = state.guesses[i];
               const pts = g ? g.locPts + g.yearPts : 0;
+              const tags = [
+                !g || g.gaveUp === "day" ? `<span class="tag">nierozegrana</span>` : g.gaveUp ? `<span class="tag">pominięta</span>` : "",
+                g?.hintLoc ? `<span class="tag hint">💡 województwo</span>` : "",
+                g?.hintYear ? `<span class="tag hint">💡 wiek</span>` : "",
+              ].join("");
               return `<li class="place${p.sponsor ? " is-sponsored" : ""}">
                 <span class="thumb"><img src="${esc(p.img)}" alt="" loading="lazy" onerror="this.remove()" /></span>
                 <div class="place-body">
-                  <a href="${esc(p.wiki)}" target="_blank" rel="noopener"><b>${esc(p.name)}</b></a>
+                  <b class="place-name">${esc(p.name)}</b>
                   <span class="muted">${p.place ? esc(p.place) + " · " : ""}${p.year}</span>
+                  <span class="place-links">${wikiButton(p, true)}${tags}</span>
                   ${p.sponsor ? `<a class="partner-mini" href="${esc(partnerLink(p.sponsor.url, p.campaign ?? `podsumowanie-${challenge.key}`))}" target="_blank" rel="noopener sponsored">Sponsorowane · ${esc(p.sponsor.cta)} ↗</a>` : ""}
                 </div>
                 <span class="place-pts">${pts}</span>

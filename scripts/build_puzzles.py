@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Krok 3: łączy dane z Wikidata, Commons i Wikipedii w pulę zagadek.
 
-Wejście:  data/raw/{wikidata,commons,plwiki}.json, public/map/countries.json
+Wejście:  data/raw/{wikidata,commons,plwiki}.json, public/map/{countries,wojewodztwa}.json
 Wyjście:  public/data/puzzles.json   (+ raport odrzuceń na stderr)
+          public/data/sponsored.json (tylko uzupełnienie pola `woj` w zagadkach partnerów)
 
 Reguły jakości:
   * licencja zdjęcia musi pozwalać na użycie z atrybucją (CC0/PD/CC BY/CC BY-SA)
@@ -11,6 +12,10 @@ Reguły jakości:
   * rok w przedziale MIN_YEAR..MAX_YEAR, punkt wewnątrz granic Polski
   * jeden obiekt na zdjęcie i na ~150 m (kompleksy budynków)
   * bez instytucji (muzeum, ośrodek — data założenia zamiast budowy) i cmentarzy
+
+Każda zagadka dostaje pole `woj` (np. „małopolskie”): województwo wyznaczone przez sprawdzenie
+punktu w wielokątach z public/map/wojewodztwa.json — tych samych, które gra podświetla
+po użyciu podpowiedzi „Województwo”.
 """
 import json
 import math
@@ -24,6 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw"
 OUT = ROOT / "public" / "data" / "puzzles.json"
+SPONSORED = ROOT / "public" / "data" / "sponsored.json"
 EXCLUDE = ROOT / "data" / "exclude.txt"  # ręczna czarna lista QID (jeden na linię)
 
 MIN_YEAR = 1000
@@ -81,6 +87,32 @@ def in_poland(lat, lon, polys):
     return False
 
 
+def load_voivodeships():
+    path = ROOT / "public" / "map" / "wojewodztwa.json"
+    if not path.exists():
+        raise SystemExit("Brak public/map/wojewodztwa.json — uruchom najpierw `npm run map`")
+    out = []
+    for f in json.loads(path.read_text())["features"]:
+        g = f["geometry"]
+        out.append((f["properties"]["name"], g["coordinates"] if g["type"] == "MultiPolygon" else [g["coordinates"]]))
+    return out
+
+
+def voivodeship(lat, lon, vois):
+    """Nazwa województwa dla punktu. Punkty tuż za obrysem (latarnie, falochrony, brzeg rzeki
+    granicznej) dostają województwo, którego granica jest najbliżej."""
+    for name, polys in vois:
+        for poly in polys:
+            if in_ring(lon, lat, poly[0]) and not any(in_ring(lon, lat, h) for h in poly[1:]):
+                return name
+    k = math.cos(math.radians(lat))
+    best = min(
+        ((((x - lon) * k) ** 2 + (y - lat) ** 2, name) for name, polys in vois for poly in polys for x, y in poly[0]),
+        default=(0, ""),
+    )
+    return best[1]
+
+
 def km(a, b):
     r = 6371.0
     p1, p2 = math.radians(a[0]), math.radians(b[0])
@@ -135,6 +167,7 @@ def main():
     plwiki = json.loads((RAW / "plwiki.json").read_text()) if (RAW / "plwiki.json").exists() else {}
     exclude = set(EXCLUDE.read_text().split()) if EXCLUDE.exists() else set()
     poland = load_poland_polygon()
+    vois = load_voivodeships()
     rejected = Counter()
 
     ok = []
@@ -188,6 +221,7 @@ def main():
                 "lat": it["lat"],
                 "lon": it["lon"],
                 "year": year,
+                "woj": voivodeship(it["lat"], it["lon"], vois),
                 "img": thumb_url(c["thumb"]),
                 "imgW": w,
                 "imgH": h,
@@ -231,8 +265,17 @@ def main():
             separators=(",", ":"),
         )
     )
+    # Zagadki partnerów są edytowane ręcznie — uzupełniamy im tylko województwo
+    if SPONSORED.exists():
+        sp = json.loads(SPONSORED.read_text())
+        for c in sp.get("campaigns", []):
+            for p in c.get("puzzles", []):
+                p["woj"] = voivodeship(p["lat"], p["lon"], vois)
+        SPONSORED.write_text(json.dumps(sp, ensure_ascii=False, indent=2) + "\n")
+
     print(f"Pula: {len(kept)} zagadek -> {OUT}", file=sys.stderr)
     print("Trudność:", dict(Counter(p["difficulty"] for p in kept)), file=sys.stderr)
+    print("Województwa:", dict(Counter(p["woj"] for p in kept).most_common()), file=sys.stderr)
     print("Kategorie:", dict(Counter(p["category"] for p in kept).most_common()), file=sys.stderr)
     print("Odrzucone:", dict(rejected.most_common()), file=sys.stderr)
     decades = Counter((p["year"] // 100) + 1 for p in kept)

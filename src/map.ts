@@ -54,11 +54,25 @@ export interface GameMap {
   onPlace(cb: (lat: number, lon: number) => void): void;
   setGuess(lat: number, lon: number): void;
   getGuess(): { lat: number; lng: number } | null;
-  reveal(answer: { lat: number; lon: number }, guess: { lat: number; lon: number }): void;
+  /** Pokazuje poprawną odpowiedź; bez `guess` (zagadka pominięta) mapa leci prosto do celu. */
+  reveal(answer: { lat: number; lon: number }, guess?: { lat: number; lon: number } | null): void;
+  /** Podświetla obszar województwa o podanej nazwie i przybliża do niego mapę (podpowiedź). */
+  highlightRegion(name: string): Promise<boolean>;
   showMany(points: { lat: number; lon: number; label: string }[]): void;
   reset(): void;
   lock(locked: boolean): void;
   invalidate(): void;
+}
+
+type Regions = GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon, { name: string }>;
+let regions: Promise<Regions> | null = null;
+/** Granice województw — pobierane dopiero przy pierwszej podpowiedzi. */
+function loadRegions(): Promise<Regions> {
+  regions ??= getJSON<Regions>("wojewodztwa").catch((e) => {
+    regions = null;
+    throw e;
+  });
+  return regions;
 }
 
 /** Wczytuje bibliotekę mapy z wyprzedzeniem (np. na ekranie startowym), żeby runda ruszała od razu. */
@@ -178,6 +192,15 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
     setGuess,
     getGuess: () => (guess ? { lat: guess.getLngLat().lat, lng: guess.getLngLat().lng } : null),
     reveal(answer, g) {
+      if (!g) {
+        guess?.remove();
+        guess = null;
+        extra.push(
+          new maplibregl.Marker({ element: pinElement("pin-answer", "Poprawna odpowiedź"), anchor: "bottom" }).setLngLat([answer.lon, answer.lat]).addTo(map),
+        );
+        map.flyTo({ center: [answer.lon, answer.lat], zoom: 9.5, duration: 1200 });
+        return;
+      }
       resultSource()?.setData({
         type: "Feature",
         properties: {},
@@ -194,6 +217,34 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
         { padding: { top: 70, bottom: 40, left: 70, right: 50 }, maxZoom: 15, duration: 900 },
       );
     },
+    async highlightRegion(name) {
+      try {
+        const feature = (await loadRegions()).features.find((f) => f.properties.name === name);
+        if (!feature || !map.getStyle()) return false;
+        const src = map.getSource("hint-region") as GeoJSONSource | undefined;
+        if (src) src.setData(feature);
+        else {
+          const color = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#c41e3a";
+          const before = map.getLayer("place-3") ? "place-3" : undefined; // pod kropkami miejscowości
+          map.addSource("hint-region", { type: "geojson", data: feature });
+          map.addLayer({ id: "hint-region-fill", type: "fill", source: "hint-region", paint: { "fill-color": color, "fill-opacity": 0.16 } }, before);
+          map.addLayer({ id: "hint-region-line", type: "line", source: "hint-region", layout: { "line-join": "round" }, paint: { "line-color": color, "line-width": 2.5 } }, before);
+        }
+        let [w, s, e, n] = [180, 90, -180, -90];
+        const g = feature.geometry;
+        for (const poly of g.type === "Polygon" ? [g.coordinates] : g.coordinates)
+          for (const [x, y] of poly[0]) {
+            w = Math.min(w, x);
+            e = Math.max(e, x);
+            s = Math.min(s, y);
+            n = Math.max(n, y);
+          }
+        map.fitBounds([[w, s], [e, n]], { padding: 28, maxZoom: 9, duration: 900 });
+        return true;
+      } catch {
+        return false;
+      }
+    },
     showMany(points) {
       for (const p of points) {
         const elPin = pinElement("pin-answer pin-small", p.label);
@@ -207,6 +258,7 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
       guess?.remove();
       guess = null;
       resultSource()?.setData({ type: "FeatureCollection", features: [] });
+      (map.getSource("hint-region") as GeoJSONSource | undefined)?.setData({ type: "FeatureCollection", features: [] });
       map.fitBounds(POLAND_BOUNDS, { ...FIT, duration: 500 });
     },
     lock(v) {

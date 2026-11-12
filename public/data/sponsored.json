@@ -1,5 +1,5 @@
 {
-  "_comment": "Kampanie partnerów. 'demo': true działa tylko z ?demo w adresie. Zagadka sponsorowana zastępuje 5. rundę (maks. 1 dziennie). Zagadka może mieć własne zdjęcie partnera (pole img) — wtedy author/license dotyczą tego zdjęcia.",
+  "_comment": "Kampanie partnerów. 'demo': true działa tylko z ?demo w adresie. Zagadka sponsorowana zastępuje 2. rundę z trzech (maks. 1 dziennie). Pole woj (województwo) uzupełnia scripts/build_puzzles.py. Zagadka może mieć własne zdjęcie partnera (pole img) — wtedy author/license dotyczą tego zdjęcia.",
   "campaigns": [
     {
       "id": "demo-sandomierz",
@@ -30,7 +30,8 @@
           "wiki": "https://pl.wikipedia.org/wiki/Bazylika_Katedralna_Narodzenia_Naj%C5%9Bwi%C4%99tszej_Maryi_Panny_w_Sandomierzu",
           "extract": "Bazylika Katedralna Narodzenia Najświętszej Maryi Panny w Sandomierzu – kościół gotycki wzniesiony ok. 1350-1370, rozbudowany w poł. XV w. Barokowa fasada świątyni pochodzi z 1670 roku. W latach 1708–1776 nastąpiła barokizacja wnętrza. Pod koniec XIX w. katedrę odnowiono według wytycznych ks. Józefa Karsznickiego. Katedra od 1818 roku, bazylika mniejsza od 1960 roku.",
           "difficulty": 1,
-          "sponsorNote": "Tak wyglądałaby zachęta partnera: np. zaproszenie na festiwal, trasę spacerową albo do punktu informacji turystycznej."
+          "sponsorNote": "Tak wyglądałaby zachęta partnera: np. zaproszenie na festiwal, trasę spacerową albo do punktu informacji turystycznej.",
+          "woj": "świętokrzyskie"
         }
       ]
     }
