@@ -46,6 +46,10 @@ Uwaga: rejestrator Cloudflare nie sprzedaje wszystkich końcówek (m.in. `.pl` n
 - Struktura bazy jest zapisana w `src/ranking-server.ts` (`SCHEMA`).
 - Stary adres na GitHub Pages tylko przekierowuje na `gdziewpolsce.com` (strona `.github/pages-redirect.html`, podmieniana w `.github/workflows/deploy.yml`).
 
+### Gdy nowe zmiany nie pojawiają się na stronie
+
+Otwórz projekt w Cloudflare → **Settings → Build**. Jeśli na górze jest komunikat „This project is disconnected from your Git account”, Cloudflare stracił dostęp do repozytorium i nie buduje nowych zmian. Kliknij **Manage** i na GitHubie upewnij się, że aplikacja **Cloudflare Workers and Pages** ma dostęp do repozytorium `gdziewpolsce` (w razie potrzeby **Disconnect** i ponownie **Connect**). Budowanie ruszy przy następnej zmianie w `main`.
+
 ## Ranking
 
 | Adres | Co robi |
