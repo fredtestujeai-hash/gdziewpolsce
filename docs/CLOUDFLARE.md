@@ -13,8 +13,10 @@ Projekt jest w pełni osobny: własny projekt Pages `gdziewpolsce`, własna baza
 2. W menu po lewej: **Storage & Databases → D1 SQL Database**.
 3. Kliknij **Create Database**. Nazwa: `gdziewpolsce-ranking`. Lokalizacja: **Eastern Europe (EEUR)** albo zostaw automatyczną. Kliknij **Create**.
 4. Otwórz nową bazę i przejdź do zakładki **Console**.
-5. Wklej całą zawartość pliku [`migrations/0001_ranking.sql`](../migrations/0001_ranking.sql) i kliknij **Execute**.
+5. Otwórz plik [`migrations/0001_ranking.sql`](../migrations/0001_ranking.sql). Ma cztery linie. Wklejaj je **po jednej**: wklej linię, kliknij **Execute**, potem następną.
    W zakładce **Tables** powinny pojawić się tabele `scores` i `day_stats`.
+
+Co jest w bazie: `scores` to wpisy rankingu (jeden na urządzenie na dzień, liczy się pierwszy). `device` to skrót SHA-256 losowego identyfikatora z przeglądarki. `nick` pusty (NULL) oznacza wpis usunięty przez gracza. `day_stats` to licznik wpisów na dzień. Plik celowo nie ma komentarzy, bo konsola Cloudflare skleja wklejony tekst w jedną linię i komentarz wyłączyłby wszystko po nim.
 
 ### Krok 2. Projekt Pages
 
