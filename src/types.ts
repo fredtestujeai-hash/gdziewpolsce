@@ -85,4 +85,6 @@ export interface DayState {
   guesses: Guess[];
   /** Podpowiedzi użyte w trwającej rundzie (zapisane, żeby odświeżenie strony ich nie „zwracało”). */
   hints?: { round: number; loc?: boolean; year?: boolean };
+  /** Gracz po przerwaniu wyzwania wybrał „Pokaż odpowiedzi” — do nierozegranych zagadek nie da się już wrócić. */
+  closed?: boolean;
 }

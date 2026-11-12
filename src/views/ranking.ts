@@ -36,7 +36,8 @@ export function attachRanking(game: Game): void {
   anchor.after(card);
 
   const demo = new URLSearchParams(location.search).has("demo");
-  const finished = game.state.guesses.length >= game.challenge.puzzles.length;
+  // wyzwanie przerwane (do którego można jeszcze wrócić) nie trafia do rankingu
+  const finished = game.state.guesses.length >= game.challenge.puzzles.length && !game.state.guesses.some((g) => g.gaveUp === "day");
   const canJoin = !game.preview && !demo && finished;
 
   const render = (data: RankingData, error = "") => {

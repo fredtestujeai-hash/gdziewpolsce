@@ -32,7 +32,7 @@ export function openAbout(section?: string): void {
       <p class="small">Użyte podpowiedzi są zaznaczone w wyniku rundy, w podsumowaniu i w udostępnianym wyniku (💡).</p>
 
       <h3>Rezygnacja</h3>
-      <p>Przycisk <b>Rezygnuję</b> pozwala <b>pominąć zagadkę</b> (0 punktów, zobaczysz poprawną odpowiedź) albo <b>zakończyć dzisiejsze wyzwanie</b> (pozostałe zagadki dostają 0 punktów). Zakończonego wyzwania nie da się powtórzyć — nowe czeka następnego dnia. Po każdej zagadce, także pominiętej, dostajesz link do Wikipedii.</p>
+      <p>Przycisk <b>Rezygnuję</b> pozwala <b>pominąć zagadkę</b> (0 punktów, zobaczysz poprawną odpowiedź) albo <b>przerwać dzisiejsze wyzwanie</b>. Do przerwanej gry możesz wrócić do północy (przycisk „Wróć do gry” w podsumowaniu); zagadki, których nie rozegrasz, dostają 0 punktów, a ich odpowiedzi zobaczysz dopiero, gdy zrezygnujesz z powrotu. <b>Wyzwanie niedokończone do końca doby przerywa serię dni.</b> Po każdej zagadce, także pominiętej, dostajesz link do Wikipedii.</p>
 
       <h3 id="about-partnerzy">Dla miast i regionów</h3>
       <p>Gra jest <b>bez reklam</b>. Utrzymują ją partnerzy — samorządy, lokalne organizacje turystyczne i instytucje kultury — których miejsca pojawiają się jako <b>zagadki sponsorowane</b>. Każda taka zagadka jest wyraźnie oznaczona, a po odpowiedzi gracz dostaje krótką zachętę do odwiedzin i link do strony partnera.</p>

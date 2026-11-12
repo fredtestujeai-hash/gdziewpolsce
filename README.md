@@ -12,7 +12,7 @@ Po każdej rundzie gracz poznaje nazwę, miejsce, datę, krótki opis z Wikipedi
 W każdej rundzie są też:
 
 - **dwie podpowiedzi**, każda za 30% punktów z tej części rundy, której dotyczy: „Województwo” (nazwa i podświetlony obszar na mapie, taniej o 30% punkty za miejsce) i „Wiek” (stulecie, np. „XIV wiek (1301–1400)”, zaznaczone na suwaku, taniej o 30% punkty za rok). Koszt to jedna stała `hintCost` w `src/config.ts`;
-- przycisk **„Rezygnuję”** z trzema opcjami: „Pomiń tę zagadkę” (0 punktów, gra pokazuje poprawną odpowiedź), „Zakończ dzisiejsze wyzwanie” (pozostałe zagadki dostają 0 punktów, gracz trafia do podsumowania; wyzwania nie da się powtórzyć) i „Gram dalej”.
+- przycisk **„Rezygnuję”** z trzema opcjami: „Pomiń tę zagadkę” (0 punktów, gra pokazuje poprawną odpowiedź), „Przerwij dzisiejsze wyzwanie” (gracz trafia do podsumowania i do północy może wrócić przyciskiem „Wróć do gry”; nierozegrane zagadki mają 0 punktów, a wyzwanie niedokończone do końca doby przerywa serię) i „Gram dalej”.
 
 Na koniec widzi podsumowanie z mapą „dzisiejszej trasy” i wynik do udostępnienia w stylu Wordle.
 
@@ -136,11 +136,11 @@ Postęp dnia jest w `localStorage` pod kluczem `gdziewpolsce:day` jako `DayState
 | `locPts`, `yearPts` | punkty za miejsce i za rok **po odjęciu kosztu podpowiedzi**. Wynik dnia to zawsze suma `locPts + yearPts` ze wszystkich rund (`totalPoints` w `src/score.ts`), maks. 3000 |
 | `lat`, `lon`, `year`, `km`, `yearDiff` | odpowiedź gracza; dla rund z `gaveUp` są zerami bez znaczenia |
 | `hintLoc`, `hintYear` | `true`, gdy gracz użył podpowiedzi „Województwo” / „Wiek” (pola nieobecne = bez podpowiedzi) |
-| `gaveUp` | `"round"` = zagadka pominięta, `"day"` = runda nierozegrana po „Zakończ dzisiejsze wyzwanie”; w obu przypadkach 0 punktów |
+| `gaveUp` | `"round"` = zagadka pominięta, `"day"` = runda nierozegrana po „Przerwij dzisiejsze wyzwanie” (znika, gdy gracz wróci do gry); w obu przypadkach 0 punktów |
 
 Punkty rundy liczy jedna funkcja `scoreRound` w `src/score.ts`; używa jej i gra, i serwer rankingu (`recomputeScore` w `src/ranking-core.ts`), który dostaje całe `guesses` i sam przelicza wynik z pól `lat`, `lon`, `year`, `hintLoc`, `hintYear`, `gaveUp`.
 
-`DayState.hints` przechowuje podpowiedzi użyte w trwającej rundzie, żeby odświeżenie strony ich nie cofało. Po rezygnacji z dnia tablica `guesses` jest od razu pełna, więc dzień liczy się do statystyk i serii jak każdy rozegrany.
+`DayState.hints` przechowuje podpowiedzi użyte w trwającej rundzie, żeby odświeżenie strony ich nie cofało. Po przerwaniu dnia tablica `guesses` jest pełna (rundy `"day"`), ale wynik tylko czeka w `Stats.pending` (`src/storage.ts`): gdy gracz wróci i dokończy, dzień liczy się normalnie; gdy nie dokończy do północy, dzień trafia do statystyk z osiągniętym wynikiem, a seria się zeruje. Takiego wyniku nie da się zgłosić do rankingu, dopóki gra nie jest dokończona. Dopóki można wrócić, podsumowanie ukrywa odpowiedzi nierozegranych zagadek; link „Nie wracam do gry — pokaż odpowiedzi” ustawia `DayState.closed` i odsłania je (z przyciskami „Wikipedia”), ale zamyka powrót. Pominięcie pojedynczej zagadki („Pomiń tę zagadkę”) nie przerywa serii.
 
 ## Zagadki sponsorowane
 

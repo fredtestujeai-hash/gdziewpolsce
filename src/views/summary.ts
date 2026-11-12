@@ -19,7 +19,13 @@ export function renderSummary(game: Game): void {
   const total = totalPoints(state.guesses);
   const max = challenge.puzzles.length * (CONFIG.maxLocationPoints + CONFIG.maxYearPoints);
   const anyHint = state.guesses.some((g) => g.hintLoc || g.hintYear);
-  const stats = game.preview ? loadStats() : recordResult(challenge.key, total);
+  // Wyzwanie przerwane („Zakończ dzisiejsze wyzwanie”): do północy można wrócić do nierozegranych zagadek
+  const firstUnplayed = state.guesses.findIndex((g) => g.gaveUp === "day");
+  const unfinished = firstUnplayed >= 0;
+  /** Można jeszcze wrócić do gry — odpowiedzi nierozegranych zagadek muszą zostać ukryte. */
+  const resumable = unfinished && !state.closed;
+  const hidden = (i: number) => resumable && state.guesses[i]?.gaveUp === "day";
+  const stats = game.preview ? loadStats() : recordResult(challenge.key, total, !unfinished);
   const avg = stats.played ? Math.round(stats.total / stats.played) : 0;
   const sponsors = challenge.puzzles.filter((p) => p.sponsor);
 
@@ -35,7 +41,15 @@ export function renderSummary(game: Game): void {
           <div><span>📅</span>${state.guesses.map((g) => `<i>${yearTile(g)}</i>`).join("")}</div>
         </div>
         ${anyHint ? `<p class="hint-note">💡 Z podpowiedzią (−${hintCostText()} pkt): ${state.guesses.map((g, i) => (g.hintLoc || g.hintYear ? `runda ${i + 1}` : "")).filter(Boolean).join(", ")}</p>` : ""}
-        <button class="btn primary big" id="share">Udostępnij wynik</button>
+        ${
+          resumable
+            ? `<div class="resume">
+                <p><b>Wyzwanie niedokończone.</b> Do północy możesz wrócić do nierozegranych zagadek. Niedokończone wyzwanie przerywa serię.</p>
+                <button class="btn primary big" id="resume">Wróć do gry</button>
+              </div>`
+            : ""
+        }
+        <button class="btn ${resumable ? "secondary" : "primary"} big" id="share">Udostępnij wynik</button>
         <p class="countdown">Następne wyzwanie za <b id="countdown">--:--:--</b></p>
       </section>
 
@@ -61,6 +75,15 @@ export function renderSummary(game: Game): void {
                 g?.hintLoc ? `<span class="tag hint">💡 województwo</span>` : "",
                 g?.hintYear ? `<span class="tag hint">💡 wiek</span>` : "",
               ].join("");
+              if (hidden(i))
+                return `<li class="place">
+                <span class="thumb thumb-hidden" aria-hidden="true">?</span>
+                <div class="place-body">
+                  <b class="place-name">Zagadka ${i + 1} — nierozegrana</b>
+                  <span class="muted">Odpowiedź jest ukryta, dopóki możesz wrócić do gry.</span>
+                </div>
+                <span class="place-pts">0</span>
+              </li>`;
               return `<li class="place${p.sponsor ? " is-sponsored" : ""}">
                 <span class="thumb"><img src="${esc(p.img)}" alt="" loading="lazy" onerror="this.remove()" /></span>
                 <div class="place-body">
@@ -74,6 +97,7 @@ export function renderSummary(game: Game): void {
             })
             .join("")}
         </ol>
+        ${resumable ? `<p class="small reveal-all"><a href="#" id="reveal-all">Nie wracam do gry — pokaż odpowiedzi</a></p>` : ""}
       </section>
 
       ${
@@ -87,6 +111,20 @@ export function renderSummary(game: Game): void {
     </main>`);
 
   attachRanking(game);
+
+  app.querySelector("#resume")?.addEventListener("click", () => {
+    state.guesses.length = firstUnplayed; // nierozegrane rundy wracają do gry; pominięte i rozegrane zostają
+    game.save();
+    game.go("round");
+  });
+
+  app.querySelector("#reveal-all")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (!confirm("Pokazać odpowiedzi? Nie będzie już można wrócić do dzisiejszego wyzwania, a seria zostanie przerwana.")) return;
+    state.closed = true;
+    game.save();
+    game.go("summary");
+  });
 
   // licznik punktów
   const totalEl = $("#total-n", app);
@@ -132,6 +170,6 @@ export function renderSummary(game: Game): void {
 
   createMap($("#recap-map", app)).then((gm) => {
     gm.lock(true);
-    gm.showMany(challenge.puzzles.map((p) => ({ lat: p.lat, lon: p.lon, label: p.name })));
+    gm.showMany(challenge.puzzles.filter((_, i) => !hidden(i)).map((p) => ({ lat: p.lat, lon: p.lon, label: p.name })));
   });
 }

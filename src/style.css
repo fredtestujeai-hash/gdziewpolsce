@@ -393,3 +393,8 @@ dialog.giveup::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter: blur(
   .place .thumb { width: 52px; height: 40px; }
   .place-pts { min-width: 2.4em; }
 }
+.resume { margin: 0 auto 14px; max-width: 30em; }
+.resume p { font-size: .92rem; color: var(--muted); margin-bottom: 10px; }
+.resume + .btn { font-size: .95rem; padding: .6em 1.6em; }
+.thumb-hidden { display: grid; place-items: center; font: 700 1.2rem var(--font-display); color: var(--muted); }
+.reveal-all { margin: 12px 0 0; text-align: center; color: var(--muted); }

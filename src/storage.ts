@@ -1,5 +1,5 @@
 import type { DayState } from "./types";
-import { addDays } from "./daily";
+import { addDays, todayKey } from "./daily";
 
 // Wszystko trzymamy wyłącznie w przeglądarce gracza: bez kont, bez ciasteczek, bez serwera.
 const KEY_DAY = "gdziewpolsce:day";
@@ -14,6 +14,11 @@ export interface Stats {
   lastKey: string;
   /** wynik z każdego dnia: RRRR-MM-DD -> punkty */
   history: Record<string, number>;
+  /**
+   * Wyzwanie przerwane przez „Zakończ dzisiejsze wyzwanie”, do którego gracz może jeszcze wrócić.
+   * Jeśli nie dokończy go do północy, dzień trafia do statystyk z tym wynikiem, a seria się zeruje.
+   */
+  pending?: { key: string; score: number };
 }
 
 const emptyStats = (): Stats => ({ played: 0, streak: 0, maxStreak: 0, best: 0, total: 0, lastKey: "", history: {} });
@@ -44,14 +49,39 @@ export function saveDay(state: DayState): void {
   write(KEY_DAY, state);
 }
 
-export function loadStats(): Stats {
-  return { ...emptyStats(), ...(read<Stats>(KEY_STATS) ?? {}) };
+/** Statystyki na dzień `today`: seria jest zerowana, gdy gracz opuścił dzień albo nie dokończył wyzwania. */
+export function loadStats(today: string = todayKey()): Stats {
+  const s = { ...emptyStats(), ...(read<Stats>(KEY_STATS) ?? {}) };
+  if (s.pending && s.pending.key !== today) {
+    // przerwane wyzwanie z innego dnia nie zostało dokończone: liczy się jako rozegrane, ale przerywa serię
+    const { key, score } = s.pending;
+    delete s.pending;
+    if (s.history[key] === undefined) {
+      s.history[key] = score;
+      s.played += 1;
+      s.total += score;
+      s.best = Math.max(s.best, score);
+      s.streak = 0;
+    }
+    write(KEY_STATS, s);
+  }
+  if (s.lastKey && s.lastKey < addDays(today, -1)) s.streak = 0; // wczoraj bez ukończonej gry
+  return s;
 }
 
-/** Zapisuje ukończone wyzwanie (idempotentnie — drugi zapis tego samego dnia nic nie zmienia). */
-export function recordResult(key: string, score: number): Stats {
-  const s = loadStats();
+/**
+ * Zapisuje wynik dnia (idempotentnie — drugi zapis tego samego ukończonego dnia nic nie zmienia).
+ * `complete = false`: gracz przerwał wyzwanie i może do niego wrócić — wynik tylko czeka (pending).
+ */
+export function recordResult(key: string, score: number, complete = true): Stats {
+  const s = loadStats(key);
   if (s.history[key] !== undefined) return s;
+  if (!complete) {
+    s.pending = { key, score };
+    write(KEY_STATS, s);
+    return s;
+  }
+  delete s.pending;
   s.history[key] = score;
   s.played += 1;
   s.total += score;

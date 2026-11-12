@@ -80,7 +80,7 @@ export async function renderRound(game: Game): Promise<void> {
           <span>0 punktów za tę rundę. Zobaczysz poprawną odpowiedź i zagrasz dalej.</span>
         </button>
         <button class="choice danger" data-act="quit" type="button">
-          <b>Zakończ dzisiejsze wyzwanie</b>
+          <b>Przerwij dzisiejsze wyzwanie</b>
           <span id="giveup-quit-text"></span>
         </button>
         <button class="btn primary" data-act="stay" type="button">Gram dalej</button>
@@ -262,7 +262,7 @@ export async function renderRound(game: Game): Promise<void> {
     finishRound(gaveUpGuess("round", hints()));
   }
 
-  /** „Zakończ dzisiejsze wyzwanie”: ta i wszystkie następne zagadki dostają 0 punktów. */
+  /** „Przerwij dzisiejsze wyzwanie”: ta i następne zagadki są nierozegrane (0 pkt), dopóki gracz nie wróci z podsumowania. */
   function quit() {
     if (revealed) return;
     for (let i = index; i < n; i++) state.guesses[i] = gaveUpGuess("day", i === index ? hints() : {});
@@ -314,9 +314,9 @@ export async function renderRound(game: Game): Promise<void> {
     const left = n - index - 1;
     els.giveupQuitText.textContent =
       (left > 0
-        ? `Ta zagadka i ${left === 1 ? "następna" : `${left} następne`} dostaną 0 punktów, a Ty zobaczysz podsumowanie. `
-        : "Ta zagadka dostanie 0 punktów, a Ty zobaczysz podsumowanie. ") +
-      "Dzisiejszego wyzwania nie da się powtórzyć — nowe będzie jutro.";
+        ? `Zobaczysz podsumowanie, a ta zagadka i ${left === 1 ? "następna" : `${left} następne`} zostaną nierozegrane. `
+        : "Zobaczysz podsumowanie, a ta zagadka zostanie nierozegrana. ") +
+      "Do północy możesz wrócić i dokończyć grę. Niedokończone wyzwanie przerywa Twoją serię.";
     els.giveup.showModal();
   });
   els.giveup.addEventListener("click", (e) => {
