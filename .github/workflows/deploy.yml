@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      # Gra działa na https://gdziewpolsce.com (Cloudflare). Stary adres GitHub Pages tylko tam przekierowuje.
+      - run: cp .github/pages-redirect.html dist/index.html && cp .github/pages-redirect.html dist/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

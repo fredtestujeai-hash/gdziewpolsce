@@ -44,7 +44,7 @@ Uwaga: rejestrator Cloudflare nie sprzedaje wszystkich końcówek (m.in. `.pl` n
 
 - Każdy push do `main` → Cloudflare buduje grę (`npm run build`) i publikuje ją razem z serwerem rankingu (`npx wrangler deploy`).
 - Struktura bazy jest zapisana w `src/ranking-server.ts` (`SCHEMA`).
-- GitHub Pages działa równolegle jak dotąd. Tam nie ma serwera, więc ranking się po prostu nie pokazuje.
+- Stary adres na GitHub Pages tylko przekierowuje na `gdziewpolsce.com` (strona `.github/pages-redirect.html`, podmieniana w `.github/workflows/deploy.yml`).
 
 ## Ranking
 
