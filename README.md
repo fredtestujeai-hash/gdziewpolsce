@@ -42,6 +42,7 @@ src/
   score.ts         punktacja (odległość po kole wielkim, różnica lat), odmiana „rok/lata/lat”
   map.ts           mapa MapLibre GL: pinezki, przybliżanie, tryb awaryjny przy braku kafelków
   mapstyle.ts      styl mapy bez napisów (kafelki wektorowe OpenStreetMap) + kropki miejscowości
+  intro.ts         chowa animację startową (obrys Polski w index.html), gdy gra jest gotowa
   storage.ts       zapis postępu i statystyk w localStorage
   track.ts         opcjonalne anonimowe liczniki dla raportów partnerów (domyślnie wyłączone)
   views/           ekrany: start, runda, podsumowanie, „o grze”
@@ -63,6 +64,10 @@ Mapa to kafelki wektorowe z danymi OpenStreetMap, rysowane w przeglądarce włas
 - Po przybliżeniu dochodzą lasy, zabudowa, drogi i tory, a od ok. 13. poziomu pojedyncze budynki.
 - Kropki miejscowości (`public/map/places.json`): 18 miast wojewódzkich, 316 powiatowych i 1984 siedziby gmin.
 
+## Animacja startowa
+
+Podczas ładowania czerwona linia obrysowuje granicę Polski, potem w mapę wbija się pinezka i pojawia się tytuł (ok. 1,8 s). Rysunek SVG i jego style są wpisane wprost w `index.html`, więc widać je, zanim wczyta się reszta gry. `src/intro.ts` czeka na domknięcie obrysu i płynnie odsłania pierwszy ekran; przy wolnym łączu gotowy obrys zostaje, a przy pinezce pulsuje kółko. Przy ustawieniu „ogranicz ruch” (`prefers-reduced-motion`) obrys pokazuje się od razu, bez animacji. Ścieżkę obrysu generuje `npm run intro` (`scripts/build_intro.mjs`) z `public/map/poland.json`.
+
 ## Dane
 
 Wszystkie dane pochodzą z otwartych źródeł:
@@ -80,6 +85,7 @@ Pipeline:
 
 ```bash
 npm run map                               # obrys Polski, główne rzeki i mapa awaryjna z Natural Earth
+npm run intro                             # uproszczony obrys Polski (ok. 300 punktów) dla animacji startowej -> index.html
 python3 scripts/fetch_places.py           # miejscowości w trzech rangach z Wikidata -> public/map/places.json
 python3 scripts/fetch_wikidata.py         # kandydaci: ~40 klas obiektów w Polsce (zamki, kościoły, ratusze…)
 python3 scripts/fetch_commons.py          # licencje i miniatury zdjęć + wstępy artykułów z plwiki

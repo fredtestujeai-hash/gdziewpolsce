@@ -4,6 +4,7 @@ import "./style.css";
 
 import { buildChallenge, todayKey, type Challenge } from "./daily";
 import { mount, toast } from "./dom";
+import { finishIntro } from "./intro";
 import { loadDay, saveDay } from "./storage";
 import type { Campaign, DayState, Puzzle, Schedule } from "./types";
 import { renderStart } from "./views/start";
@@ -83,9 +84,12 @@ async function boot() {
   if (state.guesses.length >= challenge.puzzles.length) game.go("summary");
   else if (state.guesses.length > 0) game.go("round");
   else game.go("start");
+  // Pierwszy ekran jest już gotowy pod spodem — odsłaniamy go, gdy obrys Polski się domknie
+  await finishIntro();
 }
 
 boot().catch((err) => {
   console.error(err);
+  void finishIntro(false);
   mount(`<main class="center"><div class="card narrow"><h1>Ups…</h1><p>Nie udało się wczytać gry. Sprawdź połączenie i odśwież stronę.</p><button class="btn primary" onclick="location.reload()">Odśwież</button></div></main>`);
 });
