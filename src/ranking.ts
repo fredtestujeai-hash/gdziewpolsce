@@ -1,7 +1,7 @@
 // Ranking po stronie przeglądarki: rozmowa z API i lokalna „tożsamość” gracza (bez konta).
 // Gdy API nie odpowiada (np. gra działa na hostingu bez serwera), funkcje zwracają null i ranking się nie pokazuje.
 import { CONFIG } from "./config";
-import type { RankingData } from "./ranking-core";
+import type { Period, RankingData } from "./ranking-core";
 import type { DayState } from "./types";
 
 const KEY = "gdziewpolsce:ranking";
@@ -61,10 +61,10 @@ async function call(path: string, init: RequestInit = {}): Promise<{ status: num
 }
 
 /** Ranking dnia albo null, gdy serwer rankingu jest niedostępny. */
-export async function fetchRanking(day: string): Promise<RankingData | null> {
+export async function fetchRanking(day: string, period: Period = "day"): Promise<RankingData | null> {
   if (!rankingEnabled()) return null;
   const id = loadIdentity();
-  const res = await call(`/ranking?day=${encodeURIComponent(day)}`, id ? { headers: { "x-device": id.device } } : {});
+  const res = await call(`/ranking?day=${encodeURIComponent(day)}&period=${period}`, id ? { headers: { "x-device": id.device } } : {});
   return res && res.status === 200 && isRanking(res.body) ? res.body : null;
 }
 

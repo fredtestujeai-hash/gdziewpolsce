@@ -54,7 +54,7 @@ Otwórz projekt w Cloudflare → **Settings → Build**. Jeśli na górze jest k
 
 | Adres | Co robi |
 |---|---|
-| `GET /api/ranking?day=RRRR-MM-DD` | 10 najlepszych wyników dnia, liczba graczy, miejsce gracza (jeśli przeglądarka poda swój identyfikator w nagłówku `X-Device`) |
+| `GET /api/ranking?day=RRRR-MM-DD&period=day\|week\|month\|year` | 10 najlepszych wyników dnia albo sum punktów z tygodnia, miesiąca lub roku, liczba graczy, miejsce gracza (jeśli przeglądarka poda swój identyfikator w nagłówku `X-Device`) |
 | `POST /api/score` | dołączenie do rankingu: `{day, device, nick, ids, guesses}` |
 | `DELETE /api/score` | gracz usuwa wszystkie swoje wpisy: `{device}` |
 
@@ -62,6 +62,7 @@ Zasady:
 
 - **Dobrowolnie i bez konta.** Gracz po ukończeniu wyzwania wpisuje nick. Przeglądarka losuje wtedy identyfikator i trzyma go w `localStorage`.
 - **Jeden wynik na urządzenie na dzień, liczy się pierwszy.**
+- **Cztery rankingi:** dzień, tydzień (poniedziałek–niedziela), miesiąc i rok kalendarzowy. Trzy ostatnie to suma punktów z dni, w których gracz dołączył do rankingu; przy remisie wyżej jest ten, kto wcześniej zdobył swoją sumę. Serwer trzyma gotowe sumy (tabela `totals`) i dopisuje do nich punkty przy każdym nowym wyniku, więc odczyt kosztuje tyle samo co ranking dnia.
 - **Wynik liczy serwer.** Przeglądarka wysyła odpowiedzi (pinezka i rok), a serwer przelicza punkty tymi samymi wzorami co gra (`src/score.ts`) i dla zagadek z tego dnia. Liczby punktów od przeglądarki nie przyjmuje.
 - **Dzień musi być dzisiejszy w czasie polskim** (z 30-minutowym zapasem po północy dla kończących grę).
 - **Nick:** 2–20 znaków, litery, cyfry, spacja, kropka, myślnik, podkreślnik; prosty filtr wulgaryzmów (`src/ranking-core.ts`).
@@ -76,9 +77,12 @@ Zasady:
 ```sql
 -- podgląd dzisiejszych wpisów
 SELECT day, nick, score FROM scores WHERE day = '2026-11-12' ORDER BY score DESC;
--- usunięcie wpisu
-DELETE FROM scores WHERE day = '2026-11-12' AND nick = 'TenNick';
-UPDATE day_stats SET n = n - 1 WHERE day = '2026-11-12';
+-- usunięcie wszystkich wpisów gracza o danym nicku (także z rankingów tygodnia, miesiąca i roku)
+DELETE FROM totals WHERE device IN (SELECT device FROM scores WHERE nick = 'TenNick');
+DELETE FROM scores WHERE nick = 'TenNick';
+-- liczniki graczy („W rankingu: N”) poprawią się same przy następnym dniu; można je też przeliczyć:
+UPDATE day_stats SET n = (SELECT COUNT(*) FROM scores WHERE scores.day = day_stats.day AND nick IS NOT NULL) WHERE day LIKE '20%';
+UPDATE day_stats SET n = (SELECT COUNT(*) FROM totals WHERE totals.period = day_stats.day) WHERE day LIKE '_:%';
 ```
 
 ### Czy ranking da się oszukać?
@@ -99,7 +103,7 @@ Darmowy plan Cloudflare (limity warto potwierdzić w panelu, bo bywają zmienian
 
 - **Pliki statyczne:** nielimitowany ruch i transfer; 3000 minut budowania miesięcznie (jedno budowanie to ok. 2 minuty).
 - **Serwer rankingu (Workers):** 100 000 wywołań dziennie; pliki gry się do tego nie liczą. Wejście na stronę startową i na podsumowanie to po jednym wywołaniu, dołączenie do rankingu to kolejne, czyli starcza na ok. 30 000 graczy dziennie.
-- **D1:** 5 mln odczytanych i 100 tys. zapisanych wierszy dziennie, 5 GB danych. Ciasno robi się przy kilku tysiącach graczy w rankingu jednego dnia; wtedy pomoże krótka pamięć podręczna odpowiedzi albo płatny plan Workers Paid (5 USD miesięcznie).
+- **D1:** 5 mln odczytanych i 100 tys. zapisanych wierszy dziennie, 5 GB danych. Jedno dołączenie do rankingu to kilkanaście zapisanych wierszy (wynik dnia plus sumy tygodnia, miesiąca i roku), więc ciasno robi się przy kilku tysiącach graczy w rankingu jednego dnia; wtedy pomoże krótka pamięć podręczna odpowiedzi albo płatny plan Workers Paid (5 USD miesięcznie).
 
 Po przekroczeniu darmowych limitów Cloudflare niczego nie dolicza: ranking przestaje odpowiadać do końca dnia, a sama gra działa dalej.
 

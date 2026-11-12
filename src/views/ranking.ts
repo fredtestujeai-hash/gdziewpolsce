@@ -1,10 +1,10 @@
-// Ranking dnia: karta w podsumowaniu i podgląd z ekranu startowego.
+// Ranking (dzień, tydzień, miesiąc, rok): karta w podsumowaniu i podgląd z ekranu startowego.
 // Jeśli serwer rankingu nie odpowiada, nic się nie pokazuje, a gra działa jak zwykle.
 import "../ranking.css";
 import { esc, toast } from "../dom";
 import type { Game } from "../main";
 import { deleteMyEntries, fetchRanking, loadIdentity, rankingEnabled, submitScore } from "../ranking";
-import { NICK_MAX, validateNick, type RankingData, type RankingEntry } from "../ranking-core";
+import { NICK_MAX, PERIODS, validateNick, type Period, type RankingData, type RankingEntry } from "../ranking-core";
 import { formatPoints } from "../score";
 
 function playersWord(n: number): string {
@@ -14,15 +14,50 @@ function playersWord(n: number): string {
   return u >= 2 && u <= 4 && !(t >= 12 && t <= 14) ? "gracze" : "graczy";
 }
 
+const daysWord = (n: number) => (n === 1 ? "dzień" : "dni");
+
+const PERIOD_LABEL: Record<Period, string> = { day: "Dziś", week: "Tydzień", month: "Miesiąc", year: "Rok" };
+const PERIOD_NOTE: Record<Period, string> = {
+  day: "",
+  week: "Suma punktów od poniedziałku do niedzieli.",
+  month: "Suma punktów z tego miesiąca.",
+  year: "Suma punktów z tego roku.",
+};
+
+function tabsMarkup(active: Period): string {
+  return `<div class="rank-tabs" role="tablist" aria-label="Okres rankingu">${PERIODS.map(
+    (p) => `<button type="button" role="tab" class="rank-tab${p === active ? " is-active" : ""}" aria-selected="${p === active}" data-period="${p}">${PERIOD_LABEL[p]}</button>`,
+  ).join("")}</div>`;
+}
+
+/** Przełączanie zakładek: pobiera ranking wybranego okresu i oddaje go do narysowania. */
+function bindTabs(root: HTMLElement, day: string, show: (data: RankingData) => void): void {
+  root.querySelectorAll<HTMLButtonElement>(".rank-tab").forEach((b) =>
+    b.addEventListener("click", async () => {
+      if (b.classList.contains("is-active")) return;
+      b.disabled = true;
+      const data = await fetchRanking(day, b.dataset.period as Period);
+      if (data) show(data);
+      else {
+        b.disabled = false;
+        toast("Nie udało się wczytać rankingu");
+      }
+    }),
+  );
+}
+
+const mineMarkup = (data: RankingData) => (data.me ? `<p class="rank-mine">Twoje miejsce: <b>${data.me.rank}</b> z ${data.total}</p>` : "");
+
 function row(e: RankingEntry): string {
-  return `<li class="rank-row${e.me ? " is-me" : ""}"><span class="rank-n">${e.rank}</span><span class="rank-nick">${esc(e.nick)}${e.me ? ' <i class="rank-you">Ty</i>' : ""}</span><span class="rank-pts">${formatPoints(e.score)}</span></li>`;
+  const days = e.days ? ` <span class="rank-days">${e.days} ${daysWord(e.days)}</span>` : "";
+  return `<li class="rank-row${e.me ? " is-me" : ""}"><span class="rank-n">${e.rank}</span><span class="rank-nick">${esc(e.nick)}${e.me ? ' <i class="rank-you">Ty</i>' : ""}${days}</span><span class="rank-pts">${formatPoints(e.score)}</span></li>`;
 }
 
 function listMarkup(data: RankingData): string {
   if (!data.top.length) return `<p class="muted rank-empty">Jeszcze nikogo tu nie ma. Pierwsze miejsce czeka!</p>`;
   const outside = data.me && !data.top.some((e) => e.me) ? `<li class="rank-gap" aria-hidden="true">⋯</li>${row(data.me)}` : "";
   return `<ol class="rank-list">${data.top.map(row).join("")}${outside}</ol>
-    <p class="muted small rank-total">W rankingu: ${data.total} ${playersWord(data.total)}</p>`;
+    <p class="muted small rank-total">W rankingu: ${data.total} ${playersWord(data.total)}${PERIOD_NOTE[data.period ?? "day"] ? " · " + PERIOD_NOTE[data.period ?? "day"] : ""}</p>`;
 }
 
 /** Karta rankingu pod wynikiem dnia. Wywoływana raz z ekranu podsumowania. */
@@ -43,8 +78,9 @@ export function attachRanking(game: Game): void {
   const render = (data: RankingData, error = "") => {
     if (!card.isConnected) return;
     const id = loadIdentity();
+    const period = data.period ?? "day";
     const join =
-      canJoin && !data.me
+      canJoin && !data.me && period === "day"
         ? `<form class="rank-join" novalidate>
             <label for="rank-nick">Dołącz do rankingu</label>
             <div class="rank-join-row">
@@ -55,12 +91,10 @@ export function attachRanking(game: Game): void {
             <p class="muted small">Udział jest dobrowolny. Na serwer trafią: nick, Twoje dzisiejsze odpowiedzi (z nich liczony jest wynik) i losowy identyfikator tej przeglądarki. <a href="#" data-about="prywatnosc">Więcej</a></p>
           </form>`
         : "";
-    const mine = data.me
-      ? `<p class="rank-mine">Twoje miejsce: <b>${data.me.rank}</b> z ${data.total}</p>`
-      : "";
     const remove = id ? `<p class="small rank-remove"><a href="#" data-rank-remove>Usuń moje wpisy z rankingu</a></p>` : "";
-    card.innerHTML = `<h2>Ranking dnia</h2>${mine}${listMarkup(data)}${join}${remove}`;
+    card.innerHTML = `<h2>Ranking</h2>${tabsMarkup(period)}${mineMarkup(data)}${listMarkup(data)}${join}${remove}`;
     card.hidden = false;
+    bindTabs(card, game.challenge.key, (d) => render(d));
 
     card.querySelector<HTMLFormElement>(".rank-join")?.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -82,7 +116,7 @@ export function attachRanking(game: Game): void {
       if (!confirm("Usunąć z rankingu wszystkie wpisy z tej przeglądarki?")) return;
       if (await deleteMyEntries()) {
         toast("Twoje wpisy zostały usunięte");
-        const fresh = await fetchRanking(game.challenge.key);
+        const fresh = await fetchRanking(game.challenge.key, period);
         if (fresh) render(fresh);
       } else toast("Nie udało się usunąć wpisów. Spróbuj ponownie.");
     });
@@ -94,18 +128,24 @@ export function attachRanking(game: Game): void {
   });
 }
 
-function openRankingDialog(data: RankingData): void {
+function openRankingDialog(day: string, first: RankingData): void {
   document.querySelector("dialog.about")?.remove();
   const d = document.createElement("dialog");
   d.className = "about ranking-dialog";
-  d.setAttribute("aria-label", "Ranking dnia");
-  d.innerHTML = `<div class="about-body">
+  d.setAttribute("aria-label", "Ranking");
+  const show = (data: RankingData) => {
+    const period = data.period ?? "day";
+    d.innerHTML = `<div class="about-body">
       <button class="icon-btn about-close" aria-label="Zamknij">✕</button>
-      <h2>Ranking dnia</h2>
-      ${data.me ? `<p class="rank-mine">Twoje miejsce: <b>${data.me.rank}</b> z ${data.total}</p>` : ""}
+      <h2>Ranking</h2>
+      ${tabsMarkup(period)}
+      ${mineMarkup(data)}
       ${listMarkup(data)}
-      ${data.me ? "" : `<p class="muted small">Do rankingu możesz dołączyć po ukończeniu dzisiejszego wyzwania.</p>`}
+      ${data.me || period !== "day" ? "" : `<p class="muted small">Do rankingu możesz dołączyć po ukończeniu dzisiejszego wyzwania.</p>`}
     </div>`;
+    bindTabs(d, day, show);
+  };
+  show(first);
   document.body.append(d);
   d.addEventListener("click", (e) => {
     if (e.target === d || (e.target as HTMLElement).closest(".about-close")) d.close();
@@ -114,7 +154,7 @@ function openRankingDialog(data: RankingData): void {
   d.showModal();
 }
 
-/** Link „Ranking dnia” na ekranie startowym (pojawia się tylko, gdy serwer rankingu działa). */
+/** Link „Ranking” na ekranie startowym (pojawia się tylko, gdy serwer rankingu działa). */
 export function attachRankingLink(game: Game): void {
   if (!rankingEnabled() || game.preview) return;
   const hero = document.querySelector(".start .hero");
@@ -123,10 +163,10 @@ export function attachRankingLink(game: Game): void {
     if (!data || !hero.isConnected) return;
     const p = document.createElement("p");
     p.className = "fineprint rank-link";
-    p.innerHTML = `<a href="#">🏆 Ranking dnia</a>${data.total ? ` · ${data.total} ${playersWord(data.total)}` : ""}`;
+    p.innerHTML = `<a href="#">🏆 Ranking</a>${data.total ? ` · dziś ${data.total} ${playersWord(data.total)}` : ""}`;
     p.querySelector("a")!.addEventListener("click", async (e) => {
       e.preventDefault();
-      openRankingDialog((await fetchRanking(game.challenge.key)) ?? data);
+      openRankingDialog(game.challenge.key, (await fetchRanking(game.challenge.key)) ?? data);
     });
     hero.append(p);
   });

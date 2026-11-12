@@ -8,10 +8,13 @@ import { buildChallenge, todayKey } from "./daily";
 import {
   TOP_N,
   isDeviceId,
+  isPeriod,
+  periodKey,
   isReadableDay,
   isSubmittableDay,
   recomputeScore,
   validateNick,
+  type Period,
   type RankingData,
   type RankingEntry,
 } from "./ranking-core";
@@ -54,12 +57,34 @@ export const SCHEMA = [
   "CREATE INDEX IF NOT EXISTS scores_rank ON scores (day, score DESC, created_at) WHERE nick IS NOT NULL",
   "CREATE INDEX IF NOT EXISTS scores_device ON scores (device)",
   "CREATE TABLE IF NOT EXISTS day_stats (day TEXT PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0)",
+  // Gotowe sumy punktów na tydzień, miesiąc i rok (klucze jak w periodKey), dopisywane przy każdym nowym wyniku:
+  // dzięki nim odczyt tych rankingów jest równie tani jak rankingu dnia. Liczniki graczy okresu trzymamy w day_stats.
+  "CREATE TABLE IF NOT EXISTS totals (period TEXT NOT NULL, device TEXT NOT NULL, nick TEXT NOT NULL, score INTEGER NOT NULL, days INTEGER NOT NULL, updated_at INTEGER NOT NULL, PRIMARY KEY (period, device))",
+  "CREATE INDEX IF NOT EXISTS totals_rank ON totals (period, score DESC, updated_at)",
+  "CREATE INDEX IF NOT EXISTS totals_device ON totals (device)",
 ];
+
+// Jednorazowe przeliczenie sum z wyników zapisanych, zanim powstały rankingi tygodnia, miesiąca i roku.
+const BACKFILL_MARK = "backfill:totals-1";
+const backfillSql = (keyExpr: string) =>
+  `INSERT OR IGNORE INTO totals (period, device, nick, score, days, updated_at) SELECT ${keyExpr} AS p, device, nick, SUM(score), COUNT(*), MAX(created_at) FROM scores WHERE nick IS NOT NULL GROUP BY p, device`;
+const BACKFILL = [
+  backfillSql("'w:' || date(day, 'weekday 0', '-6 days')"),
+  backfillSql("'m:' || substr(day, 1, 7)"),
+  backfillSql("'y:' || substr(day, 1, 4)"),
+  "INSERT OR REPLACE INTO day_stats (day, n) SELECT period, COUNT(*) FROM totals GROUP BY period",
+  `INSERT OR REPLACE INTO day_stats (day, n) VALUES ('${BACKFILL_MARK}', 1)`,
+];
+async function prepareDb(db: D1Like): Promise<void> {
+  await db.batch(SCHEMA.map((sql) => db.prepare(sql)));
+  const done = await db.prepare("SELECT n FROM day_stats WHERE day = ?").bind(BACKFILL_MARK).first();
+  if (!done) await db.batch(BACKFILL.map((sql) => db.prepare(sql)));
+}
 
 let schemaReady: Promise<unknown> | null = null;
 /** Zakłada tabele, jeśli ich nie ma (raz na uruchomienie serwera; nic nie kosztuje, gdy już istnieją). */
 export function ensureSchema(db: D1Like): Promise<unknown> {
-  schemaReady ??= db.batch(SCHEMA.map((sql) => db.prepare(sql))).catch((e) => {
+  schemaReady ??= prepareDb(db).catch((e) => {
     schemaReady = null;
     throw e;
   });
@@ -103,48 +128,55 @@ interface Row {
   device: string;
   nick: string;
   score: number;
-  created_at: number;
+  /** Czas zgłoszenia (ranking dnia) albo ostatniego dopisania punktów (sumy): rozstrzyga remisy. */
+  t: number;
+  days: number;
 }
 
-export async function readRanking(db: D1Like, day: string, deviceHash: string | null): Promise<RankingData> {
+export async function readRanking(db: D1Like, day: string, deviceHash: string | null, period: Period = "day"): Promise<RankingData> {
+  // Ranking dnia czytamy z wyników dnia, pozostałe z gotowych sum; oba mają ten sam układ kolumn.
+  const key = period === "day" ? day : periodKey(day, period);
+  const from =
+    period === "day"
+      ? "SELECT device, nick, score, created_at AS t, 1 AS days FROM scores WHERE day = ? AND nick IS NOT NULL"
+      : "SELECT device, nick, score, updated_at AS t, days FROM totals WHERE period = ?";
   const [topRes, stat] = await Promise.all([
-    db
-      .prepare("SELECT device, nick, score, created_at FROM scores WHERE day = ? AND nick IS NOT NULL ORDER BY score DESC, created_at ASC LIMIT ?")
-      .bind(day, TOP_N)
-      .all<Row>(),
-    db.prepare("SELECT n FROM day_stats WHERE day = ?").bind(day).first<{ n: number }>(),
+    db.prepare(`${from} ORDER BY score DESC, t ASC LIMIT ?`).bind(key, TOP_N).all<Row>(),
+    db.prepare("SELECT n FROM day_stats WHERE day = ?").bind(key).first<{ n: number }>(),
   ]);
-  const top: RankingEntry[] = topRes.results.map((r, i) => ({
-    rank: i + 1,
+  const entry = (r: Row, rank: number): RankingEntry => ({
+    rank,
     nick: r.nick,
     score: r.score,
+    ...(period === "day" ? {} : { days: r.days }),
     ...(deviceHash && r.device === deviceHash ? { me: true } : {}),
-  }));
+  });
+  const top = topRes.results.map((r, i) => entry(r, i + 1));
   let me: RankingEntry | null = top.find((e) => e.me) ?? null;
   if (!me && deviceHash) {
-    const mine = await db
-      .prepare("SELECT device, nick, score, created_at FROM scores WHERE day = ? AND device = ? AND nick IS NOT NULL")
-      .bind(day, deviceHash)
-      .first<Row>();
+    const mine = await db.prepare(`${from} AND device = ?`).bind(key, deviceHash).first<Row>();
     if (mine) {
-      const better = await db
-        .prepare("SELECT COUNT(*) AS c FROM scores WHERE day = ? AND nick IS NOT NULL AND (score > ? OR (score = ? AND created_at < ?))")
-        .bind(day, mine.score, mine.score, mine.created_at)
-        .first<{ c: number }>();
-      me = { rank: (better?.c ?? 0) + 1, nick: mine.nick, score: mine.score, me: true };
+      const count =
+        period === "day"
+          ? "SELECT COUNT(*) AS c FROM scores WHERE day = ? AND nick IS NOT NULL AND (score > ? OR (score = ? AND created_at < ?))"
+          : "SELECT COUNT(*) AS c FROM totals WHERE period = ? AND (score > ? OR (score = ? AND updated_at < ?))";
+      const better = await db.prepare(count).bind(key, mine.score, mine.score, mine.t).first<{ c: number }>();
+      me = entry(mine, (better?.c ?? 0) + 1);
     }
   }
-  return { day, total: Math.max(stat?.n ?? 0, top.length), top, me };
+  return { day, period, total: Math.max(stat?.n ?? 0, top.length), top, me };
 }
 
-/** GET /api/ranking?day=RRRR-MM-DD (nagłówek X-Device: identyfikator urządzenia, opcjonalnie). */
+/** GET /api/ranking?day=RRRR-MM-DD&period=day|week|month|year (nagłówek X-Device: identyfikator urządzenia, opcjonalnie). */
 export async function handleRanking(request: Request, env: Env, now: Date = new Date()): Promise<Response> {
   if (!env.DB) return fail(503, "Ranking jest chwilowo niedostępny.");
   const day = new URL(request.url).searchParams.get("day") ?? todayKey(now);
   if (!isReadableDay(day, now)) return fail(400, "Nieprawidłowy dzień.");
   const device = request.headers.get("x-device");
   const deviceHash = isDeviceId(device) ? await sha256(device) : null;
-  return json(await readRanking(env.DB, day, deviceHash));
+  const period = new URL(request.url).searchParams.get("period") ?? "day";
+  if (!isPeriod(period)) return fail(400, "Nieprawidłowy okres.");
+  return json(await readRanking(env.DB, day, deviceHash, period));
 }
 
 async function readBody(request: Request): Promise<Record<string, unknown> | null> {
@@ -189,8 +221,24 @@ export async function handleScore(request: Request, env: Env, now: Date = new Da
     .bind(day, deviceHash, nick.nick, score, now.getTime())
     .run();
   const added = (ins.meta.changes ?? 0) > 0;
-  if (added)
-    await db.prepare("INSERT INTO day_stats (day, n) VALUES (?, 1) ON CONFLICT(day) DO UPDATE SET n = n + 1").bind(day).run();
+  if (added) {
+    const bump = "INSERT INTO day_stats (day, n) VALUES (?, 1) ON CONFLICT(day) DO UPDATE SET n = n + 1";
+    const stmts = [db.prepare(bump).bind(day)];
+    // Dopisanie punktów do sum tygodnia, miesiąca i roku; licznik graczy okresu rośnie tylko przy pierwszym wpisie gracza.
+    for (const period of ["week", "month", "year"] as const) {
+      const key = periodKey(day, period);
+      const had = await db.prepare("SELECT 1 AS x FROM totals WHERE period = ? AND device = ?").bind(key, deviceHash).first();
+      stmts.push(
+        db
+          .prepare(
+            "INSERT INTO totals (period, device, nick, score, days, updated_at) VALUES (?, ?, ?, ?, 1, ?) ON CONFLICT(period, device) DO UPDATE SET score = score + excluded.score, days = days + 1, nick = excluded.nick, updated_at = excluded.updated_at",
+          )
+          .bind(key, deviceHash, nick.nick, score, now.getTime()),
+      );
+      if (!had) stmts.push(db.prepare(bump).bind(key));
+    }
+    await db.batch(stmts);
+  }
   return json({ ...(await readRanking(db, day, deviceHash)), added });
 }
 
@@ -204,7 +252,9 @@ export async function handleDelete(request: Request, env: Env, now: Date = new D
   const deviceHash = await sha256(body.device);
   const today = todayKey(now);
   const rows = await db.prepare("SELECT day FROM scores WHERE device = ? AND nick IS NOT NULL").bind(deviceHash).all<{ day: string }>();
-  const stmts: D1Stmt[] = rows.results.map((r) => db.prepare("UPDATE day_stats SET n = MAX(n - 1, 0) WHERE day = ?").bind(r.day));
+  const sums = await db.prepare("SELECT period AS day FROM totals WHERE device = ?").bind(deviceHash).all<{ day: string }>();
+  const stmts: D1Stmt[] = [...rows.results, ...sums.results].map((r) => db.prepare("UPDATE day_stats SET n = MAX(n - 1, 0) WHERE day = ?").bind(r.day));
+  stmts.push(db.prepare("DELETE FROM totals WHERE device = ?").bind(deviceHash));
   // Dzisiejszy wpis zostaje bez nicka i bez wyniku (sama blokada ponownego zgłoszenia), starsze znikają całkiem.
   stmts.push(db.prepare("UPDATE scores SET nick = NULL, score = 0 WHERE device = ? AND day >= ?").bind(deviceHash, today));
   stmts.push(db.prepare("DELETE FROM scores WHERE device = ? AND day < ?").bind(deviceHash, today));

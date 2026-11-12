@@ -12,15 +12,21 @@ export const TOP_N = 10;
 /** Jak długo po północy przyjmujemy jeszcze wynik z poprzedniego dnia (gracz kończył grę o północy). */
 export const DAY_GRACE_MS = 30 * 60 * 1000;
 
+export type Period = "day" | "week" | "month" | "year";
+export const PERIODS: Period[] = ["day", "week", "month", "year"];
+
 export interface RankingEntry {
   rank: number;
   nick: string;
   score: number;
+  /** Rankingi tygodnia, miesiąca i roku: z ilu dni pochodzi suma punktów. */
+  days?: number;
   me?: boolean;
 }
 
 export interface RankingData {
   day: string;
+  period?: Period;
   /** Liczba graczy w rankingu tego dnia. */
   total: number;
   top: RankingEntry[];
@@ -98,6 +104,21 @@ export function isSubmittableDay(day: string, now: Date = new Date()): boolean {
 /** Zakres dni, z których można czytać ranking: od początku gry do dziś. */
 export function isReadableDay(day: string, now: Date = new Date()): boolean {
   return isDayKey(day) && day <= todayKey(now) && day >= addDays(todayKey(now), -366);
+}
+
+export function isPeriod(s: unknown): s is Period {
+  return typeof s === "string" && (PERIODS as string[]).includes(s);
+}
+
+/**
+ * Klucz okresu, do którego należy dzień: tydzień (od poniedziałku do niedzieli) „w:RRRR-MM-DD” z datą poniedziałku,
+ * miesiąc „m:RRRR-MM”, rok „y:RRRR”.
+ */
+export function periodKey(day: string, period: Exclude<Period, "day">): string {
+  if (period === "year") return "y:" + day.slice(0, 4);
+  if (period === "month") return "m:" + day.slice(0, 7);
+  const dow = new Date(day + "T00:00:00Z").getUTCDay(); // 0 = niedziela
+  return "w:" + addDays(day, -((dow + 6) % 7));
 }
 
 export function isDeviceId(s: unknown): s is string {

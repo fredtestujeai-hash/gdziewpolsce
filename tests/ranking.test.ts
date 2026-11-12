@@ -2,8 +2,8 @@ import { DatabaseSync } from "node:sqlite";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CONFIG } from "../src/config";
 import { buildChallenge } from "../src/daily";
-import { isProfane, isSubmittableDay, maxScore, recomputeScore, validateNick } from "../src/ranking-core";
-import { SCHEMA, handleDelete, handleRanking, handleScore, rateLimited, type D1Like, type D1Stmt, type GameData } from "../src/ranking-server";
+import { isProfane, isSubmittableDay, maxScore, periodKey, recomputeScore, validateNick } from "../src/ranking-core";
+import { SCHEMA, ensureSchema, handleDelete, handleRanking, handleScore, rateLimited, type D1Like, type D1Stmt, type GameData } from "../src/ranking-server";
 import type { Puzzle } from "../src/types";
 
 /** D1 udawane przez SQLite wbudowany w Node: te same zapytania SQL co na produkcji. */
@@ -161,6 +161,50 @@ describe("API rankingu", () => {
     expect(again.me).toBeNull();
     expect(again.total).toBe(1);
     expect(again.top.map((e: any) => e.nick)).toEqual(["Ela"]);
+  });
+
+  it("sumuje punkty w rankingach tygodnia, miesiąca i roku i usuwa je razem z wpisami", async () => {
+    const day2: GameData = { ...data, schedule: { start: DAY, days: [data.schedule.days[0], data.schedule.days[0]] } };
+    const NEXT = new Date(NOON.getTime() + 86_400_000);
+    const worse = perfect.map((g) => ({ ...g, year: g.year + 40 }));
+    await submit(1, "Ola", worse);
+    await submit(2, "Ela", perfect);
+    await handleScore(post({ day: "2026-11-02", device: dev(1), nick: "Ola2", guesses: perfect }), env, NEXT, day2);
+    const read = async (period: string, device?: string) =>
+      (await (await handleRanking(new Request(`https://gra.test/api/ranking?day=2026-11-02&period=${period}`, { headers: device ? { "x-device": device } : {} }), env, NEXT)).json()) as any;
+    // 1 listopada 2026 to niedziela, 2 listopada to poniedziałek: dwa różne tygodnie, ten sam miesiąc i rok
+    const week = await read("week", dev(1));
+    expect(week).toMatchObject({ period: "week", total: 1, me: { rank: 1, nick: "Ola2", score: MAX, days: 1 } });
+    const month = await read("month", dev(1));
+    expect(month.total).toBe(2);
+    expect(month.top[0]).toMatchObject({ nick: "Ola2", days: 2, me: true });
+    expect(month.top[0].score).toBeGreaterThan(MAX);
+    expect(month.top[1]).toMatchObject({ nick: "Ela", score: MAX, days: 1 });
+    expect((await read("year")).top.map((e: any) => e.nick)).toEqual(["Ola2", "Ela"]);
+    expect((await handleRanking(get(DAY + "&period=wiek"), env, NOON)).status).toBe(400);
+    await handleDelete(post({ device: dev(1) }, "DELETE"), env, NEXT);
+    const after = await read("month");
+    expect(after.total).toBe(1);
+    expect(after.top.map((e: any) => e.nick)).toEqual(["Ela"]);
+    expect((await read("week")).total).toBe(0);
+  });
+
+  it("przelicza sumy z wyników zapisanych przed wprowadzeniem rankingów okresowych", async () => {
+    await env.DB.prepare("INSERT INTO scores (day, device, nick, score, created_at) VALUES ('2026-11-13', 'abc', 'Krystian', 879, 5), ('2026-11-12', 'abc', 'Krystian', 100, 4), ('2026-11-08', 'abc', 'Krystian', 1, 3)").run();
+    await ensureSchema(env.DB);
+    const at = new Date("2026-11-13T11:00:00Z");
+    const read = async (period: string) => (await (await handleRanking(new Request(`https://gra.test/api/ranking?day=2026-11-13&period=${period}`), env, at)).json()) as any;
+    expect((await read("week")).top).toEqual([{ rank: 1, nick: "Krystian", score: 979, days: 2 }]);
+    expect((await read("month")).top[0]).toMatchObject({ score: 980, days: 3 });
+    expect((await read("year")).total).toBe(1);
+  });
+
+  it("klucze okresów: tydzień od poniedziałku", () => {
+    expect(periodKey("2026-11-13", "week")).toBe("w:2026-11-09");
+    expect(periodKey("2026-11-09", "week")).toBe("w:2026-11-09");
+    expect(periodKey("2026-11-15", "week")).toBe("w:2026-11-09");
+    expect(periodKey("2026-11-13", "month")).toBe("m:2026-11");
+    expect(periodKey("2026-11-13", "year")).toBe("y:2026");
   });
 
   it("ogranicza liczbę zgłoszeń z jednego adresu i działa bez bazy", async () => {

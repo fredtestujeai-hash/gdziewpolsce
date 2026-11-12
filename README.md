@@ -17,7 +17,7 @@ W każdej rundzie są też:
 Na koniec widzi podsumowanie z mapą „dzisiejszej trasy” i wynik do udostępnienia w stylu Wordle.
 
 - **Bez reklam, bez logowania, bez ciasteczek.** Wynik i seria są zapisywane w przeglądarce (`localStorage`).
-- **Dobrowolny ranking dnia** (nick zamiast konta), działa na Cloudflare Workers + D1. Szczegóły: [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md).
+- **Dobrowolny ranking** dnia, tygodnia, miesiąca i roku (nick zamiast konta), działa na Cloudflare Workers + D1. Szczegóły: [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md).
 - **Model finansowania: zagadki sponsorowane.** Miasto lub region staje się partnerem, a jego obiekt trafia do wyzwania jako wyraźnie oznaczona zagadka z zachętą do odwiedzin. Szczegóły: [docs/PARTNERZY.md](docs/PARTNERZY.md).
 
 Gra działa pod adresem https://gdziewpolsce.com (Cloudflare, z rankingiem; opis w [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md)). Stary adres na GitHub Pages (https://fredtestujeai-hash.github.io/gdziewpolsce/) przekierowuje na nową domenę.
