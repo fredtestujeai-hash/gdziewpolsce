@@ -1,0 +1,12 @@
+# Cloudflare Pages: projekt „gdziewpolsce” (statyczny dist/ + Pages Functions z katalogu functions/).
+# Opis wdrożenia: docs/CLOUDFLARE.md
+name = "gdziewpolsce"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-06-01"
+
+# Baza rankingu (D1). Identyfikator bazy nie jest sekretem.
+[[d1_databases]]
+binding = "DB"
+database_name = "gdziewpolsce-ranking"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"

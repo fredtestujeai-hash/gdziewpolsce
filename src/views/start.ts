@@ -4,6 +4,7 @@ import type { Game } from "../main";
 import { preloadMap } from "../map";
 import { loadStats } from "../storage";
 import { formatDayLong, topbar } from "./common";
+import { attachRankingLink } from "./ranking";
 
 export function renderStart(game: Game): void {
   const { challenge } = game;
@@ -31,5 +32,6 @@ export function renderStart(game: Game): void {
       </section>
     </main>`);
   app.querySelector("#play")!.addEventListener("click", () => game.go("round"));
+  attachRankingLink(game);
   setTimeout(preloadMap, 300);
 }

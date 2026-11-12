@@ -1,0 +1,25 @@
+/* ---------- Ranking dnia ---------- */
+.ranking h2 { margin: 0 0 8px; }
+.rank-mine { margin: 0 0 10px; }
+.rank-list { list-style: none; margin: 0; padding: 0; }
+.rank-row { display: grid; grid-template-columns: 2.2em 1fr auto; gap: 10px; align-items: baseline; padding: 7px 10px; border-radius: 8px; }
+.rank-row:nth-child(odd) { background: color-mix(in srgb, var(--surface-2) 55%, transparent); }
+.rank-row.is-me { background: var(--accent-soft); font-weight: 600; }
+.rank-n { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+.rank-row:nth-child(-n + 3) .rank-n { color: var(--ink); font-weight: 700; }
+.rank-nick { min-width: 0; overflow-wrap: anywhere; }
+.rank-you { font-style: normal; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--accent); margin-left: 4px; }
+.rank-pts { font-variant-numeric: tabular-nums; font-weight: 600; }
+.rank-gap { text-align: center; color: var(--muted); line-height: 1; padding: 2px 0; }
+.rank-total { margin: 8px 0 0; }
+.rank-empty { margin: 4px 0 0; }
+.rank-join { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.rank-join label { display: block; font-weight: 600; margin-bottom: 6px; }
+.rank-join-row { display: flex; gap: 8px; }
+.rank-join input { flex: 1; min-width: 0; font: inherit; font-size: 1rem; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: .55em .8em; }
+.rank-join input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rank-error { color: var(--bad); font-size: .9rem; margin: 6px 0 0; min-height: 1.2em; }
+.rank-join .small { margin: 4px 0 0; }
+.rank-remove { margin: 12px 0 0; }
+.rank-remove a { color: var(--muted); }
+.ranking-dialog { width: min(440px, calc(100vw - 32px)); }

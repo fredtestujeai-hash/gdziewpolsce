@@ -7,6 +7,7 @@ import { formatPoints, rating, tile } from "../score";
 import { loadStats, recordResult } from "../storage";
 import { formatDayLong, topbar } from "./common";
 import { track } from "../track";
+import { attachRanking } from "./ranking";
 
 export function shareText(game: Game): string {
   const { challenge, state } = game;
@@ -81,6 +82,8 @@ export function renderSummary(game: Game): void {
         <a href="#" data-about>Jak grać</a> · <a href="#" data-about="partnerzy">Dla miast i regionów</a> · <a href="#" data-about="zrodla">Źródła i licencje</a>
       </footer>
     </main>`);
+
+  attachRanking(game);
 
   // licznik punktów
   const totalEl = $("#total-n", app);

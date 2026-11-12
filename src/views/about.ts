@@ -35,8 +35,9 @@ export function openAbout(section?: string): void {
       </ul>
       <p class="small">Daty pochodzą z otwartych baz i bywają umowne (np. rozpoczęcie budowy albo pierwsza wzmianka). Widzisz błąd? Popraw go w Wikidata — skorzystają wszyscy.</p>
 
-      <h3>Prywatność</h3>
-      <p class="small">Bez kont, bez ciasteczek, bez śledzenia. Twoje wyniki i seria są zapisywane wyłącznie w tej przeglądarce.</p>
+      <h3 id="about-prywatnosc">Prywatność</h3>
+      <p class="small">Bez kont, bez ciasteczek, bez śledzenia. Twoje wyniki i seria są zapisywane w tej przeglądarce.</p>
+      <p class="small"><b>Ranking jest dobrowolny.</b> Jeśli po ukończeniu wyzwania do niego dołączysz, na serwer gry trafią: Twój nick, dzisiejsze odpowiedzi (z nich liczony jest wynik) oraz losowy identyfikator tej przeglądarki, dzięki któremu jedno urządzenie ma jeden wynik dziennie. Nick i wynik są widoczne dla wszystkich. Nie zapisujemy adresu IP ani żadnych innych danych. Swoje wpisy usuniesz w każdej chwili linkiem „Usuń moje wpisy z rankingu” pod rankingiem${CONFIG.partnerEmail ? `, możesz też napisać na <a href="mailto:${esc(CONFIG.partnerEmail)}">${esc(CONFIG.partnerEmail)}</a>` : ""}.</p>
     </div>`;
   document.body.append(d);
   d.addEventListener("click", (e) => {

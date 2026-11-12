@@ -8,6 +8,8 @@ export const CONFIG = {
   partnerEmail: "",
   /** Adres anonimowego licznika zdarzeń (POST JSON). Puste = żadnych statystyk. */
   statsEndpoint: "",
+  /** Adres API rankingu (Cloudflare Pages Functions). Puste = ranking wyłączony. */
+  rankingApi: "/api",
   timezone: "Europe/Warsaw",
   rounds: 10,
   minYear: 1000,

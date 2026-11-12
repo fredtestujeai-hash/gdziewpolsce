@@ -4,3 +4,4 @@ data/raw/ne/
 *.log
 .DS_Store
 __pycache__/
+.wrangler/
