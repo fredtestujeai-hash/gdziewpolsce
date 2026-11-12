@@ -2,7 +2,7 @@
 //
 // Źródło: public/map/poland.json (Natural Earth, patrz build_map.mjs). Obrys jest upraszczany
 // do kilkuset punktów, przeliczany na odwzorowanie Mercatora i zapisywany jako zwarta ścieżka SVG.
-// Skrypt podmienia w index.html atrybuty viewBox i d oraz położenie pinezki; reszta
+// Skrypt podmienia w index.html atrybuty viewBox i d oraz położenia pinezki; reszta
 // animacji (style, znaczniki) jest pisana ręcznie w index.html.
 //
 // Użycie: npm run intro
@@ -18,7 +18,27 @@ const HTML = join(ROOT, "index.html");
 const POINTS = 300; // docelowa liczba punktów obrysu
 const WIDTH = 600; // szerokość rysunku w jednostkach SVG (współrzędne są zaokrąglane do całości)
 const PAD = 14; // margines na grubość linii i odbicie pinezki
-const PIN = [21.012, 52.23]; // pinezka: Warszawa
+// Miejsca, w które może wbić się pinezka (losowane przy każdym uruchomieniu); pierwsze jest domyślne
+const SPOTS = [
+  [21.012, 52.23], // Warszawa
+  [19.937, 50.061], // Kraków
+  [18.646, 54.352], // Gdańsk
+  [17.033, 51.11], // Wrocław
+  [16.925, 52.408], // Poznań
+  [19.456, 51.76], // Łódź
+  [14.553, 53.429], // Szczecin
+  [22.568, 51.247], // Lublin
+  [23.158, 53.132], // Białystok
+  [19.023, 50.264], // Katowice
+  [22.004, 50.041], // Rzeszów
+  [20.48, 53.778], // Olsztyn
+  [18.598, 53.014], // Toruń
+  [19.949, 49.299], // Zakopane
+  [20.628, 50.866], // Kielce
+  [15.506, 51.935], // Zielona Góra
+  [22.93, 54.1], // Suwałki
+  [16.172, 54.194], // Koszalin
+];
 
 const merc = ([lon, lat]) => [(lon * Math.PI) / 180, -Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360))];
 
@@ -60,7 +80,8 @@ for (let i = 1; i < pts.length; i++) {
   d += (i > 1 && dx >= 0 ? " " : "") + dx + (dy >= 0 ? " " : "") + dy;
 }
 d += "z";
-const [pinX, pinY] = toSvg(merc(PIN));
+const spots = SPOTS.map((p) => toSvg(merc(p)));
+const [pinX, pinY] = spots[0];
 
 // 4. Podmiana w index.html
 let html = await readFile(HTML, "utf8");
@@ -71,5 +92,6 @@ const swap = (re, value, what) => {
 swap(/(<svg class="intro-map" viewBox=")[^"]*(")/, `$10 0 ${WIDTH} ${height}$2`, "viewBox");
 swap(/(<path class="intro-outline"[^>]*? d=")[^"]*(")/, `$1${d}$2`, "ścieżkę obrysu");
 swap(/(<g class="intro-pin" transform=")[^"]*(")/, `$1translate(${pinX} ${pinY})$2`, "pinezkę");
+swap(/(<g class="intro-pin"[^>]*? data-spots=")[^"]*(")/, `$1${spots.map((p) => p.join(",")).join(" ")}$2`, "listę miejsc pinezki");
 await writeFile(HTML, html);
 console.log(`obrys: ${total} -> ${pts.length} punktów, ścieżka ${d.length} B, viewBox 0 0 ${WIDTH} ${height}, pinezka ${pinX},${pinY}`);

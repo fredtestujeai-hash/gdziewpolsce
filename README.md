@@ -66,7 +66,7 @@ Mapa to kafelki wektorowe z danymi OpenStreetMap, rysowane w przeglądarce włas
 
 ## Animacja startowa
 
-Podczas ładowania czerwona linia obrysowuje granicę Polski, potem w mapę wbija się pinezka i pojawia się tytuł (ok. 1,8 s). Rysunek SVG i jego style są wpisane wprost w `index.html`, więc widać je, zanim wczyta się reszta gry. `src/intro.ts` czeka na domknięcie obrysu i płynnie odsłania pierwszy ekran; przy wolnym łączu gotowy obrys zostaje, a przy pinezce pulsuje kółko. Przy ustawieniu „ogranicz ruch” (`prefers-reduced-motion`) obrys pokazuje się od razu, bez animacji. Ścieżkę obrysu generuje `npm run intro` (`scripts/build_intro.mjs`) z `public/map/poland.json`.
+Podczas ładowania czerwona linia obrysowuje granicę Polski, potem w mapę wbija się pinezka (za każdym razem w inne, losowe miasto) i pojawia się tytuł (ok. 1,8 s). Rysunek SVG i jego style są wpisane wprost w `index.html`, więc widać je, zanim wczyta się reszta gry. `src/intro.ts` czeka na domknięcie obrysu i płynnie odsłania pierwszy ekran; przy wolnym łączu gotowy obrys zostaje, a przy pinezce pulsuje kółko. Przy ustawieniu „ogranicz ruch” (`prefers-reduced-motion`) obrys pokazuje się od razu, bez animacji. Ścieżkę obrysu generuje `npm run intro` (`scripts/build_intro.mjs`) z `public/map/poland.json`.
 
 ## Dane
 
