@@ -2,7 +2,7 @@ import { CONFIG } from "../config";
 import { $, esc, mount, partnerLink } from "../dom";
 import type { Game } from "../main";
 import { createMap, type GameMap } from "../map";
-import { afterHint, century, centuryRange, formatKm, formatPoints, haversineKm, hintCostText, locationPoints, totalPoints, yearPoints, yearsWord } from "../score";
+import { century, centuryRange, formatKm, formatPoints, hintCostText, scoreRound, totalPoints, yearsWord } from "../score";
 import type { Guess, Puzzle } from "../types";
 import { topbar, wikiButton } from "./common";
 import { track } from "../track";
@@ -249,21 +249,11 @@ export async function renderRound(game: Game): Promise<void> {
     const pos = gm.getGuess();
     if (!pos || revealed) return;
     const p = challenge.puzzles[index];
-    const km = haversineKm(pos.lat, pos.lng, p.lat, p.lon);
-    const y = year();
     const h = hints();
-    const g: Guess = {
-      lat: pos.lat,
-      lon: pos.lng,
-      year: y,
-      km,
-      yearDiff: y - p.year,
-      locPts: afterHint(locationPoints(km), h.loc),
-      yearPts: afterHint(yearPoints(y - p.year), h.year),
-    };
-    if (h.loc) g.hintLoc = true;
-    if (h.year) g.hintYear = true;
-    finishRound(g);
+    const answer: Pick<Guess, "lat" | "lon" | "year" | "hintLoc" | "hintYear"> = { lat: pos.lat, lon: pos.lng, year: year() };
+    if (h.loc) answer.hintLoc = true;
+    if (h.year) answer.hintYear = true;
+    finishRound({ ...answer, ...scoreRound(p, answer) });
   }
 
   /** „Pomiń tę zagadkę”: 0 punktów, mapa leci do celu, zwykła karta wyniku. */

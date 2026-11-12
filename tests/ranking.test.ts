@@ -74,6 +74,21 @@ describe("przeliczanie wyniku", () => {
     expect(s).toBeGreaterThan(0);
     expect(s).toBeLessThan(MAX / 2);
   });
+  it("podpowiedzi i rezygnacja liczą się tak samo jak w grze", () => {
+    const full = CONFIG.maxLocationPoints + CONFIG.maxYearPoints;
+    const cut = 1 - CONFIG.hintCost;
+    const hinted = perfect.map((g, i) => (i === 0 ? { ...g, hintLoc: true, hintYear: true } : g));
+    expect(recomputeScore(challenge.puzzles, hinted)).toBe(MAX - full + Math.round(CONFIG.maxLocationPoints * cut) + Math.round(CONFIG.maxYearPoints * cut));
+    // dokładnie taki zapis rundy tworzy gra po „Pomiń tę zagadkę” i „Zakończ dzisiejsze wyzwanie”
+    const zero = (gaveUp: string) => ({ lat: 0, lon: 0, year: 0, km: 0, yearDiff: 0, locPts: 0, yearPts: 0, gaveUp });
+    const quit = perfect.map((g, i) => (i === 0 ? { ...g, hintLoc: true } : i === 1 ? zero("round") : zero("day")));
+    expect(recomputeScore(challenge.puzzles, quit)).toBe(Math.round(CONFIG.maxLocationPoints * cut) + CONFIG.maxYearPoints);
+    expect(recomputeScore(challenge.puzzles, perfect.map(() => zero("day")))).toBe(0);
+    // punkty podane przez klienta są ignorowane, a nieznane wartości odrzucane
+    expect(recomputeScore(challenge.puzzles, perfect.map((g) => ({ ...g, locPts: 9999, yearPts: 9999 })))).toBe(MAX);
+    expect(recomputeScore(challenge.puzzles, perfect.map(() => zero("x")))).toBeNull();
+    expect(recomputeScore(challenge.puzzles, perfect.map((g) => ({ ...g, hintLoc: "nie" })))).toBeNull();
+  });
   it("odrzuca niepełne i bzdurne zgłoszenia", () => {
     expect(recomputeScore(challenge.puzzles, perfect.slice(1))).toBeNull();
     expect(recomputeScore(challenge.puzzles, [...perfect, perfect[0]])).toBeNull();

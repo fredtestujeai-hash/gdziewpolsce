@@ -2,7 +2,7 @@
 // Bez zależności od DOM ani od bazy.
 import { CONFIG } from "./config";
 import { addDays, todayKey } from "./daily";
-import { haversineKm, locationPoints, yearPoints } from "./score";
+import { scoreRound } from "./score";
 import type { Puzzle } from "./types";
 
 export const NICK_MIN = 2;
@@ -33,6 +33,11 @@ export interface SubmittedGuess {
   lat: number;
   lon: number;
   year: number;
+  /** Użyte podpowiedzi „Województwo” / „Wiek” — obniżają punkty tak samo jak w grze. */
+  hintLoc?: boolean;
+  hintYear?: boolean;
+  /** Zagadka pominięta ("round") albo nierozegrana po zakończeniu dnia ("day") — 0 punktów. */
+  gaveUp?: "round" | "day";
 }
 
 export type NickResult = { ok: true; nick: string } | { ok: false; error: string };
@@ -104,7 +109,8 @@ function num(v: unknown): number | null {
 }
 
 /**
- * Przelicza wynik dnia ze zgłoszonych odpowiedzi, tymi samymi wzorami co gra.
+ * Przelicza wynik dnia ze zgłoszonych odpowiedzi tą samą funkcją co gra (scoreRound):
+ * koszt podpowiedzi z CONFIG.hintCost, runda pominięta albo nierozegrana = 0 punktów.
  * Zwraca null, gdy zgłoszenie jest niepełne albo ma wartości spoza zakresu.
  */
 export function recomputeScore(puzzles: Pick<Puzzle, "lat" | "lon" | "year">[], guesses: unknown): number | null {
@@ -115,14 +121,19 @@ export function recomputeScore(puzzles: Pick<Puzzle, "lat" | "lon" | "year">[], 
   for (let i = 0; i < puzzles.length; i++) {
     const g = guesses[i] as Record<string, unknown> | null;
     if (!g || typeof g !== "object") return null;
+    if (g.gaveUp !== undefined) {
+      if (g.gaveUp !== "round" && g.gaveUp !== "day") return null;
+      continue; // 0 punktów; pinezka i rok nie mają znaczenia
+    }
+    for (const k of ["hintLoc", "hintYear"]) if (g[k] !== undefined && typeof g[k] !== "boolean") return null;
     const lat = num(g.lat);
     const lon = num(g.lon);
     const year = num(g.year);
     if (lat === null || lon === null || year === null) return null;
     if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
     if (!Number.isInteger(year) || year < CONFIG.minYear || year > maxYear) return null;
-    const p = puzzles[i];
-    total += locationPoints(haversineKm(lat, lon, p.lat, p.lon)) + yearPoints(year - p.year);
+    const r = scoreRound(puzzles[i], { lat, lon, year, hintLoc: g.hintLoc === true, hintYear: g.hintYear === true });
+    total += r.locPts + r.yearPts;
   }
   return total;
 }

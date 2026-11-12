@@ -34,6 +34,21 @@ export function afterHint(points: number, used: boolean | undefined, cost = CONF
   return used ? Math.round(points * (1 - cost)) : points;
 }
 
+/**
+ * Punkty jednej rundy — jedyne miejsce, w którym są liczone. Korzysta z niego i gra (src/views/round.ts),
+ * i serwer rankingu (recomputeScore w src/ranking-core.ts), więc oba wyniki są zawsze identyczne.
+ * Runda z `gaveUp` (pominięta albo nierozegrana) ma 0 punktów; podpowiedź obniża punkty swojej części.
+ */
+export function scoreRound(
+  puzzle: { lat: number; lon: number; year: number },
+  answer: { lat: number; lon: number; year: number; hintLoc?: boolean; hintYear?: boolean; gaveUp?: unknown },
+): { km: number; yearDiff: number; locPts: number; yearPts: number } {
+  if (answer.gaveUp) return { km: 0, yearDiff: 0, locPts: 0, yearPts: 0 };
+  const km = haversineKm(answer.lat, answer.lon, puzzle.lat, puzzle.lon);
+  const yearDiff = answer.year - puzzle.year;
+  return { km, yearDiff, locPts: afterHint(locationPoints(km), answer.hintLoc), yearPts: afterHint(yearPoints(yearDiff), answer.hintYear) };
+}
+
 /** Koszt podpowiedzi jako tekst, np. „30%”. */
 export function hintCostText(cost = CONFIG.hintCost): string {
   return `${Math.round(cost * 100)}%`;

@@ -138,6 +138,8 @@ Postęp dnia jest w `localStorage` pod kluczem `gdziewpolsce:day` jako `DayState
 | `hintLoc`, `hintYear` | `true`, gdy gracz użył podpowiedzi „Województwo” / „Wiek” (pola nieobecne = bez podpowiedzi) |
 | `gaveUp` | `"round"` = zagadka pominięta, `"day"` = runda nierozegrana po „Zakończ dzisiejsze wyzwanie”; w obu przypadkach 0 punktów |
 
+Punkty rundy liczy jedna funkcja `scoreRound` w `src/score.ts`; używa jej i gra, i serwer rankingu (`recomputeScore` w `src/ranking-core.ts`), który dostaje całe `guesses` i sam przelicza wynik z pól `lat`, `lon`, `year`, `hintLoc`, `hintYear`, `gaveUp`.
+
 `DayState.hints` przechowuje podpowiedzi użyte w trwającej rundzie, żeby odświeżenie strony ich nie cofało. Po rezygnacji z dnia tablica `guesses` jest od razu pełna, więc dzień liczy się do statystyk i serii jak każdy rozegrany.
 
 ## Zagadki sponsorowane
