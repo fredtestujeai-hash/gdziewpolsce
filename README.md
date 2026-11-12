@@ -20,7 +20,7 @@ Na koniec widzi podsumowanie z mapą „dzisiejszej trasy” i wynik do udostęp
 - **Dobrowolny ranking dnia** (nick zamiast konta), działa na Cloudflare Workers + D1. Szczegóły: [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md).
 - **Model finansowania: zagadki sponsorowane.** Miasto lub region staje się partnerem, a jego obiekt trafia do wyzwania jako wyraźnie oznaczona zagadka z zachętą do odwiedzin. Szczegóły: [docs/PARTNERZY.md](docs/PARTNERZY.md).
 
-Gra jest publikowana na GitHub Pages: https://fredtestujeai-hash.github.io/gdziewpolsce/
+Gra działa pod adresem https://gdziewpolsce.com (Cloudflare, z rankingiem; opis w [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md)). Kopia bez rankingu jest na GitHub Pages: https://fredtestujeai-hash.github.io/gdziewpolsce/
 
 ## Uruchomienie
 

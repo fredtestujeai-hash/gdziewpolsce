@@ -3,7 +3,7 @@ export const CONFIG = {
   name: "Gdzie w Polsce?",
   tagline: "Codzienna podróż po Polsce",
   /** Adres publiczny gry — trafia do tekstu udostępniania wyniku. */
-  siteUrl: "",
+  siteUrl: "https://gdziewpolsce.com/",
   /** Kontakt dla miast i regionów zainteresowanych partnerstwem (puste = ukryte). */
   partnerEmail: "",
   /** Adres anonimowego licznika zdarzeń (POST JSON). Puste = żadnych statystyk. */

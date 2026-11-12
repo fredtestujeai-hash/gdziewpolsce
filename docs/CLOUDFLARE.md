@@ -30,11 +30,15 @@ Otwórz adres gry z dopiskiem `/api/ranking`. Powinien pokazać się tekst zaczy
 
 ### Krok 4. Własna domena
 
-1. Kup domenę. Rejestrator Cloudflare najpewniej **nie obsługuje końcówki `.pl`** (sprawdzisz to w panelu: **Domain Registration → Register Domains**, wpisz nazwę). Domenę `.pl` kupuje się więc u dowolnego polskiego rejestratora (np. OVH, nazwa.pl, home.pl, cyber_Folks; zwróć uwagę na cenę **odnowienia**, a nie tylko pierwszego roku).
-2. W Cloudflare: **Account Home → Add a domain**, wpisz domenę, wybierz plan **Free**. Cloudflare poda dwa adresy serwerów nazw (np. `xxx.ns.cloudflare.com`).
-3. U rejestratora, w ustawieniach domeny, zamień serwery nazw (DNS/NS) na te dwa z Cloudflare. Zmiana zaczyna działać zwykle w ciągu godziny, czasem do doby.
-4. W projekcie `gdziewpolsce`: **Settings → Domains & Routes → Add → Custom domain**, wpisz domenę i zatwierdź. Cloudflare sam doda wpis DNS i certyfikat.
-5. Na koniec w kodzie trzeba ustawić adres gry: `siteUrl` w `src/config.ts` oraz adres kanoniczny i `og:url` w `index.html`.
+Gra ma domenę **gdziewpolsce.com**, kupioną w rejestratorze Cloudflare (**Domain Registration**), więc jest od razu na tym samym koncie i nie trzeba przepinać serwerów nazw.
+
+1. W projekcie `gdziewpolsce`: **Settings → Domains & Routes → Add → Custom domain**.
+2. Wpisz `gdziewpolsce.com` i zatwierdź. Cloudflare sam doda wpis DNS i certyfikat (zwykle kilka minut).
+3. Opcjonalnie powtórz to dla `www.gdziewpolsce.com`.
+
+Adres gry jest wpisany w kodzie w dwóch miejscach: `siteUrl` w `src/config.ts` (trafia do tekstu udostępniania wyniku) oraz adres kanoniczny i `og:url` w `index.html`.
+
+Uwaga: rejestrator Cloudflare nie sprzedaje wszystkich końcówek (m.in. `.pl` najpewniej nie). Taką domenę kupuje się u innego rejestratora, dodaje w Cloudflare (**Add a domain**, plan Free) i przepina u rejestratora serwery nazw na podane przez Cloudflare.
 
 ## Jak to działa na co dzień
 
@@ -85,7 +89,7 @@ Pełniejsza ochrona (ok. 2–4 dni pracy): odpowiedzi znikają z publicznego pli
 
 ## Ile to kosztuje
 
-Cel: **0 zł miesięcznie** (poza domeną, zwykle kilkadziesiąt złotych rocznie za `.pl`).
+Cel: **0 zł miesięcznie** poza domeną `gdziewpolsce.com`, odnawianą raz w roku w Cloudflare po cenie hurtowej (ok. 10 USD).
 
 Darmowy plan Cloudflare (limity warto potwierdzić w panelu, bo bywają zmieniane):
 
