@@ -1,10 +1,10 @@
-# Cloudflare Pages: projekt „gdziewpolsce” (statyczny dist/ + Pages Functions z katalogu functions/).
+# Ten plik służy WYŁĄCZNIE do lokalnego uruchamiania rankingu (npx wrangler pages dev dist).
+# Celowo nie ma tu „pages_build_output_dir”: dzięki temu Cloudflare Pages ignoruje ten plik,
+# a ustawienia prawdziwego projektu (w tym podpięcie bazy jako „DB”) robi się w panelu Cloudflare.
 # Opis wdrożenia: docs/CLOUDFLARE.md
 name = "gdziewpolsce"
-pages_build_output_dir = "dist"
 compatibility_date = "2025-06-01"
 
-# Baza rankingu (D1). Identyfikator bazy nie jest sekretem.
 [[d1_databases]]
 binding = "DB"
 database_name = "gdziewpolsce-ranking"
