@@ -1,13 +1,19 @@
 # Gdzie w Polsce? — codzienna gra o Polsce
 
-Przeglądarkowa gra o Polsce. Codziennie **10 zdjęć** zabytków i atrakcji, takich samych dla wszystkich graczy.
+Przeglądarkowa gra o Polsce. Codziennie **3 zdjęcia** zabytków i atrakcji (łatwe, średnie i trudne), takie same dla wszystkich graczy.
 Dla każdego zdjęcia gracz:
 
 1. **wbija pinezkę** na mapie Polski **bez żadnych nazw**: widać rzeki, jeziora, lasy, drogi i tory, a kropki oznaczają miasta wojewódzkie, powiatowe i siedziby gmin. Mapę można przybliżyć aż do pojedynczych ulic i budynków,
 2. **ustawia na suwaku rok powstania** obiektu.
 
-Im bliżej prawdy, tym więcej punktów: do 500 za miejsce i do 500 za rok, czyli maks. 10 000 dziennie.
-Po każdej rundzie gracz poznaje nazwę, miejsce, datę, krótki opis z Wikipedii i link do niej.
+Im bliżej prawdy, tym więcej punktów: do 500 za miejsce i do 500 za rok, czyli maks. 3000 dziennie.
+Po każdej rundzie gracz poznaje nazwę, miejsce, datę, krótki opis z Wikipedii i przycisk „Wikipedia” (także gdy zagadkę pominął).
+
+W każdej rundzie są też:
+
+- **dwie podpowiedzi**, każda za 30% punktów z tej części rundy, której dotyczy: „Województwo” (nazwa i podświetlony obszar na mapie, taniej o 30% punkty za miejsce) i „Wiek” (stulecie, np. „XIV wiek (1301–1400)”, zaznaczone na suwaku, taniej o 30% punkty za rok). Koszt to jedna stała `hintCost` w `src/config.ts`;
+- przycisk **„Rezygnuję”** z trzema opcjami: „Pomiń tę zagadkę” (0 punktów, gra pokazuje poprawną odpowiedź), „Zakończ dzisiejsze wyzwanie” (pozostałe zagadki dostają 0 punktów, gracz trafia do podsumowania; wyzwania nie da się powtórzyć) i „Gram dalej”.
+
 Na koniec widzi podsumowanie z mapą „dzisiejszej trasy” i wynik do udostępnienia w stylu Wordle.
 
 - **Bez reklam, bez logowania, bez ciasteczek.** Wynik i seria są zapisywane w przeglądarce (`localStorage`).
@@ -29,7 +35,7 @@ Przydatne parametry adresu:
 
 | Parametr | Działanie |
 |---|---|
-| `?demo` | włącza demonstracyjną kampanię partnera (zagadka sponsorowana w 5. rundzie) |
+| `?demo` | włącza demonstracyjną kampanię partnera (zagadka sponsorowana w 2. rundzie) |
 | `?dzien=2026-12-24` | podgląd wyzwania z dowolnego dnia, bez zapisywania wyniku; przydatny dla redakcji i na prezentacje dla partnerów |
 
 ## Jak to jest zbudowane
@@ -40,7 +46,7 @@ Gra jest w całości statyczna i nie ma serwera. Można ją hostować za darmo n
 src/
   main.ts          start aplikacji, wczytanie danych, przełączanie ekranów
   daily.ts         data w czasie polskim, wyzwanie dnia, wstawianie zagadki sponsorowanej
-  score.ts         punktacja (odległość po kole wielkim, różnica lat), odmiana „rok/lata/lat”
+  score.ts         punktacja (odległość po kole wielkim, różnica lat, koszt podpowiedzi), tekst do udostępnienia
   map.ts           mapa MapLibre GL: pinezki, przybliżanie, tryb awaryjny przy braku kafelków
   mapstyle.ts      styl mapy bez napisów (kafelki wektorowe OpenStreetMap) + kropki miejscowości
   intro.ts         chowa animację startową (obrys Polski w index.html), gdy gra jest gotowa
@@ -52,9 +58,10 @@ functions/api/     Cloudflare Pages Functions: /api/score i /api/ranking
 migrations/        struktura bazy D1 rankingu
 public/
   data/puzzles.json     pula zagadek (generowana)
-  data/schedule.json    harmonogram: dzień -> 10 id zagadek (generowany, tylko dopisywany)
+  data/schedule.json    harmonogram: dzień -> 3 id zagadek (generowany, tylko dopisywany)
   data/sponsored.json   kampanie partnerów (edytowane ręcznie)
   map/places.json       miejscowości bez nazw: [długość, szerokość, ranga 1–3] (generowane)
+  map/wojewodztwa.json  granice województw do podpowiedzi „Województwo” (generowane)
   map/*.json            obrys Polski i uproszczona mapa awaryjna (generowane)
 scripts/                pipeline danych (Python 3 bez zależności + Node dla mapy)
 data/                   surowe dane z Wikidata/Commons/Wikipedii, ręczne poprawki
@@ -84,16 +91,17 @@ Wszystkie dane pochodzą z otwartych źródeł:
 | mapa: ulice, rzeki, jeziora, lasy, budynki | OpenStreetMap, kafelki wektorowe OpenFreeMap (schemat OpenMapTiles) | ODbL, z podpisem na mapie |
 | miejscowości: wojewódzkie, powiatowe, gminne | Wikidata | CC0 |
 | główne rzeki przy oddaleniu, obrys kraju, mapa awaryjna | Natural Earth | domena publiczna |
+| granice województw (podpowiedź) | Państwowy Rejestr Granic (GUGiK), w wersji GeoJSON z repozytorium ppatrzyk/polska-geojson | dane publiczne bez opłat |
 
 Pipeline:
 
 ```bash
-npm run map                               # obrys Polski, główne rzeki i mapa awaryjna z Natural Earth
+npm run map                               # obrys Polski, główne rzeki, mapa awaryjna i granice województw
 npm run intro                             # uproszczony obrys Polski (ok. 300 punktów) dla animacji startowej -> index.html
 python3 scripts/fetch_places.py           # miejscowości w trzech rangach z Wikidata -> public/map/places.json
 python3 scripts/fetch_wikidata.py         # kandydaci: ~40 klas obiektów w Polsce (zamki, kościoły, ratusze…)
 python3 scripts/fetch_commons.py          # licencje i miniatury zdjęć + wstępy artykułów z plwiki
-python3 scripts/build_puzzles.py          # filtrowanie i pula -> public/data/puzzles.json
+python3 scripts/build_puzzles.py          # filtrowanie, województwo każdej zagadki i pula -> public/data/puzzles.json
 python3 scripts/build_schedule.py         # harmonogram dni -> public/data/schedule.json
 ```
 
@@ -104,19 +112,33 @@ Reguły jakości w `build_puzzles.py`:
 - obiekt istnieje (pomijamy budowle rozebrane i zniszczone, bo gra ma zachęcać do odwiedzin),
 - jeden obiekt na zdjęcie i na ~150 m,
 - bez instytucji (muzeum, ośrodek; ich data to zwykle założenie, a nie budowa), cmentarzy i browarów (zdjęcia butelek, data założenia firmy),
+- każda zagadka dostaje pole `woj` (np. „małopolskie”): punkt jest sprawdzany w wielokątach z `public/map/wojewodztwa.json`, czyli tych samych, które gra podświetla; skrypt uzupełnia to pole także w `public/data/sponsored.json`. Granice z Natural Earth okazały się za mało dokładne (ok. 1% zagadek przy granicach trafiało do złego województwa), dlatego użyto Państwowego Rejestru Granic,
 - trudność wynika z rozpoznawalności, czyli liczby wersji językowych Wikipedii: łatwe ≥ 9, średnie 4–8, trudne ≤ 3.
 
 Ręczne poprawki redakcyjne:
 - `data/exclude.txt` to czarna lista QID, jeden na linię, np. obiekty z błędną datą,
 - `data/curated.json` to obiekty dodane ręcznie, z rokiem podanym przez redakcję. Służy dla znanych miejsc, którym w Wikidata brakuje dokładnej daty (np. Wawel ma tam tylko „XI w.”).
 
-**Stan obecny:** 1095 zagadek (185 łatwych, 418 średnich, 492 trudnych), a harmonogram bez powtórek wystarcza na 91 dni.
+**Stan obecny:** 1095 zagadek (185 łatwych, 418 średnich, 492 trudnych). Harmonogram ma 185 dni (od 11.11.2026 do 14.05.2027) bez żadnej powtórki; potem zaczną się powtarzać zagadki łatwe, bo jest ich 185.
 
 ### Harmonogram dni
 
-`build_schedule.py` układa każdy dzień według tych zasad: 2 łatwe, 4 średnie i 4 trudne zagadki; maks. 3 z tej samej kategorii; maks. 1 z tej samej miejscowości; nic bliżej niż 15 km od siebie; maks. 4 z jednego stulecia.
-Plik jest **tylko dopisywany**, więc odświeżenie danych nie zmienia graczom dzisiejszego wyzwania. Gdy harmonogram się skończy, gra sama dobiera zagadki deterministycznie z daty.
+`build_schedule.py` układa każdy dzień według tych zasad: 1 łatwa, 1 średnia i 1 trudna zagadka, w tej kolejności; trzy różne kategorie, trzy różne województwa i trzy różne stulecia; nic bliżej niż 15 km od siebie.
+Plik jest **tylko dopisywany**, więc odświeżenie danych nie zmienia graczom dzisiejszego wyzwania. Wyjątkiem jest `python3 scripts/build_schedule.py --rebuild`, które układa wszystko od nowa z zachowaniem daty startu (do użycia tylko przed premierą). Gdy harmonogram się skończy, gra sama dobiera zagadki deterministycznie z daty.
 Workflow `.github/workflows/data.yml` co miesiąc dopisuje kolejne dni.
+
+## Zapis gry (dla rankingu i innych modułów)
+
+Postęp dnia jest w `localStorage` pod kluczem `gdziewpolsce:day` jako `DayState` (`src/types.ts`). Każda runda to jeden `Guess`:
+
+| Pole | Znaczenie |
+|---|---|
+| `locPts`, `yearPts` | punkty za miejsce i za rok **po odjęciu kosztu podpowiedzi**. Wynik dnia to zawsze suma `locPts + yearPts` ze wszystkich rund (`totalPoints` w `src/score.ts`), maks. 3000 |
+| `lat`, `lon`, `year`, `km`, `yearDiff` | odpowiedź gracza; dla rund z `gaveUp` są zerami bez znaczenia |
+| `hintLoc`, `hintYear` | `true`, gdy gracz użył podpowiedzi „Województwo” / „Wiek” (pola nieobecne = bez podpowiedzi) |
+| `gaveUp` | `"round"` = zagadka pominięta, `"day"` = runda nierozegrana po „Zakończ dzisiejsze wyzwanie”; w obu przypadkach 0 punktów |
+
+`DayState.hints` przechowuje podpowiedzi użyte w trwającej rundzie, żeby odświeżenie strony ich nie cofało. Po rezygnacji z dnia tablica `guesses` jest od razu pełna, więc dzień liczy się do statystyk i serii jak każdy rozegrany.
 
 ## Zagadki sponsorowane
 
@@ -128,12 +150,12 @@ Kampanie partnerów są w `public/data/sponsored.json`:
     "id": "torun-2027-wiosna",            // trafia do utm_campaign w linku partnera
     "from": "2027-04-01", "to": "2027-04-30",
     "sponsor": { "name": "Urząd Miasta …", "url": "https://…", "cta": "Zaplanuj wizytę", "logo": "sponsors/…svg" },
-    "puzzles": [ { /* pełny rekord zagadki jak w puzzles.json, może mieć własne zdjęcie partnera */ } ]
+    "puzzles": [ { /* pełny rekord zagadki jak w puzzles.json (z polem woj), może mieć własne zdjęcie partnera */ } ]
   }]
 }
 ```
 
-- Zagadka sponsorowana zastępuje **5. rundę**. Dziennie jest maks. jedna; kilka aktywnych kampanii rotuje.
+- Zagadka sponsorowana zastępuje **2. rundę** (z trzech). Dziennie jest maks. jedna; kilka aktywnych kampanii rotuje.
 - Zagadka ma etykietę **„Zagadka sponsorowana”** na zdjęciu i w wyniku, a link do partnera ma `rel="sponsored"` i parametry UTM.
 - Po ustawieniu `statsEndpoint` w `src/config.ts` gra wysyła anonimowe zdarzenia (`start`, `finish`, `sponsor_view`, `sponsor_click`) z dniem i id kampanii. Nie ma w nich identyfikatorów ani ciasteczek, więc nie potrzeba banera zgód.
 

@@ -58,6 +58,7 @@ export interface GameMap {
   reveal(answer: { lat: number; lon: number }, guess?: { lat: number; lon: number } | null): void;
   /** Podświetla obszar województwa o podanej nazwie i przybliża do niego mapę (podpowiedź). */
   highlightRegion(name: string): Promise<boolean>;
+  clearRegion(): void;
   showMany(points: { lat: number; lon: number; label: string }[]): void;
   reset(): void;
   lock(locked: boolean): void;
@@ -244,6 +245,9 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
       } catch {
         return false;
       }
+    },
+    clearRegion() {
+      (map.getSource("hint-region") as GeoJSONSource | undefined)?.setData({ type: "FeatureCollection", features: [] });
     },
     showMany(points) {
       for (const p of points) {

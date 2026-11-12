@@ -170,13 +170,13 @@ export async function renderRound(game: Game): Promise<void> {
     els.hintLoc.disabled = !!h.loc;
     els.hintLoc.classList.toggle("used", !!h.loc);
     els.hintLoc.innerHTML = h.loc
-      ? `<b>Województwo: ${esc(p.woj)}</b><span>podpowiedź · −${cost} pkt za miejsce</span>`
+      ? `<b>${esc(p.woj)}</b><span>województwo · −${cost} pkt za miejsce</span>`
       : `<b>💡 Województwo</b><span>kosztuje ${cost} pkt za miejsce</span>`;
     const c = centuryRange(p.year);
     els.hintYear.disabled = !!h.year;
     els.hintYear.classList.toggle("used", !!h.year);
     els.hintYear.innerHTML = h.year
-      ? `<b>${c.label} (${c.from}–${c.to})</b><span>podpowiedź · −${cost} pkt za rok</span>`
+      ? `<b>${c.label} (${c.from}–${c.to})</b><span>−${cost} pkt za rok</span>`
       : `<b>💡 Wiek</b><span>kosztuje ${cost} pkt za rok</span>`;
     const from = Math.max(c.from, CONFIG.minYear);
     const to = Math.min(c.to, CONFIG.maxYear);
@@ -291,6 +291,8 @@ export async function renderRound(game: Game): Promise<void> {
     gm.lock(true);
     els.game.classList.add("revealed");
     els.controls.hidden = true;
+    els.hint.classList.add("gone");
+    gm.clearRegion();
     els.result.innerHTML = resultCard(p, g, index === n - 1, challenge.key);
     els.result.hidden = false;
     $(".result-scroll", els.result).scrollTop = 0;
@@ -374,12 +376,12 @@ function resultCard(p: Puzzle, g: Guess, last: boolean, key: string): string {
           : ""
       }
       ${p.extract ? `<p class="extract">${esc(p.extract)}</p>` : ""}
-      ${wikiButton(p)}
       <p class="credit-full">Zdjęcie: ${
         p.filePage ? `<a href="${esc(p.filePage)}" target="_blank" rel="noopener">${esc(p.author)}</a>` : esc(p.author)
       }, ${p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" target="_blank" rel="noopener license">${esc(p.license)}</a>` : esc(p.license)}</p>
     </div>
     <div class="result-actions">
+      ${wikiButton(p)}
       <button class="btn primary next" id="next">${last ? "Zobacz wynik" : "Następne miejsce →"}</button>
     </div>`;
 }

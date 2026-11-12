@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CONFIG } from "../src/config";
-import { afterHint, century, centuryRange, haversineKm, hintCostText, locationPoints, placesWord, shareLines, tile, totalPoints, yearPoints, yearsWord } from "../src/score";
+import { afterHint, formatPoints, century, centuryRange, haversineKm, hintCostText, locationPoints, placesWord, shareLines, tile, totalPoints, yearPoints, yearsWord } from "../src/score";
 import type { Guess } from "../src/types";
 
 describe("punktacja", () => {
@@ -49,7 +49,7 @@ describe("podpowiedzi i rezygnacja", () => {
   const g = (o: Partial<Guess>): Guess => ({ lat: 50, lon: 20, year: 1500, km: 0, yearDiff: 0, locPts: 500, yearPts: 500, ...o });
   const gaveUp = (kind: "round" | "day"): Guess => g({ lat: 0, lon: 0, year: 0, locPts: 0, yearPts: 0, gaveUp: kind });
   it("udostępniany wynik: maks. 3000, podpowiedzi i rundy bez odpowiedzi są zaznaczone", () => {
-    expect(shareLines(7, [g({}), g({}), g({})], 3, "https://x")).toBe(`${CONFIG.name} #7 — 3 000/3 000\n📍 🟩🟩🟩\n📅 🟩🟩🟩\nhttps://x`);
+    expect(shareLines(7, [g({}), g({}), g({})], 3, "https://x")).toBe(`${CONFIG.name} #7 — ${formatPoints(3000)}/${formatPoints(3000)}\n📍 🟩🟩🟩\n📅 🟩🟩🟩\nhttps://x`);
     const mixed = [g({ locPts: 350, hintLoc: true }), gaveUp("round"), gaveUp("day")];
     expect(totalPoints(mixed)).toBe(850);
     const text = shareLines(7, mixed, 3, "https://x").split("\n");

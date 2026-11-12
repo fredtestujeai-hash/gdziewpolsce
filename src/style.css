@@ -348,11 +348,11 @@ dialog.about::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter: blur(2
   border-radius: 10px; padding: 6px 10px; cursor: pointer;
 }
 .hint-btn[hidden] { display: none; }
-.hint-btn b { font-size: .85rem; font-weight: 650; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.hint-btn span { font-size: .72rem; color: var(--muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hint-btn b { font-size: .85rem; font-weight: 650; max-width: 100%; overflow-wrap: anywhere; }
+.hint-btn span { font-size: .72rem; color: var(--muted); max-width: 100%; }
 .hint-btn:hover:not(:disabled) { border-color: var(--gold); background: color-mix(in srgb, var(--gold) 10%, var(--surface)); }
 .hint-btn.used { cursor: default; border-style: solid; border-color: var(--gold); background: color-mix(in srgb, var(--gold) 14%, var(--surface)); }
-.hint-band-wrap { position: absolute; left: 13px; right: 13px; top: 6px; height: 16px; pointer-events: none; }
+.hint-band-wrap { position: absolute; left: 13px; right: 13px; top: 2px; height: 24px; pointer-events: none; }
 .hint-band { position: absolute; top: 0; bottom: 0; min-width: 6px; border-radius: 4px; background: color-mix(in srgb, var(--gold) 55%, transparent); border: 1px solid var(--gold); }
 .hint-band[hidden] { display: none; }
 .range-wrap input[type="range"] { position: relative; }
@@ -373,15 +373,23 @@ dialog.giveup::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter: blur(
 .choice.danger:hover { border-color: var(--accent); }
 
 /* Przycisk „Wikipedia” */
-.wiki-btn { display: inline-flex; align-items: center; gap: .5em; font-weight: 600; font-size: .92rem; text-decoration: none; color: var(--ink); background: var(--surface); border: 1.5px solid var(--ink); border-radius: 999px; padding: .45em 1.1em .45em .5em; margin: 0 0 12px; }
+.wiki-btn { display: inline-flex; align-items: center; gap: .5em; flex: none; font-weight: 600; font-size: .95rem; text-decoration: none; white-space: nowrap; color: var(--ink); background: var(--surface); border: 1.5px solid var(--ink); border-radius: 999px; padding: .45em 1.1em .45em .5em; }
+.result-actions { display: flex; gap: 8px; align-items: stretch; }
+.result-actions .next { flex: 1; width: auto; }
 .wiki-btn:hover { color: var(--accent); border-color: var(--accent); }
 .wiki-w { display: grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 50%; background: var(--ink); color: var(--surface); font: 700 .95em Georgia, "Times New Roman", serif; }
 .wiki-btn:hover .wiki-w { background: var(--accent); }
-.wiki-btn.small { font-size: .78rem; margin: 0; border-width: 1px; padding: .2em .8em .2em .25em; }
+.wiki-btn.small { font-size: .78rem; border-width: 1px; padding: .2em .8em .2em .25em; }
 
 /* Podsumowanie: znaczniki rund */
 .hint-note { font-size: .85rem; color: var(--muted); margin: -8px 0 16px; }
-.place-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.place-name { font-weight: 600; overflow-wrap: anywhere; }
 .place-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; }
 .tag { font-size: .72rem; font-weight: 600; padding: .15em .6em; border-radius: 999px; background: var(--surface-2); color: var(--muted); white-space: nowrap; }
 .tag.hint { background: color-mix(in srgb, var(--gold) 16%, var(--surface)); color: color-mix(in srgb, var(--gold) 60%, var(--ink)); }
+@media (max-width: 520px) {
+  .map-hint { font-size: .74rem; padding: 5px 10px; }
+  .place { align-items: flex-start; gap: 10px; }
+  .place .thumb { width: 52px; height: 40px; }
+  .place-pts { min-width: 2.4em; }
+}
