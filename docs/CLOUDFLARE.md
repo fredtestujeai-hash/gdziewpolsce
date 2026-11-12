@@ -1,57 +1,45 @@
 # Cloudflare: hosting gry i ranking
 
-Gra działa na **Cloudflare Pages** (pliki statyczne z `dist/`), a ranking na **Pages Functions** (katalog `functions/`) z bazą **D1**.
-Cloudflare sam pobiera kod z GitHuba i publikuje grę po każdej zmianie w gałęzi `main`. W repozytorium nie ma żadnych haseł ani tokenów.
+Gra działa na **Cloudflare Workers**: pliki statyczne z `dist/` serwuje Cloudflare, a ranking obsługuje mały serwer (`worker/index.ts`) z bazą **D1**.
+Cloudflare sam pobiera kod z GitHuba i publikuje grę po każdej zmianie w gałęzi `main`. W repozytorium nie ma żadnych haseł ani tokenów. Ustawienia są w pliku `wrangler.toml`.
 
-Projekt jest w pełni osobny: własny projekt Pages `gdziewpolsce`, własna baza `gdziewpolsce-ranking`, własna domena. Z innymi projektami na tym samym koncie Cloudflare nie dzieli niczego.
+Projekt jest w pełni osobny: własny Worker `gdziewpolsce`, własna baza `gdziewpolsce-ranking`, własna domena. Z innymi projektami na tym samym koncie Cloudflare nie dzieli niczego.
 
-## Wdrożenie od zera (ok. 10 minut, wszystko w panelu Cloudflare)
+## Wdrożenie od zera (ok. 5 minut, wszystko w panelu Cloudflare)
 
-### Krok 1. Baza rankingu
+### Krok 1. Projekt połączony z GitHubem
 
 1. Wejdź na https://dash.cloudflare.com i zaloguj się.
-2. W menu po lewej: **Storage & Databases → D1 SQL Database**.
-3. Kliknij **Create Database**. Nazwa: `gdziewpolsce-ranking`. Lokalizacja: **Eastern Europe (EEUR)** albo zostaw automatyczną. Kliknij **Create**.
-4. Otwórz nową bazę i przejdź do zakładki **Console**.
-5. Otwórz plik [`migrations/0001_ranking.sql`](../migrations/0001_ranking.sql). Ma cztery linie. Wklejaj je **po jednej**: wklej linię, kliknij **Execute**, potem następną.
-   W zakładce **Tables** powinny pojawić się tabele `scores` i `day_stats`.
-
-Co jest w bazie: `scores` to wpisy rankingu (jeden na urządzenie na dzień, liczy się pierwszy). `device` to skrót SHA-256 losowego identyfikatora z przeglądarki. `nick` pusty (NULL) oznacza wpis usunięty przez gracza. `day_stats` to licznik wpisów na dzień. Plik celowo nie ma komentarzy, bo konsola Cloudflare skleja wklejony tekst w jedną linię i komentarz wyłączyłby wszystko po nim.
-
-### Krok 2. Projekt Pages
-
-1. W menu po lewej: **Compute (Workers) → Workers & Pages** → **Create**.
-2. Wybierz zakładkę **Pages** (na nowszym ekranie: link „Looking to deploy Pages? Get started” na dole) → **Import an existing Git repository**.
-3. Połącz konto GitHub (jeśli Cloudflare o to poprosi, daj dostęp **tylko** do repozytorium `gdziewpolsce`) i wybierz repozytorium `fredtestujeai-hash/gdziewpolsce`.
+2. W menu po lewej: **Compute (Workers) → Workers & Pages** → **Create** → **Import a repository**.
+3. Połącz konto GitHub (daj dostęp **tylko** do repozytorium `gdziewpolsce`) i wybierz `fredtestujeai-hash/gdziewpolsce`.
 4. Ustawienia:
    - **Project name:** `gdziewpolsce`
-   - **Production branch:** `main`
-   - **Framework preset:** `None`
    - **Build command:** `npm run build`
-   - **Build output directory:** `dist`
-5. Kliknij **Save and Deploy** i poczekaj, aż budowanie się skończy (1–2 minuty). Gra jest już pod adresem `https://gdziewpolsce.pages.dev` (jeśli nazwa była zajęta, Cloudflare pokaże nieco inny adres).
+   - **Deploy command:** `npx wrangler deploy`
+5. Kliknij **Create and deploy** i poczekaj 1–2 minuty. Adres gry (w rodzaju `https://gdziewpolsce.TWOJA-NAZWA.workers.dev`) jest widoczny na stronie projektu.
 
-### Krok 3. Podpięcie bazy do projektu
+### Krok 2. Baza rankingu
 
-1. W projekcie `gdziewpolsce`: **Settings → Bindings → Add → D1 database**.
-2. **Variable name:** `DB` (dokładnie tak, wielkimi literami). **D1 database:** `gdziewpolsce-ranking`. Zapisz.
-3. Wejdź w **Deployments**, przy najnowszym wdrożeniu kliknij trzy kropki → **Retry deployment** (podpięcie bazy zaczyna działać od następnego wdrożenia).
+Nic nie trzeba klikać. Przy wdrożeniu Cloudflare podpina bazę D1 o nazwie `gdziewpolsce-ranking` (jeśli jej nie ma, tworzy ją), a tabele zakłada sam serwer przy pierwszym zapytaniu.
 
-Sprawdzenie: adres `https://gdziewpolsce.pages.dev/api/ranking` powinien pokazać tekst zaczynający się od `{"day":"…","total":0`.
-Jeśli pokazuje „Ranking jest chwilowo niedostępny”, baza nie jest podpięta (wróć do kroku 3).
+Gdyby wdrożenie zgłosiło błąd dotyczący bazy: otwórz **Storage & Databases → D1 SQL Database → gdziewpolsce-ranking**, skopiuj **Database ID** i dopisz go w `wrangler.toml` jako linię `database_id = "…"` pod `database_name` (identyfikator nie jest sekretem).
+
+### Krok 3. Sprawdzenie
+
+Otwórz adres gry z dopiskiem `/api/ranking`. Powinien pokazać się tekst zaczynający się od `{"day":"…","total":0`.
 
 ### Krok 4. Własna domena
 
 1. Kup domenę. Rejestrator Cloudflare najpewniej **nie obsługuje końcówki `.pl`** (sprawdzisz to w panelu: **Domain Registration → Register Domains**, wpisz nazwę). Domenę `.pl` kupuje się więc u dowolnego polskiego rejestratora (np. OVH, nazwa.pl, home.pl, cyber_Folks; zwróć uwagę na cenę **odnowienia**, a nie tylko pierwszego roku).
 2. W Cloudflare: **Account Home → Add a domain**, wpisz domenę, wybierz plan **Free**. Cloudflare poda dwa adresy serwerów nazw (np. `xxx.ns.cloudflare.com`).
 3. U rejestratora, w ustawieniach domeny, zamień serwery nazw (DNS/NS) na te dwa z Cloudflare. Zmiana zaczyna działać zwykle w ciągu godziny, czasem do doby.
-4. W projekcie Pages `gdziewpolsce`: **Custom domains → Set up a custom domain**, wpisz domenę i zatwierdź. Cloudflare sam doda wpis DNS i certyfikat.
+4. W projekcie `gdziewpolsce`: **Settings → Domains & Routes → Add → Custom domain**, wpisz domenę i zatwierdź. Cloudflare sam doda wpis DNS i certyfikat.
 5. Na koniec w kodzie trzeba ustawić adres gry: `siteUrl` w `src/config.ts` oraz adres kanoniczny i `og:url` w `index.html`.
 
 ## Jak to działa na co dzień
 
-- Każdy push do `main` → Cloudflare buduje grę (`npm run build`) i publikuje ją razem z funkcjami z katalogu `functions/`.
-- Zmiany w strukturze bazy to kolejne pliki w `migrations/`; ich treść wkleja się w konsoli bazy (krok 1.5).
+- Każdy push do `main` → Cloudflare buduje grę (`npm run build`) i publikuje ją razem z serwerem rankingu (`npx wrangler deploy`).
+- Struktura bazy jest zapisana w `src/ranking-server.ts` (`SCHEMA`).
 - GitHub Pages działa równolegle jak dotąd. Tam nie ma serwera, więc ranking się po prostu nie pokazuje.
 
 ## Ranking
@@ -101,9 +89,9 @@ Cel: **0 zł miesięcznie** (poza domeną, zwykle kilkadziesiąt złotych roczni
 
 Darmowy plan Cloudflare (limity warto potwierdzić w panelu, bo bywają zmieniane):
 
-- **Pages:** nielimitowany ruch i transfer dla plików statycznych, 500 budowań miesięcznie (każdy push do `main` to jedno budowanie).
-- **Pages Functions:** 100 000 wywołań dziennie. Wejście na stronę startową i na podsumowanie to po jednym wywołaniu, dołączenie do rankingu to kolejne, czyli starcza na ok. 30 000 graczy dziennie.
-- **D1:** 5 mln odczytanych i 100 tys. zapisanych wierszy dziennie, 5 GB danych. Ciasno robi się przy kilku tysiącach graczy w rankingu jednego dnia; wtedy pomoże krótka pamięć podręczna odpowiedzi albo płatny plan Workers (5 USD miesięcznie).
+- **Pliki statyczne:** nielimitowany ruch i transfer; 3000 minut budowania miesięcznie (jedno budowanie to ok. 2 minuty).
+- **Serwer rankingu (Workers):** 100 000 wywołań dziennie; pliki gry się do tego nie liczą. Wejście na stronę startową i na podsumowanie to po jednym wywołaniu, dołączenie do rankingu to kolejne, czyli starcza na ok. 30 000 graczy dziennie.
+- **D1:** 5 mln odczytanych i 100 tys. zapisanych wierszy dziennie, 5 GB danych. Ciasno robi się przy kilku tysiącach graczy w rankingu jednego dnia; wtedy pomoże krótka pamięć podręczna odpowiedzi albo płatny plan Workers Paid (5 USD miesięcznie).
 
 Po przekroczeniu darmowych limitów Cloudflare niczego nie dolicza: ranking przestaje odpowiadać do końca dnia, a sama gra działa dalej.
 
@@ -113,7 +101,6 @@ Po podpięciu własnej domeny warto dodać w Cloudflare regułę ograniczania li
 
 ```bash
 npm run build
-npx wrangler@4 d1 migrations apply gdziewpolsce-ranking --local   # lokalna baza w .wrangler/
-npx wrangler@4 pages dev dist                                      # http://localhost:8788
-npm test                                                           # m.in. tests/ranking.test.ts
+npx wrangler@4 dev        # http://localhost:8787, lokalna baza w .wrangler/
+npm test                  # m.in. tests/ranking.test.ts
 ```

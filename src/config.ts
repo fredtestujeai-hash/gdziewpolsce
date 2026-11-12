@@ -8,7 +8,7 @@ export const CONFIG = {
   partnerEmail: "",
   /** Adres anonimowego licznika zdarzeń (POST JSON). Puste = żadnych statystyk. */
   statsEndpoint: "",
-  /** Adres API rankingu (Cloudflare Pages Functions). Puste = ranking wyłączony. */
+  /** Adres API rankingu (Cloudflare Workers). Puste = ranking wyłączony. */
   rankingApi: "/api",
   timezone: "Europe/Warsaw",
   /** Liczba zagadek w wyzwaniu dnia: 1 łatwa, 1 średnia, 1 trudna. */

@@ -1,12 +1,16 @@
-# Ten plik służy WYŁĄCZNIE do lokalnego uruchamiania rankingu (npx wrangler pages dev dist).
-# Celowo nie ma tu „pages_build_output_dir”: dzięki temu Cloudflare Pages ignoruje ten plik,
-# a ustawienia prawdziwego projektu (w tym podpięcie bazy jako „DB”) robi się w panelu Cloudflare.
-# Opis wdrożenia: docs/CLOUDFLARE.md
+# Cloudflare Workers: gra (pliki statyczne z dist/) + ranking (worker/index.ts, baza D1).
+# Cloudflare po każdym pushu do main wykonuje: npm run build, a potem npx wrangler deploy.
+# Opis: docs/CLOUDFLARE.md
 name = "gdziewpolsce"
+main = "worker/index.ts"
 compatibility_date = "2025-06-01"
 
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+# Baza rankingu. Bez wpisanego identyfikatora: Cloudflare sam znajduje bazę o tej nazwie
+# (albo ją tworzy), a tabele zakłada sam serwer przy pierwszym zapytaniu.
 [[d1_databases]]
 binding = "DB"
 database_name = "gdziewpolsce-ranking"
-database_id = "00000000-0000-0000-0000-000000000000"
-migrations_dir = "migrations"

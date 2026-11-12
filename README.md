@@ -17,7 +17,7 @@ W każdej rundzie są też:
 Na koniec widzi podsumowanie z mapą „dzisiejszej trasy” i wynik do udostępnienia w stylu Wordle.
 
 - **Bez reklam, bez logowania, bez ciasteczek.** Wynik i seria są zapisywane w przeglądarce (`localStorage`).
-- **Dobrowolny ranking dnia** (nick zamiast konta), działa na Cloudflare Pages + D1. Szczegóły: [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md).
+- **Dobrowolny ranking dnia** (nick zamiast konta), działa na Cloudflare Workers + D1. Szczegóły: [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md).
 - **Model finansowania: zagadki sponsorowane.** Miasto lub region staje się partnerem, a jego obiekt trafia do wyzwania jako wyraźnie oznaczona zagadka z zachętą do odwiedzin. Szczegóły: [docs/PARTNERZY.md](docs/PARTNERZY.md).
 
 Gra jest publikowana na GitHub Pages: https://fredtestujeai-hash.github.io/gdziewpolsce/
@@ -54,8 +54,8 @@ src/
   track.ts         opcjonalne anonimowe liczniki dla raportów partnerów (domyślnie wyłączone)
   views/           ekrany: start, runda, podsumowanie, „o grze”, ranking
   ranking*.ts      ranking dnia: reguły wspólne (core), klient API, logika serwera (server)
-functions/api/     Cloudflare Pages Functions: /api/score i /api/ranking
-migrations/        struktura bazy D1 rankingu
+worker/index.ts    serwer na Cloudflare Workers: /api/score i /api/ranking (reszta to pliki statyczne)
+wrangler.toml      ustawienia wdrożenia na Cloudflare
 public/
   data/puzzles.json     pula zagadek (generowana)
   data/schedule.json    harmonogram: dzień -> 3 id zagadek (generowany, tylko dopisywany)

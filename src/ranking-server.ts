@@ -1,5 +1,5 @@
-// Serwer rankingu: logika endpointów /api/score i /api/ranking (Cloudflare Pages Functions + D1).
-// UWAGA: ten plik wolno importować tylko z functions/ i z testów. Wciąga całą pulę zagadek,
+// Serwer rankingu: logika endpointów /api/score i /api/ranking (Cloudflare Workers + D1).
+// UWAGA: ten plik wolno importować tylko z worker/ i z testów. Wciąga całą pulę zagadek,
 // więc nie może trafić do paczki przeglądarkowej.
 import puzzlesFile from "../public/data/puzzles.json";
 import scheduleFile from "../public/data/schedule.json";
@@ -43,6 +43,28 @@ const DATA: GameData = {
   schedule: scheduleFile as Schedule,
   campaigns: (sponsoredFile as unknown as { campaigns: Campaign[] }).campaigns,
 };
+
+/**
+ * Struktura bazy. `scores`: jeden wpis na urządzenie na dzień (liczy się pierwszy); `device` to skrót SHA-256
+ * losowego identyfikatora z przeglądarki, `nick` = NULL oznacza wpis usunięty przez gracza.
+ * `day_stats`: licznik wpisów na dzień. Adresów IP nie zapisujemy.
+ */
+export const SCHEMA = [
+  "CREATE TABLE IF NOT EXISTS scores (day TEXT NOT NULL, device TEXT NOT NULL, nick TEXT, score INTEGER NOT NULL, created_at INTEGER NOT NULL, PRIMARY KEY (day, device))",
+  "CREATE INDEX IF NOT EXISTS scores_rank ON scores (day, score DESC, created_at) WHERE nick IS NOT NULL",
+  "CREATE INDEX IF NOT EXISTS scores_device ON scores (device)",
+  "CREATE TABLE IF NOT EXISTS day_stats (day TEXT PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0)",
+];
+
+let schemaReady: Promise<unknown> | null = null;
+/** Zakłada tabele, jeśli ich nie ma (raz na uruchomienie serwera; nic nie kosztuje, gdy już istnieją). */
+export function ensureSchema(db: D1Like): Promise<unknown> {
+  schemaReady ??= db.batch(SCHEMA.map((sql) => db.prepare(sql))).catch((e) => {
+    schemaReady = null;
+    throw e;
+  });
+  return schemaReady;
+}
 
 /** Największa liczba wpisów jednego dnia: bezpiecznik chroniący darmowy limit bazy. */
 export const MAX_ENTRIES_PER_DAY = 20_000;

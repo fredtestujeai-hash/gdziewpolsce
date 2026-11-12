@@ -1,16 +1,15 @@
-import { readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CONFIG } from "../src/config";
 import { buildChallenge } from "../src/daily";
 import { isProfane, isSubmittableDay, maxScore, recomputeScore, validateNick } from "../src/ranking-core";
-import { handleDelete, handleRanking, handleScore, rateLimited, type D1Like, type D1Stmt, type GameData } from "../src/ranking-server";
+import { SCHEMA, handleDelete, handleRanking, handleScore, rateLimited, type D1Like, type D1Stmt, type GameData } from "../src/ranking-server";
 import type { Puzzle } from "../src/types";
 
 /** D1 udawane przez SQLite wbudowany w Node: te same zapytania SQL co na produkcji. */
 function fakeD1(): D1Like {
   const db = new DatabaseSync(":memory:");
-  db.exec(readFileSync(new URL("../migrations/0001_ranking.sql", import.meta.url), "utf8"));
+  for (const sql of SCHEMA) db.exec(sql);
   const stmt = (sql: string, args: unknown[] = []): D1Stmt => ({
     bind: (...v) => stmt(sql, v),
     first: async () => (db.prepare(sql).get(...(args as never[])) as never) ?? null,

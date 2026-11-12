@@ -1,4 +1,4 @@
-// Wspólne reguły rankingu: używane i w przeglądarce, i na serwerze (Pages Functions), i w testach.
+// Wspólne reguły rankingu: używane i w przeglądarce, i na serwerze (Cloudflare Workers), i w testach.
 // Bez zależności od DOM ani od bazy.
 import { CONFIG } from "./config";
 import { addDays, todayKey } from "./daily";
