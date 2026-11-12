@@ -232,6 +232,7 @@ def main():
                 "wiki": it["wiki"],
                 "extract": short_extract(extract),
                 "_sl": it["sitelinks"],
+                "_curated": bool(it.get("curated")),
             }
         )
 
@@ -245,7 +246,8 @@ def main():
         if p["img"] in seen_img:
             rejected["duplikat zdjęcia"] += 1
             continue
-        if any(abs(p["lat"] - q["lat"]) < 0.002 and km((p["lat"], p["lon"]), (q["lat"], q["lon"])) < 0.15 for q in kept):
+        # obiekty dodane ręcznie (data/curated.json) zostają nawet tuż obok innej zagadki, np. zamek na Wawelu przy katedrze
+        if not p["_curated"] and any(abs(p["lat"] - q["lat"]) < 0.002 and km((p["lat"], p["lon"]), (q["lat"], q["lon"])) < 0.15 for q in kept):
             rejected["duplikat lokalizacji"] += 1
             continue
         seen_img.add(p["img"])
@@ -254,7 +256,7 @@ def main():
     # Trudność wg rozpoznawalności (liczba wersji językowych Wikipedii)
     for p in kept:
         p["difficulty"] = 1 if p["_sl"] >= EASY_SITELINKS else (2 if p["_sl"] >= MEDIUM_SITELINKS else 3)
-        del p["_sl"]
+        del p["_sl"], p["_curated"]
     kept.sort(key=lambda p: p["id"])
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

@@ -110,7 +110,7 @@ Reguły jakości w `build_puzzles.py`:
 - zdjęcie ma min. 800 px szerokości, bez panoram, map, planów, herbów i wnętrz,
 - data jest jednoznaczna, z dokładnością do roku, w przedziale 1000 – dziś,
 - obiekt istnieje (pomijamy budowle rozebrane i zniszczone, bo gra ma zachęcać do odwiedzin),
-- jeden obiekt na zdjęcie i na ~150 m,
+- jeden obiekt na zdjęcie i na ~150 m (obiekty z `data/curated.json` są z tej reguły zwolnione, np. zamek na Wawelu obok katedry),
 - bez instytucji (muzeum, ośrodek; ich data to zwykle założenie, a nie budowa), cmentarzy i browarów (zdjęcia butelek, data założenia firmy),
 - każda zagadka dostaje pole `woj` (np. „małopolskie”): punkt jest sprawdzany w wielokątach z `public/map/wojewodztwa.json`, czyli tych samych, które gra podświetla; skrypt uzupełnia to pole także w `public/data/sponsored.json`. Granice z Natural Earth okazały się za mało dokładne (ok. 1% zagadek przy granicach trafiało do złego województwa), dlatego użyto Państwowego Rejestru Granic,
 - trudność wynika z rozpoznawalności, czyli liczby wersji językowych Wikipedii: łatwe ≥ 9, średnie 4–8, trudne ≤ 3.
@@ -123,7 +123,7 @@ Ręczne poprawki redakcyjne:
 - `data/exclude.txt` to czarna lista QID, jeden na linię, np. obiekty z błędną datą,
 - `data/curated.json` to obiekty dodane ręcznie, z rokiem podanym przez redakcję (pole `note` mówi, skąd rok). Służy dla znanych miejsc, którym w Wikidata brakuje dokładnej daty (Wawel, Książ, Żuraw…). Rok bywa przybliżony albo umowny, np. ukończenie budowy; to świadoma decyzja. Po dopisaniu obiektów: `python3 scripts/fetch_wikidata.py --only-curated`, potem `fetch_commons.py` i `build_puzzles.py`.
 
-**Stan obecny:** 1206 zagadek (263 łatwe, 453 średnie, 490 trudnych). Harmonogram ma 263 dni (od 11.11.2026 do 31.07.2027) bez żadnej powtórki; potem zaczną się powtarzać zagadki łatwe, bo jest ich 263 (skrypt bierze wtedy te najdawniej użyte). Powtórki są akceptowane.
+**Stan obecny:** 1211 zagadek (269 łatwych, 452 średnie, 490 trudnych). Harmonogram ma 269 dni (od 11.11.2026 do 6.08.2027) bez żadnej powtórki; potem zaczną się powtarzać zagadki łatwe, bo jest ich 269 (skrypt bierze wtedy te najdawniej użyte). Powtórki są akceptowane.
 
 ### Harmonogram dni
 
