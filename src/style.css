@@ -398,3 +398,6 @@ dialog.giveup::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter: blur(
 .resume + .btn { font-size: .95rem; padding: .6em 1.6em; }
 .thumb-hidden { display: grid; place-items: center; font: 700 1.2rem var(--font-display); color: var(--muted); }
 .reveal-all { margin: 12px 0 0; text-align: center; color: var(--muted); }
+.hints-title { margin: 0 0 -2px; font-size: .8rem; font-weight: 650; }
+.hints-title span { font-weight: 400; color: var(--muted); }
+.hint-btn:not(.used) b::after { content: " ›"; color: var(--muted); }

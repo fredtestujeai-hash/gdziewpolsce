@@ -40,7 +40,8 @@ export async function renderRound(game: Game): Promise<void> {
         </div>
 
         <div class="controls" id="controls">
-          <div class="hints" aria-label="Podpowiedzi (obniżają punkty)">
+          <p class="hints-title" id="hints-title">💡 Podpowiedzi <span>— każda obniża punkty o ${hintCostText()}</span></p>
+          <div class="hints" role="group" aria-labelledby="hints-title">
             <button class="hint-btn" id="hint-loc" type="button"></button>
             <button class="hint-btn" id="hint-year" type="button"></button>
           </div>
@@ -170,14 +171,14 @@ export async function renderRound(game: Game): Promise<void> {
     els.hintLoc.disabled = !!h.loc;
     els.hintLoc.classList.toggle("used", !!h.loc);
     els.hintLoc.innerHTML = h.loc
-      ? `<b>${esc(p.woj)}</b><span>województwo · −${cost} pkt za miejsce</span>`
-      : `<b>💡 Województwo</b><span>kosztuje ${cost} pkt za miejsce</span>`;
+      ? `<b>${esc(p.woj)}</b><span>podpowiedź: województwo</span>`
+      : `<b>Pokaż województwo</b><span>−${cost} pkt za miejsce</span>`;
     const c = centuryRange(p.year);
     els.hintYear.disabled = !!h.year;
     els.hintYear.classList.toggle("used", !!h.year);
     els.hintYear.innerHTML = h.year
-      ? `<b>${c.label} (${c.from}–${c.to})</b><span>−${cost} pkt za rok</span>`
-      : `<b>💡 Wiek</b><span>kosztuje ${cost} pkt za rok</span>`;
+      ? `<b>${c.label} (${c.from}–${c.to})</b><span>podpowiedź: wiek</span>`
+      : `<b>Pokaż wiek</b><span>−${cost} pkt za rok</span>`;
     const from = Math.max(c.from, CONFIG.minYear);
     const to = Math.min(c.to, CONFIG.maxYear);
     els.hintBand.hidden = !h.year;

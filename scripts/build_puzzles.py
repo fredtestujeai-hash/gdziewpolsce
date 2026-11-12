@@ -217,7 +217,7 @@ def main():
                 "id": it["qid"],
                 "name": it["name"],
                 "category": it["category"],
-                "place": it["place"] if it["place"] != it["name"] else "",
+                "place": it["place"] if it["place"] != it["name"] and not NAME_LOOKS_LIKE_QID.match(it["place"]) else "",
                 "lat": it["lat"],
                 "lon": it["lon"],
                 "year": year,

@@ -280,6 +280,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--min-sitelinks", type=int, default=3)
     ap.add_argument("--only-demolished", action="store_true", help="tylko uzupełnij flagę 'demolished'")
+    ap.add_argument("--only-curated", action="store_true", help="tylko dobierz obiekty z data/curated.json")
     ap.add_argument("--only-known", action="store_true", help="tylko dobierz znane obiekty spoza listy klas")
     ap.add_argument("--only", help="pobierz tylko wskazane klasy, np. Q23413,Q16560")
     args = ap.parse_args()
@@ -289,6 +290,12 @@ def main():
         items = {i["qid"]: i for i in json.loads(OUT.read_text())}
 
     if args.only_demolished:
+        mark_demolished(items)
+        OUT.write_text(json.dumps(list(items.values()), ensure_ascii=False, indent=1))
+        return
+
+    if args.only_curated:
+        fetch_curated(items)
         mark_demolished(items)
         OUT.write_text(json.dumps(list(items.values()), ensure_ascii=False, indent=1))
         return

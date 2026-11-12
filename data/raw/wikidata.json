@@ -24309,7 +24309,7 @@
   "sitelinks": 9,
   "wiki": "https://pl.wikipedia.org/wiki/Most_Marii_Sk%C5%82odowskiej-Curie_w_Warszawie",
   "place": "Warszawa",
-  "known": true
+  "curated": true
  },
  {
   "qid": "Q738643",
@@ -24795,5 +24795,758 @@
   "wiki": "https://pl.wikipedia.org/wiki/Krzywy_Domek",
   "place": "Sopot",
   "known": true
+ },
+ {
+  "qid": "Q1133188",
+  "name": "Pałac w Mosznej",
+  "description": "castle",
+  "category": "pałac",
+  "lat": 50.44139,
+  "lon": 17.76944,
+  "years": [
+   1900
+  ],
+  "image": "Zamek w Mosznej 2024.jpg",
+  "sitelinks": 17,
+  "wiki": "https://pl.wikipedia.org/wiki/Pa%C5%82ac_w_Mosznej",
+  "place": "Q1004793",
+  "curated": true
+ },
+ {
+  "qid": "Q1143171",
+  "name": "Kościół Archiprezbiterialny pw. Wniebowzięcia Najświętszej Marii Panny w Krakowie",
+  "description": "zabytkowy kościół w Krakowie",
+  "category": "kościół",
+  "lat": 50.06167,
+  "lon": 19.93917,
+  "years": [
+   1397
+  ],
+  "image": "Kosciol mariacki krakow.jpg",
+  "sitelinks": 37,
+  "wiki": "https://pl.wikipedia.org/wiki/Ko%C5%9Bci%C3%B3%C5%82_Archiprezbiterialny_Wniebowzi%C4%99cia_Naj%C5%9Bwi%C4%99tszej_Marii_Panny_w_Krakowie",
+  "place": "Kraków",
+  "curated": true
+ },
+ {
+  "qid": "Q1195738",
+  "name": "Kościół św. Andrzeja w Krakowie",
+  "description": "kościół w Krakowie",
+  "category": "kościół",
+  "lat": 50.05661,
+  "lon": 19.9384,
+  "years": [
+   1098
+  ],
+  "image": "Church of St. Andrew, 54 Grodzka Street, Old Town, Kraków, Poland.jpg",
+  "sitelinks": 21,
+  "wiki": "https://pl.wikipedia.org/wiki/Ko%C5%9Bci%C3%B3%C5%82_%C5%9Bw._Andrzeja_w_Krakowie",
+  "place": "Stare Miasto",
+  "curated": true
+ },
+ {
+  "qid": "Q1236543",
+  "name": "Bazylika Prymasowska Wniebowzięcia Najświętszej Maryi Panny w Gnieźnie",
+  "description": "świątynia katolicka, katedra",
+  "category": "katedra",
+  "lat": 52.53678,
+  "lon": 17.59264,
+  "years": [
+   1342
+  ],
+  "image": "Bazylika gnieźnieńska.jpg",
+  "sitelinks": 20,
+  "wiki": "https://pl.wikipedia.org/wiki/Bazylika_Prymasowska_Wniebowzi%C4%99cia_Naj%C5%9Bwi%C4%99tszej_Maryi_Panny_w_Gnie%C5%BAnie",
+  "place": "Gniezno",
+  "curated": true
+ },
+ {
+  "qid": "Q1280433",
+  "name": "Sanktuarium pasyjno-maryjne w Kalwarii Zebrzydowskiej",
+  "description": "religious heritage site",
+  "category": "bazylika",
+  "lat": 49.86032,
+  "lon": 19.67072,
+  "years": [
+   1609
+  ],
+  "image": "Kalwaria Zebrzydowska - Bazylika i mur-02GP.jpg",
+  "sitelinks": 18,
+  "wiki": "https://pl.wikipedia.org/wiki/Sanktuarium_pasyjno-maryjne_w_Kalwarii_Zebrzydowskiej",
+  "place": "Kalwaria Zebrzydowska",
+  "curated": true
+ },
+ {
+  "qid": "Q1363724",
+  "name": "Brama Floriańska w Krakowie",
+  "description": "gothic tower in Kraków, Poland",
+  "category": "brama miejska",
+  "lat": 50.06472,
+  "lon": 19.94139,
+  "years": [
+   1307
+  ],
+  "image": "20200516 Brama Floriańska w Krakowie 0911 9966.jpg",
+  "sitelinks": 20,
+  "wiki": "https://pl.wikipedia.org/wiki/Brama_Floria%C5%84ska_w_Krakowie",
+  "place": "Stare Miasto",
+  "curated": true
+ },
+ {
+  "qid": "Q1408436",
+  "name": "Twierdza Boyen",
+  "description": "",
+  "category": "fortyfikacja",
+  "lat": 54.03333,
+  "lon": 21.74556,
+  "years": [
+   1855
+  ],
+  "image": "Twierdza Boyen - Makieta.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Twierdza_Boyen",
+  "place": "Giżycko",
+  "curated": true
+ },
+ {
+  "qid": "Q1408976",
+  "name": "Twierdza Srebrnogórska",
+  "description": "zabytkowa fortyfikacja w Polsce",
+  "category": "fortyfikacja",
+  "lat": 50.57417,
+  "lon": 16.64214,
+  "years": [
+   1777
+  ],
+  "image": "2026 Twierdza Srebrna Góra (02).jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Twierdza_Srebrna_G%C3%B3ra",
+  "place": "Srebrna Góra",
+  "curated": true
+ },
+ {
+  "qid": "Q1434756",
+  "name": "Bazylika Katedralna Wniebowzięcia Najświętszej Maryi Panny w Płocku",
+  "description": "świątynia katolicka, katedra",
+  "category": "katedra",
+  "lat": 52.54108,
+  "lon": 19.68981,
+  "years": [
+   1144
+  ],
+  "image": "Plock Cathedral aerial photograph 2019 P01.jpg",
+  "sitelinks": 15,
+  "wiki": "https://pl.wikipedia.org/wiki/Bazylika_Katedralna_Wniebowzi%C4%99cia_Naj%C5%9Bwi%C4%99tszej_Maryi_Panny_w_P%C5%82ocku",
+  "place": "Płock",
+  "curated": true,
+  "demolished": true
+ },
+ {
+  "qid": "Q1549228",
+  "name": "Wielka Zbrojownia w Gdańsku",
+  "description": "zabytek w Gdańsku",
+  "category": "budynek",
+  "lat": 54.35056,
+  "lon": 18.64917,
+  "years": [
+   1605
+  ],
+  "image": "Gran Armería, Gdansk, Polonia, 2013-05-20, DD 12.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Wielka_Zbrojownia_w_Gda%C5%84sku",
+  "place": "Śródmieście",
+  "curated": true
+ },
+ {
+  "qid": "Q18820",
+  "name": "Zamek Królewski na Wawelu",
+  "description": "zamek w Krakowie",
+  "category": "zamek",
+  "lat": 50.0544,
+  "lon": 19.9366,
+  "years": [
+   1536
+  ],
+  "image": "Wawel on Wisla.JPG",
+  "sitelinks": 33,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_Kr%C3%B3lewski_na_Wawelu",
+  "place": "Kraków",
+  "curated": true
+ },
+ {
+  "qid": "Q253930",
+  "name": "Brama Żuraw w Gdańsku",
+  "description": "zabytkowy budynek w Polsce",
+  "category": "brama miejska",
+  "lat": 54.35056,
+  "lon": 18.6575,
+  "years": [
+   1444
+  ],
+  "image": "2025-04 Gdańsk Brama Żuraw (4).jpg",
+  "sitelinks": 16,
+  "wiki": "https://pl.wikipedia.org/wiki/Brama_%C5%BBuraw_w_Gda%C5%84sku",
+  "place": "Gdańsk",
+  "curated": true
+ },
+ {
+  "qid": "Q318098",
+  "name": "Parowozownia Pilska",
+  "description": "zabytkowa parowozownia w Polsce",
+  "category": "zabytek techniki",
+  "lat": 53.1425,
+  "lon": 16.75222,
+  "years": [
+   1874
+  ],
+  "image": "Parowozownia OKRĄGLAK.JPG",
+  "sitelinks": 28,
+  "wiki": "https://pl.wikipedia.org/wiki/Parowozownia_Pi%C5%82a",
+  "place": "Piła",
+  "curated": true
+ },
+ {
+  "qid": "Q360129",
+  "name": "Wieżyca",
+  "description": "mountain in Poland",
+  "category": "wieża widokowa",
+  "lat": 54.22444,
+  "lon": 18.12361,
+  "years": [
+   1997
+  ],
+  "image": "Wiezyca.JPG",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Wie%C5%BCyca_(Pojezierze_Kaszubskie)",
+  "place": "",
+  "curated": true
+ },
+ {
+  "qid": "Q421806",
+  "name": "Cerkiew św. Paraskewy w Radrużu",
+  "description": "drewniana cerkiew w Radrużu w Polsce, zabytek na liście kulturowego dziedzictwa UNESCO",
+  "category": "cerkiew",
+  "lat": 50.1767,
+  "lon": 23.40161,
+  "years": [
+   1583
+  ],
+  "image": "Radruż2.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Cerkiew_%C5%9Bw._Paraskewy_w_Radru%C5%BCu",
+  "place": "Radruż",
+  "curated": true
+ },
+ {
+  "qid": "Q1650372",
+  "name": "Unity Tower",
+  "description": "Dawniej planowany jako biurowiec Naczelnej Organizacji Technicznej, następnie pozostawiony na ponad 30 lat, nazywany Szkieletorem wieżowiec w Krakowie, obecnie po dokończeniu budowy wieżowiec ,,Unity Tower\"",
+  "category": "wieżowiec",
+  "lat": 50.06806,
+  "lon": 19.95778,
+  "years": [
+   2020
+  ],
+  "image": "Unity Tower. 2 Lubomirskiego street, Krakow, Poland.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Unity_Tower",
+  "place": "Kraków",
+  "curated": true
+ },
+ {
+  "qid": "Q1893280",
+  "name": "Świątynia Wang",
+  "description": "zabytkowy, ewangelicki kościół parafialny o konstrukcji klepkowej, w Karpaczu w Karkonoszach",
+  "category": "kościół",
+  "lat": 50.77739,
+  "lon": 15.72409,
+  "years": [
+   1844
+  ],
+  "image": "Karpacz Swiatynia Wang.JPG",
+  "sitelinks": 17,
+  "wiki": "https://pl.wikipedia.org/wiki/%C5%9Awi%C4%85tynia_Wang",
+  "place": "Karpacz",
+  "curated": true
+ },
+ {
+  "qid": "Q1933198",
+  "name": "Warsaw Financial Center",
+  "description": "tall building in Warsaw Poland",
+  "category": "wieżowiec",
+  "lat": 52.2333,
+  "lon": 21.0017,
+  "years": [
+   1998
+  ],
+  "image": "2025 Warszawa widok z Varso na Warsaw Financial Center, 1.jpg",
+  "sitelinks": 14,
+  "wiki": "https://pl.wikipedia.org/wiki/Warsaw_Financial_Center",
+  "place": "Warszawa",
+  "curated": true
+ },
+ {
+  "qid": "Q1985405",
+  "name": "Kopiec Piłsudskiego w Krakowie",
+  "description": "kopiec (Kraków, Polska)",
+  "category": "kopiec",
+  "lat": 50.06006,
+  "lon": 19.84724,
+  "years": [
+   1937
+  ],
+  "image": "KopiecPiłsudskiego-Sowiniec-POL, Kraków.jpg",
+  "sitelinks": 16,
+  "wiki": "https://pl.wikipedia.org/wiki/Kopiec_J%C3%B3zefa_Pi%C5%82sudskiego_w_Krakowie",
+  "place": "Kraków",
+  "curated": true
+ },
+ {
+  "qid": "Q641398",
+  "name": "Kopiec Kościuszki w Krakowie",
+  "description": "kopiec w Krakowie",
+  "category": "kopiec",
+  "lat": 50.0549,
+  "lon": 19.89328,
+  "years": [
+   1823
+  ],
+  "image": "DJI 0236 Kopiec Kościuszki.jpg",
+  "sitelinks": 19,
+  "wiki": "https://pl.wikipedia.org/wiki/Kopiec_Ko%C5%9Bciuszki_w_Krakowie",
+  "place": "Kraków",
+  "curated": true
+ },
+ {
+  "qid": "Q642455",
+  "name": "Filtry Lindleya",
+  "description": "Water filtration system in Warsaw, Poland",
+  "category": "zabytek techniki",
+  "lat": 52.22028,
+  "lon": 20.995,
+  "years": [
+   1886
+  ],
+  "image": "Warszawa, Stacja Filtrów - fotopolska.eu (289405).jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Zesp%C3%B3%C5%82_Stacji_Filtr%C3%B3w_w_Warszawie",
+  "place": "Warszawa",
+  "curated": true
+ },
+ {
+  "qid": "Q734863",
+  "name": "Wielki Młyn w Gdańsku",
+  "description": "zabytkowy budynek w Polsce",
+  "category": "zabytek techniki",
+  "lat": 54.35403,
+  "lon": 18.65,
+  "years": [
+   1350
+  ],
+  "image": "SM Gdańsk Wielki Młyn (2) ID 635793.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Wielki_M%C5%82yn_w_Gda%C5%84sku",
+  "place": "Gdańsk",
+  "curated": true
+ },
+ {
+  "qid": "Q738109",
+  "name": "Książ",
+  "description": "kompleks zamkowo-parkowy w Polsce",
+  "category": "zamek",
+  "lat": 50.84222,
+  "lon": 16.29167,
+  "years": [
+   1292
+  ],
+  "image": "Ksiaz - zamek 01.jpg",
+  "sitelinks": 34,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_Ksi%C4%85%C5%BC",
+  "place": "Wałbrzych",
+  "curated": true
+ },
+ {
+  "qid": "Q825098",
+  "name": "Pomnik Obrońców Wybrzeża",
+  "description": "pomnik w Gdańsku, Polska",
+  "category": "pomnik",
+  "lat": 54.40667,
+  "lon": 18.66722,
+  "years": [
+   1966
+  ],
+  "image": "Westerplatte Monument, Gdańsk, Pomerania.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Pomnik_Obro%C5%84c%C3%B3w_Wybrze%C5%BCa",
+  "place": "Gdańsk",
+  "curated": true
+ },
+ {
+  "qid": "Q866580",
+  "name": "Wieża Bismarcka w Szczecinie",
+  "description": "building in Szczecin, Poland",
+  "category": "wieża",
+  "lat": 53.47714,
+  "lon": 14.60153,
+  "years": [
+   1921
+  ],
+  "image": "Bismarckturm-2.JPG",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Wie%C5%BCa_Goc%C5%82awska",
+  "place": "Szczecin",
+  "curated": true
+ },
+ {
+  "qid": "Q881519",
+  "name": "Pałac Blanka",
+  "description": "zabytkowy budynek w Warszawie",
+  "category": "pałac",
+  "lat": 52.245,
+  "lon": 21.01015,
+  "years": [
+   1764
+  ],
+  "image": "Warszawa Palac Blanka (dron).jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Pa%C5%82ac_Blanka",
+  "place": "Warszawa",
+  "curated": true
+ },
+ {
+  "qid": "Q2135657",
+  "name": "Ratusz Głównego Miasta w Gdańsku",
+  "description": "ratusz w Gdańsku",
+  "category": "ratusz",
+  "lat": 54.34883,
+  "lon": 18.6527,
+  "years": [
+   1492
+  ],
+  "image": "Ayuntamiento Principal, Gdansk, Polonia, 2013-05-20, DD 10.jpg",
+  "sitelinks": 21,
+  "wiki": "https://pl.wikipedia.org/wiki/Ratusz_G%C5%82%C3%B3wnego_Miasta_w_Gda%C5%84sku",
+  "place": "Gdańsk",
+  "curated": true
+ },
+ {
+  "qid": "Q2147028",
+  "name": "Zamek w Niedzicy",
+  "description": "zabytkowy zamek w Polsce",
+  "category": "zamek",
+  "lat": 49.42231,
+  "lon": 20.31964,
+  "years": [
+   1320
+  ],
+  "image": "Niedzica zamek.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_Dunajec",
+  "place": "Niedzica-Zamek",
+  "curated": true
+ },
+ {
+  "qid": "Q2193788",
+  "name": "Zamek w Będzinie",
+  "description": "zamek w Polsce",
+  "category": "zamek",
+  "lat": 50.32722,
+  "lon": 19.12914,
+  "years": [
+   1348
+  ],
+  "image": "Zamek w Będzinie 1.JPG",
+  "sitelinks": 24,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_w_B%C4%99dzinie",
+  "place": "Będzin",
+  "curated": true
+ },
+ {
+  "qid": "Q2241816",
+  "name": "Pałac w Kamieńcu Ząbkowickim",
+  "description": "zabytkowy pałac w Polsce",
+  "category": "pałac",
+  "lat": 50.52083,
+  "lon": 16.88083,
+  "years": [
+   1872
+  ],
+  "image": "2025 Pałac w Kamieńcu Ząbkowickim (06).jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Pa%C5%82ac_w_Kamie%C5%84cu_Z%C4%85bkowickim",
+  "place": "Kamieniec Ząbkowicki",
+  "curated": true
+ },
+ {
+  "qid": "Q2344115",
+  "name": "Pomnik Żegoty w Warszawie",
+  "description": "monument in Warsaw, Poland",
+  "category": "pomnik",
+  "lat": 52.24947,
+  "lon": 20.99411,
+  "years": [
+   1995
+  ],
+  "image": "Pomnik Żegoty w Warszawie.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Pomnik_%C5%BBegoty_w_Warszawie",
+  "place": "Warszawa",
+  "curated": true
+ },
+ {
+  "qid": "Q2376970",
+  "name": "Pałac Branickich w Białymstoku",
+  "description": "pałac w Białymstoku",
+  "category": "pałac",
+  "lat": 53.13056,
+  "lon": 23.165,
+  "years": [
+   1697
+  ],
+  "image": "Pałac Branickich - budynki kompleksu pałacowego 08.jpg",
+  "sitelinks": 24,
+  "wiki": "https://pl.wikipedia.org/wiki/Pa%C5%82ac_Branickich_w_Bia%C5%82ymstoku",
+  "place": "Białystok",
+  "curated": true
+ },
+ {
+  "qid": "Q2604117",
+  "name": "Zamek w Lublinie",
+  "description": "medieval castle and prison in the city of Lublin in eastern Poland",
+  "category": "zamek",
+  "lat": 51.20053,
+  "lon": 22.57173,
+  "years": [
+   1826
+  ],
+  "image": "Lublin Zamek.JPG",
+  "sitelinks": 22,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_w_Lublinie",
+  "place": "Lublin",
+  "curated": true
+ },
+ {
+  "qid": "Q2732849",
+  "name": "Hala Olivia",
+  "description": "hala widowiskowo-sportowa w Gdańsku",
+  "category": "hala",
+  "lat": 54.40132,
+  "lon": 18.57212,
+  "years": [
+   1972
+  ],
+  "image": "Gdansk hala Olivia 2.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Hala_Olivia",
+  "place": "Gdańsk",
+  "curated": true
+ },
+ {
+  "qid": "Q2879740",
+  "name": "Kaplica Czaszek w Czermnej",
+  "description": "zabytek w województwie dolnośląskim, w powiecie kłodzkim",
+  "category": "kaplica",
+  "lat": 50.45153,
+  "lon": 16.24193,
+  "years": [
+   1776
+  ],
+  "image": "Poland - Czermna - Chapel of Skulls - interior 06.jpg",
+  "sitelinks": 13,
+  "wiki": "https://pl.wikipedia.org/wiki/Kaplica_Czaszek_w_Kudowie-Zdroju",
+  "place": "Kudowa-Zdrój",
+  "curated": true
+ },
+ {
+  "qid": "Q3177824",
+  "name": "Molo w Sopocie",
+  "description": "budowla hydrotechniczna w Polsce",
+  "category": "molo",
+  "lat": 54.4475,
+  "lon": 18.575,
+  "years": [
+   1928
+  ],
+  "image": "Muelle de Sopot, Polonia, 2013-05-22, DD 21.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Molo_w_Sopocie",
+  "place": "Sopot",
+  "curated": true
+ },
+ {
+  "qid": "Q4373316",
+  "name": "Brama Portowa w Szczecinie",
+  "description": "zabytkowa brama forteczna w Szczecinie",
+  "category": "brama miejska",
+  "lat": 53.42497,
+  "lon": 14.55041,
+  "years": [
+   1727
+  ],
+  "image": "09 11 Brama Portowa Szczecin SZN.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Brama_Portowa_w_Szczecinie",
+  "place": "Szczecin",
+  "curated": true
+ },
+ {
+  "qid": "Q4497261",
+  "name": "Zamek w Chęcinach",
+  "description": "zamek w Polsce",
+  "category": "ruiny zamku",
+  "lat": 50.79722,
+  "lon": 20.46028,
+  "years": [
+   1300
+  ],
+  "image": "Chęciny zamek bok.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_w_Ch%C4%99cinach",
+  "place": "Chęciny",
+  "curated": true
+ },
+ {
+  "qid": "Q4578195",
+  "name": "Pałac Izraela Poznańskiego",
+  "description": "pałac fabrykancki",
+  "category": "pałac",
+  "lat": 51.77911,
+  "lon": 19.45082,
+  "years": [
+   1903
+  ],
+  "image": "Łódź - Pałac Izraela Poznańskiego.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Pa%C5%82ac_Izraela_Pozna%C5%84skiego",
+  "place": "Bałuty-Centrum",
+  "curated": true
+ },
+ {
+  "qid": "Q6796021",
+  "name": "Ratusz Staromiejski w Toruniu",
+  "description": "średniowieczna siedziba władz miejskich Torunia",
+  "category": "ratusz",
+  "lat": 53.0105,
+  "lon": 18.6044,
+  "years": [
+   1393
+  ],
+  "image": "Torun ratusz corr.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Ratusz_Staromiejski_w_Toruniu",
+  "place": "Stare Miasto",
+  "curated": true
+ },
+ {
+  "qid": "Q9167726",
+  "name": "Bazylika Nawiedzenia Najświętszej Maryi Panny w Świętej Lipce",
+  "description": "church building in Święta Lipka, Poland",
+  "category": "bazylika",
+  "lat": 54.0257,
+  "lon": 21.2146,
+  "years": [
+   1693
+  ],
+  "image": "Brama przed Kościółem Nawiedzenia NMP w Świętej Lipce.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Bazylika_Nawiedzenia_Naj%C5%9Bwi%C4%99tszej_Maryi_Panny_w_%C5%9Awi%C4%99tej_Lipce",
+  "place": "Święta Lipka",
+  "curated": true
+ },
+ {
+  "qid": "Q9187655",
+  "name": "Cerkiew św. Jakuba w Powroźniku",
+  "description": "UNESCO World Heritage Site",
+  "category": "cerkiew",
+  "lat": 49.36955,
+  "lon": 20.95038,
+  "years": [
+   1600
+  ],
+  "image": "Powroźnik, cerkiew pw. św. Jakuba Młodszego Apostoła (2).jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Cerkiew_%C5%9Bw._Jakuba_w_Powro%C5%BAniku",
+  "place": "Powroźnik",
+  "curated": true
+ },
+ {
+  "qid": "Q11737324",
+  "name": "Katedra Zmartwychwstania Pańskiego i św. Tomasza Apostoła w Zamościu",
+  "description": "świątynia katolicka, zabytek renesansowy",
+  "category": "katedra",
+  "lat": 50.7164,
+  "lon": 23.2503,
+  "years": [
+   1598
+  ],
+  "image": "Katedra Zamosc 2013.JPG",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Katedra_Zmartwychwstania_Pa%C5%84skiego_i_%C5%9Bw._Tomasza_Aposto%C5%82a_w_Zamo%C5%9Bciu",
+  "place": "Zamość",
+  "curated": true
+ },
+ {
+  "qid": "Q11747195",
+  "name": "Kościół św. Michała Archanioła w Dębnie",
+  "description": "zabytkowy drewniany kościół w Dębnie (woj. małopolskie)",
+  "category": "kościół",
+  "lat": 49.4665,
+  "lon": 20.212,
+  "years": [
+   1490
+  ],
+  "image": "Church of St. Michael in Dębno 2009 (5).jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Ko%C5%9Bci%C3%B3%C5%82_%C5%9Bw._Micha%C5%82a_Archanio%C5%82a_w_D%C4%99bnie",
+  "place": "Dębno",
+  "curated": true
+ },
+ {
+  "qid": "Q11823548",
+  "name": "Pomnik króla Jana III Sobieskiego w Gdańsku",
+  "description": "Pomnik w Gdańsku",
+  "category": "pomnik",
+  "lat": 54.35211,
+  "lon": 18.64847,
+  "years": [
+   1898
+  ],
+  "image": "John III Sobieski Monument in Gdańsk 2669.JPG",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Pomnik_kr%C3%B3la_Jana_III_Sobieskiego_w_Gda%C5%84sku",
+  "place": "Gdańsk",
+  "curated": true
+ },
+ {
+  "qid": "Q21155924",
+  "name": "Ruiny zamku Ogrodzieniec",
+  "description": "ruiny średniowiecznego zamku w Podzamczu",
+  "category": "ruiny zamku",
+  "lat": 50.45326,
+  "lon": 19.55214,
+  "years": [
+   1545
+  ],
+  "image": "Ogrodzieniec zamek 2.jpg",
+  "sitelinks": 17,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_Ogrodzieniec",
+  "place": "Podzamcze",
+  "curated": true
+ },
+ {
+  "qid": "Q28320872",
+  "name": "Varso",
+  "description": "kompleks biurowo-usługowy w Warszawie",
+  "category": "wieżowiec",
+  "lat": 52.22863,
+  "lon": 20.99918,
+  "years": [
+   2022
+  ],
+  "image": "Varso 05.2022.jpg",
+  "sitelinks": 25,
+  "wiki": "https://pl.wikipedia.org/wiki/Varso",
+  "place": "Warszawa",
+  "curated": true
  }
 ]

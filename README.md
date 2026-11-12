@@ -121,9 +121,9 @@ Skąd biorą się kandydaci (`fetch_wikidata.py`):
 
 Ręczne poprawki redakcyjne:
 - `data/exclude.txt` to czarna lista QID, jeden na linię, np. obiekty z błędną datą,
-- `data/curated.json` to obiekty dodane ręcznie, z rokiem podanym przez redakcję. Służy dla znanych miejsc, którym w Wikidata brakuje dokładnej daty (np. Wawel ma tam tylko „XI w.”).
+- `data/curated.json` to obiekty dodane ręcznie, z rokiem podanym przez redakcję (pole `note` mówi, skąd rok). Służy dla znanych miejsc, którym w Wikidata brakuje dokładnej daty (Wawel, Książ, Żuraw…). Rok bywa przybliżony albo umowny, np. ukończenie budowy; to świadoma decyzja. Po dopisaniu obiektów: `python3 scripts/fetch_wikidata.py --only-curated`, potem `fetch_commons.py` i `build_puzzles.py`.
 
-**Stan obecny:** 1173 zagadki (228 łatwych, 455 średnich, 490 trudnych). Harmonogram ma 228 dni (od 11.11.2026 do 26.06.2027) bez żadnej powtórki; potem zaczną się powtarzać zagadki łatwe, bo jest ich 228 (skrypt bierze wtedy te najdawniej użyte). Powtórki są akceptowane.
+**Stan obecny:** 1206 zagadek (263 łatwe, 453 średnie, 490 trudnych). Harmonogram ma 263 dni (od 11.11.2026 do 31.07.2027) bez żadnej powtórki; potem zaczną się powtarzać zagadki łatwe, bo jest ich 263 (skrypt bierze wtedy te najdawniej użyte). Powtórki są akceptowane.
 
 ### Harmonogram dni
 
