@@ -31,9 +31,9 @@ describe("wyzwanie dnia", () => {
       expect(day.map((id) => byId.get(id)?.difficulty)).toEqual([1, 2, 3]);
     }
   });
-  it("brak powtórek w pierwszych 180 dniach", () => {
+  it("brak powtórek w pierwszych 220 dniach", () => {
     const seen = new Set<string>();
-    for (const day of schedule.days.slice(0, 180)) for (const id of day) {
+    for (const day of schedule.days.slice(0, 220)) for (const id of day) {
       expect(seen.has(id)).toBe(false);
       seen.add(id);
     }

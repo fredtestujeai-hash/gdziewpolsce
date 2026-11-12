@@ -23012,5 +23012,1788 @@
   "wiki": "https://pl.wikipedia.org/wiki/Krzy%C5%BCtop%C3%B3r",
   "place": "Ujazd",
   "curated": true
+ },
+ {
+  "qid": "Q1134135",
+  "name": "Skocznia narciarska im. Adama Małysza",
+  "description": "duża skocznia narciarska zlokalizowana w Wiśle",
+  "category": "skocznia narciarska",
+  "lat": 49.62833,
+  "lon": 18.915,
+  "years": [
+   2008
+  ],
+  "image": "POL Wisła Malinka DW942 pod skocznią 3.JPG",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Skocznia_narciarska_im._Adama_Ma%C5%82ysza",
+  "place": "Wisła",
+  "known": true
+ },
+ {
+  "qid": "Q11688741",
+  "name": "Brama Bernardyńska na Wawelu",
+  "description": "",
+  "category": "brama miejska",
+  "lat": 50.0529,
+  "lon": 19.9354,
+  "years": [
+   1943
+  ],
+  "image": "2015 Kraków, Wawel, Brama Bernardyńska 01.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Brama_Bernardy%C5%84ska_na_Wawelu",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q11785777",
+  "name": "Most Józefa Piłsudskiego w Krakowie",
+  "description": "most w Krakowie",
+  "category": "most",
+  "lat": 50.0456,
+  "lon": 19.945,
+  "years": [
+   1933
+  ],
+  "image": "Most Piłsudskiego w Krakowie.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_Marsza%C5%82ka_J%C3%B3zefa_Pi%C5%82sudskiego_w_Krakowie",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q11689734",
+  "name": "Cerkiew i monaster Zaśnięcia Najświętszej Marii Panny w Warszawie",
+  "description": "",
+  "category": "kościół",
+  "lat": 52.24778,
+  "lon": 21.00917,
+  "years": [
+   1782
+  ],
+  "image": "Cerkiew Zaśnięcia Najświętszej Marii Panny w Warszawie 2023.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Cerkiew_i_monaster_Za%C5%9Bni%C4%99cia_Naj%C5%9Bwi%C4%99tszej_Marii_Panny_w_Warszawie",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q11784882",
+  "name": "Molo w Gdyni Orłowie",
+  "description": "budowla hydrotechniczna w Polsce",
+  "category": "molo",
+  "lat": 54.47989,
+  "lon": 18.56558,
+  "years": [
+   1934
+  ],
+  "image": "Orłowskie molo P1020629 krz.JPG",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Molo_w_Gdyni_Or%C5%82owie",
+  "place": "Gdynia",
+  "known": true
+ },
+ {
+  "qid": "Q11785962",
+  "name": "Most średnicowy w Warszawie",
+  "description": "most kolejowy na Wiśle w Warszawie",
+  "category": "most",
+  "lat": 52.2388,
+  "lon": 21.0375,
+  "years": [
+   1931
+  ],
+  "image": "Most średnicowy w Warszawie 2021.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_%C5%9Brednicowy_w_Warszawie",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q11785930",
+  "name": "Most spawany w Maurzycach",
+  "description": "Most-zabytek nad rzeką Słudwią",
+  "category": "most",
+  "lat": 52.1395,
+  "lon": 19.87067,
+  "years": [
+   1929
+  ],
+  "image": "Pierwszy na świecie drogowy most spawany, most w Maurzycach na rzece Słudwi pod Łowiczem, 2025, KsP 0392.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_spawany_w_Maurzycach",
+  "place": "Maurzyce",
+  "known": true
+ },
+ {
+  "qid": "Q1164761",
+  "name": "Hotel Polski",
+  "description": "nieistniejący hotel w Warszawie",
+  "category": "budynek",
+  "lat": 52.24667,
+  "lon": 21.00472,
+  "years": [
+   1808
+  ],
+  "image": "Hotel Polski w Warszawie 2025.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Hotel_Polski_w_Warszawie",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q103759598",
+  "name": "Zamek w Stobnicy",
+  "description": "współczesny zamek",
+  "category": "budynek",
+  "lat": 52.71263,
+  "lon": 16.61181,
+  "years": [
+   2015
+  ],
+  "image": "2026-07 Stobnica (20).jpg",
+  "sitelinks": 8,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_w_Stobnicy",
+  "place": "Stobnica",
+  "known": true
+ },
+ {
+  "qid": "Q1147191",
+  "name": "Stadion Zagłębia Lubin",
+  "description": "stadion piłkarski w Lubinie, Polska",
+  "category": "stadion",
+  "lat": 51.41333,
+  "lon": 16.1975,
+  "years": [
+   914
+  ],
+  "image": "Dialog Arena.jpg",
+  "sitelinks": 15,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_w_Lubinie",
+  "place": "Lubin",
+  "known": true
+ },
+ {
+  "qid": "Q122324",
+  "name": "Bazylika Archikatedralna Wniebowzięcia Najświętszej Marii Panny we Lwowie",
+  "description": "kościół we Lwowie",
+  "category": "katedra",
+  "lat": 49.84056,
+  "lon": 24.03056,
+  "years": [
+   1360
+  ],
+  "image": "Латинський катедральний костел.jpg",
+  "sitelinks": 23,
+  "wiki": "https://pl.wikipedia.org/wiki/Bazylika_Archikatedralna_Wniebowzi%C4%99cia_Naj%C5%9Bwi%C4%99tszej_Marii_Panny_we_Lwowie",
+  "place": "Lwów",
+  "known": true
+ },
+ {
+  "qid": "Q11829017",
+  "name": "Przemyśl Główny",
+  "description": "stacja kolejowa w Polsce",
+  "category": "dworzec",
+  "lat": 49.78333,
+  "lon": 22.77639,
+  "years": [
+   1860
+  ],
+  "image": "00499 Der neugestaltete Legionów Platz und Hauptbahnhof in Przemyśl (2012).JPG",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Przemy%C5%9Bl_G%C5%82%C3%B3wny",
+  "place": "Przemyśl",
+  "known": true
+ },
+ {
+  "qid": "Q11823129",
+  "name": "Pomnik Bartolomeo Colleoniego w Szczecinie",
+  "description": "monument in Szczecin, Poland",
+  "category": "pomnik",
+  "lat": 53.4303,
+  "lon": 14.5505,
+  "years": [
+   1913
+  ],
+  "image": "0907 Colleoni Monument in Szczecin SZN 2.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Pomnik_Bartolomea_Colleoniego_w_Szczecinie",
+  "place": "Szczecin",
+  "known": true
+ },
+ {
+  "qid": "Q11799275",
+  "name": "Orlinek",
+  "description": "skocznia narciarska w Karpaczu",
+  "category": "skocznia narciarska",
+  "lat": 50.76817,
+  "lon": 15.74308,
+  "years": [
+   1979
+  ],
+  "image": "2022 Orlinek Karpacz.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Orlinek_(skocznia_narciarska)",
+  "place": "Karpacz",
+  "known": true
+ },
+ {
+  "qid": "Q11823151",
+  "name": "Pomnik Bolka i Lolka w Bielsku-Białej",
+  "description": "monument in Bielsko-Biała, Poland",
+  "category": "pomnik",
+  "lat": 49.8263,
+  "lon": 19.0482,
+  "years": [
+   2011
+  ],
+  "image": "Bolek and Lolek monument 8.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Pomnik_Bolka_i_Lolka_w_Bielsku-Bia%C5%82ej",
+  "place": "Bielsko-Biała",
+  "known": true
+ },
+ {
+  "qid": "Q140812741",
+  "name": "Pomnik Matki Bożej Miłosiernej w Konotopiu",
+  "description": "monumentalna figura maryjna znajdująca się w Konotopiu, w województwie kujawsko-pomorskim",
+  "category": "pomnik",
+  "lat": 52.89661,
+  "lon": 19.11795,
+  "years": [
+   2026
+  ],
+  "image": "Konotopie posąg Matki Boskiej 2026 07 24 001.jpg",
+  "sitelinks": 8,
+  "wiki": "https://pl.wikipedia.org/wiki/Pomnik_Matki_Bo%C5%BCej_Mi%C5%82osiernej_w_Konotopiu",
+  "place": "Kikół",
+  "known": true
+ },
+ {
+  "qid": "Q1291459",
+  "name": "Stadion im. Edwarda Szymkowiaka",
+  "description": "stadion piłkarski w Bytomiu, Polska",
+  "category": "stadion",
+  "lat": 50.35756,
+  "lon": 18.89872,
+  "years": [
+   1929
+  ],
+  "image": "Kryta trybuna stadionu Polonii od strony łuku.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_im._Edwarda_Szymkowiaka",
+  "place": "Bytom",
+  "known": true
+ },
+ {
+  "qid": "Q1445398",
+  "name": "Opera Leśna",
+  "description": "amfiteatr w Sopocie, Polska",
+  "category": "amfiteatr",
+  "lat": 54.4448,
+  "lon": 18.5444,
+  "years": [
+   1909
+  ],
+  "image": "Sopot - Opera Leśna (3).JPG",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Opera_Le%C5%9Bna",
+  "place": "Sopot",
+  "known": true
+ },
+ {
+  "qid": "Q14903119",
+  "name": "Wiadukt kolejowy w Nowej Rudzie",
+  "description": "most w Polsce",
+  "category": "most",
+  "lat": 50.58107,
+  "lon": 16.50624,
+  "years": [
+   1879
+  ],
+  "image": "NowaRudaWiadukt22.JPG",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_kolejowy_nad_Wolibork%C4%85_w_Nowej_Rudzie",
+  "place": "Nowa Ruda",
+  "known": true
+ },
+ {
+  "qid": "Q1409009",
+  "name": "Twierdza Zegrze",
+  "description": "fortress",
+  "category": "fortyfikacja",
+  "lat": 52.46336,
+  "lon": 21.02804,
+  "years": [
+   1892
+  ],
+  "image": "Fort Zegrze (schemat).svg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Twierdza_Zegrze",
+  "place": "",
+  "known": true
+ },
+ {
+  "qid": "Q1407331",
+  "name": "RTCN Sucha Góra",
+  "description": "tower in Poland",
+  "category": "wieża",
+  "lat": 49.7561,
+  "lon": 21.8129,
+  "years": [
+   1962
+  ],
+  "image": "Wieza RTV Sucha Góra 1.JPG",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/RTCN_Sucha_G%C3%B3ra",
+  "place": "Krosno",
+  "known": true
+ },
+ {
+  "qid": "Q1636036",
+  "name": "Wielka Krokiew",
+  "description": "skocznia narciarska (Zakopane, Polska; otw. 1925)",
+  "category": "skocznia narciarska",
+  "lat": 49.27944,
+  "lon": 19.96528,
+  "years": [
+   1925
+  ],
+  "image": "Wielka krokiew.jpg",
+  "sitelinks": 18,
+  "wiki": "https://pl.wikipedia.org/wiki/Wielka_Krokiew",
+  "place": "Zakopane",
+  "known": true
+ },
+ {
+  "qid": "Q1609397",
+  "name": "Most Siekierkowski",
+  "description": "most w Warszawie",
+  "category": "most",
+  "lat": 52.21485,
+  "lon": 21.09323,
+  "years": [
+   2002
+  ],
+  "image": "Most Siekierkowski Warsaw 2022 aerial.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_Siekierkowski",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q182385",
+  "name": "Gdańsk Arena",
+  "description": "stadion piłkarski w Gdańsku, Polska",
+  "category": "stadion",
+  "lat": 54.39,
+  "lon": 18.64028,
+  "years": [
+   2011
+  ],
+  "image": "PGE Arena.jpeg",
+  "sitelinks": 50,
+  "wiki": "https://pl.wikipedia.org/wiki/Gda%C5%84sk_Arena",
+  "place": "Gdańsk",
+  "known": true
+ },
+ {
+  "qid": "Q18216052",
+  "name": "Kolegiata w Stanisławowie",
+  "description": "sanktuarium rodu potockich, rzymskokatolicki kościół farny i kolegialny w Stanisławowie, ob. na Ukrainie",
+  "category": "kościół",
+  "lat": 48.92373,
+  "lon": 24.70919,
+  "years": [
+   1672
+  ],
+  "image": "Stanislawow Zabytki 11.jpg",
+  "sitelinks": 8,
+  "wiki": "https://pl.wikipedia.org/wiki/Kolegiata_w_Iwano-Frankiwsku",
+  "place": "Iwano-Frankiwsk",
+  "known": true
+ },
+ {
+  "qid": "Q16978699",
+  "name": "Hotel Brda",
+  "description": "hotel w Bydgoszczy",
+  "category": "budynek",
+  "lat": 53.1322,
+  "lon": 17.9958,
+  "years": [
+   1854
+  ],
+  "image": "Bdg hotel Brda 2 07-2013.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Hotel_Brda",
+  "place": "Bydgoszcz",
+  "known": true
+ },
+ {
+  "qid": "Q169235",
+  "name": "Stadion im. Zdzisława Krzyszkowiaka",
+  "description": "football stadium",
+  "category": "stadion",
+  "lat": 53.14556,
+  "lon": 18.02056,
+  "years": [
+   1960
+  ],
+  "image": "Stadion Zawiszy Bydgoszcz widok ogolny.jpg",
+  "sitelinks": 15,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_im._Zdzis%C5%82awa_Krzyszkowiaka",
+  "place": "Bydgoszcz",
+  "known": true
+ },
+ {
+  "qid": "Q1739931",
+  "name": "Most wiszący w Ozimku",
+  "description": "bridge in Ozimek, Poland",
+  "category": "most",
+  "lat": 50.67645,
+  "lon": 18.21241,
+  "years": [
+   1827
+  ],
+  "image": "Most w Ozimku.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_wisz%C4%85cy_w_Ozimku",
+  "place": "Ozimek",
+  "known": true
+ },
+ {
+  "qid": "Q17333870",
+  "name": "Kościół ewangelicko-reformowany w Warszawie",
+  "description": "church building in Warsaw, Poland",
+  "category": "kościół",
+  "lat": 52.24333,
+  "lon": 20.9975,
+  "years": [
+   1880
+  ],
+  "image": "Kościół ewangelicko-reformowany w Warszawie 2023.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Ko%C5%9Bci%C3%B3%C5%82_ewangelicko-reformowany_w_Warszawie",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q1540926",
+  "name": "Grób Nieznanego Żołnierza w Warszawie",
+  "description": "grób nieznanego żołnierza (plac J. Piłsudskiego, Warszawa, Polska)",
+  "category": "pomnik",
+  "lat": 52.24111,
+  "lon": 21.01139,
+  "years": [
+   1925
+  ],
+  "image": "Grob Nieznanego Zołnierza w Warszawie 2010 (2).JPG",
+  "sitelinks": 19,
+  "wiki": "https://pl.wikipedia.org/wiki/Gr%C3%B3b_Nieznanego_%C5%BBo%C5%82nierza_w_Warszawie",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q1570176",
+  "name": "Hala Sportowo-Widowiskowa Gdynia",
+  "description": "hala sportowa w Gdyni",
+  "category": "hala",
+  "lat": 54.49889,
+  "lon": 18.53139,
+  "years": [
+   2008
+  ],
+  "image": "POL.Gdynia.HSW5.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Gdynia_Arena",
+  "place": "Gdynia",
+  "known": true
+ },
+ {
+  "qid": "Q1862048",
+  "name": "Lublin Główny",
+  "description": "stacja kolejowa w Lublinie",
+  "category": "dworzec",
+  "lat": 51.2316,
+  "lon": 22.5686,
+  "years": [
+   1877
+  ],
+  "image": "Lublin Główny, budynek dworca, 21.04.2024 (cropped).jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Lublin_G%C5%82%C3%B3wny",
+  "place": "Lublin",
+  "known": true
+ },
+ {
+  "qid": "Q188699",
+  "name": "Stadion Miejski w Poznaniu",
+  "description": "stadion piłkarski w Poznaniu, Polska",
+  "category": "stadion",
+  "lat": 52.39722,
+  "lon": 16.85806,
+  "years": [
+   1980
+  ],
+  "image": "Stadion Miejski Poznan, 2011-08-23.jpg",
+  "sitelinks": 47,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Pozna%C5%84",
+  "place": "Poznań",
+  "known": true
+ },
+ {
+  "qid": "Q188706",
+  "name": "Tarczyński Arena Wrocław",
+  "description": "stadion piłkarski we Wrocławiu",
+  "category": "stadion",
+  "lat": 51.14111,
+  "lon": 16.94361,
+  "years": [
+   2011
+  ],
+  "image": "Wroclaw Munincipal Stadium 2019.jpg",
+  "sitelinks": 45,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Miejski_we_Wroc%C5%82awiu",
+  "place": "Wrocław",
+  "known": true
+ },
+ {
+  "qid": "Q195120",
+  "name": "Stadion GKS Bełchatów",
+  "description": "stadion sportowy w Bełchatowie, Polska",
+  "category": "stadion",
+  "lat": 51.36584,
+  "lon": 19.38169,
+  "years": [
+   1977
+  ],
+  "image": "Stadion gks belchatow.jpg",
+  "sitelinks": 13,
+  "wiki": "https://pl.wikipedia.org/wiki/GIEKSA_Arena",
+  "place": "Bełchatów",
+  "known": true
+ },
+ {
+  "qid": "Q2154725",
+  "name": "Kraków Główny",
+  "description": "stacja kolejowa w Krakowie",
+  "category": "dworzec",
+  "lat": 50.06556,
+  "lon": 19.94722,
+  "years": [
+   1847
+  ],
+  "image": "Former Kraków Główny railway station, 1844 design. Peter Rosenbaum, 1-3 Jan Nowak-Jeziorański square, Kraków, Poland (bird's eye view, 2025).jpg",
+  "sitelinks": 24,
+  "wiki": "https://pl.wikipedia.org/wiki/Krak%C3%B3w_G%C5%82%C3%B3wny",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q2309434",
+  "name": "Złota Kamienica w Gdańsku",
+  "description": "house in Gdańsk, Poland",
+  "category": "budynek",
+  "lat": 54.34862,
+  "lon": 18.65383,
+  "years": [
+   1618
+  ],
+  "image": "Gdansk-golden-house-gp.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Dom_Steffens%C3%B3w_w_Gda%C5%84sku",
+  "place": "Gdańsk",
+  "known": true
+ },
+ {
+  "qid": "Q2367681",
+  "name": "Superjednostka",
+  "description": "budynek mieszkalny w Katowicach",
+  "category": "wieżowiec",
+  "lat": 50.26351,
+  "lon": 19.02053,
+  "years": [
+   1972
+  ],
+  "image": "Katowice Superjednostka 2022.jpg",
+  "sitelinks": 8,
+  "wiki": "https://pl.wikipedia.org/wiki/Superjednostka",
+  "place": "Katowice",
+  "known": true
+ },
+ {
+  "qid": "Q2296082",
+  "name": "Stadion Ruchu Chorzów",
+  "description": "stadion piłkarski w Chorzowie, Polska",
+  "category": "stadion",
+  "lat": 50.2822,
+  "lon": 18.94418,
+  "years": [
+   1935
+  ],
+  "image": "StadionRuch.jpg",
+  "sitelinks": 16,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Ruchu_Chorz%C3%B3w",
+  "place": "Chorzów",
+  "known": true
+ },
+ {
+  "qid": "Q1960842",
+  "name": "Pałac w Słobitach",
+  "description": "ruined baroque palace in former East Prussia, now Poland",
+  "category": "pałac",
+  "lat": 54.14128,
+  "lon": 19.78601,
+  "years": [
+   1734
+  ],
+  "image": "Słobity-pałac-ruina.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Pa%C5%82ac_w_S%C5%82obitach",
+  "place": "województwo warmińsko-mazurskie",
+  "known": true,
+  "demolished": true
+ },
+ {
+  "qid": "Q20035646",
+  "name": "Enea Arena",
+  "description": "hala widowiskowo-sportowa w Szczecinie",
+  "category": "hala",
+  "lat": 53.4576,
+  "lon": 14.4949,
+  "years": [
+   2014
+  ],
+  "image": "1506 Arena Szczecin Panorama ZS.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Enea_Arena",
+  "place": "Szczecin",
+  "known": true
+ },
+ {
+  "qid": "Q2379846",
+  "name": "Zamek w Golubiu",
+  "description": "zamek w Polsce",
+  "category": "zamek",
+  "lat": 53.11544,
+  "lon": 19.04978,
+  "years": [
+   1293
+  ],
+  "image": "Golub-Dobrzyń, zamek krzyżacki.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_w_Golubiu",
+  "place": "Golub-Dobrzyń",
+  "known": true
+ },
+ {
+  "qid": "Q2003046",
+  "name": "budynek Hotelu Forum",
+  "description": "budynek w Warszawie",
+  "category": "budynek",
+  "lat": 52.22988,
+  "lon": 21.01254,
+  "years": [
+   1974
+  ],
+  "image": "Hotel Novotel Centrum w Warszawie 2019.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Novotel_Warszawa_Centrum",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q1969248",
+  "name": "Stadion Dziesięciolecia",
+  "description": "dawny wielofunkcyjny stadion sportowy w Warszawie, Polska",
+  "category": "stadion",
+  "lat": 52.23947,
+  "lon": 21.04572,
+  "years": [
+   1955
+  ],
+  "image": "Warszawa-Stadion Dziesieciolecia-2006.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Dziesi%C4%99ciolecia",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q2002170",
+  "name": "Exbud Arena",
+  "description": "Stadion miejski w Kielcach",
+  "category": "stadion",
+  "lat": 50.86139,
+  "lon": 20.62472,
+  "years": [
+   2006
+  ],
+  "image": "Korona Kielce Super Stadion 1.jpg",
+  "sitelinks": 18,
+  "wiki": "https://pl.wikipedia.org/wiki/Arena_Kielce",
+  "place": "Kielce",
+  "known": true
+ },
+ {
+  "qid": "Q2017390",
+  "name": "Stadion Miejski w Gliwicach",
+  "description": "stadion piłkarski w Gliwicach, Polska",
+  "category": "stadion",
+  "lat": 50.30658,
+  "lon": 18.69587,
+  "years": [
+   1926
+  ],
+  "image": "Stadion Piasta Gliwice 05.JPG",
+  "sitelinks": 13,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Miejski_w_Gliwicach",
+  "place": "Gliwice",
+  "known": true
+ },
+ {
+  "qid": "Q2018124",
+  "name": "Stadion im. Kazimierza Górskiego",
+  "description": "stadion piłkarski w Płocku",
+  "category": "stadion",
+  "lat": 52.562,
+  "lon": 19.68407,
+  "years": [
+   1973
+  ],
+  "image": "Orlen Stadion 2025.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_im._Kazimierza_G%C3%B3rskiego_w_P%C5%82ocku",
+  "place": "Płock",
+  "known": true
+ },
+ {
+  "qid": "Q2772800",
+  "name": "Warszawa Wileńska",
+  "description": "stacja kolejowa w Warszawie",
+  "category": "dworzec",
+  "lat": 52.2553,
+  "lon": 21.0375,
+  "years": [
+   1863
+  ],
+  "image": "Warszawa Wileńska 2015 07.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Warszawa_Wile%C5%84ska",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q2739495",
+  "name": "Synagoga w Lesku",
+  "description": "synagogue in Lesko, Poland",
+  "category": "synagoga",
+  "lat": 49.47051,
+  "lon": 22.331,
+  "years": [
+   1654
+  ],
+  "image": "Synagoga lesko.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Synagoga_w_Lesku",
+  "place": "Lesko",
+  "known": true
+ },
+ {
+  "qid": "Q2742223",
+  "name": "Arena Poznań",
+  "description": "hala widowiskowo-sportowa w Poznaniu",
+  "category": "hala",
+  "lat": 52.3975,
+  "lon": 16.89222,
+  "years": [
+   1974
+  ],
+  "image": "Arena Poznań RB1.JPG",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Arena_Pozna%C5%84",
+  "place": "Poznań",
+  "known": true
+ },
+ {
+  "qid": "Q2503140",
+  "name": "Twierdza Osowiec",
+  "description": "19th century Russian Empire fortress in Poland",
+  "category": "fortyfikacja",
+  "lat": 53.46861,
+  "lon": 22.64389,
+  "years": [
+   1882
+  ],
+  "image": "Twierdza Osowiec. Fort I-tunel zach..JPG",
+  "sitelinks": 20,
+  "wiki": "https://pl.wikipedia.org/wiki/Twierdza_Osowiec",
+  "place": "Osowiec-Twierdza",
+  "known": true
+ },
+ {
+  "qid": "Q28055039",
+  "name": "The Warsaw Hub",
+  "description": "kompleks dwóch biurowców i budynku hotelowego w Warszawie",
+  "category": "wieżowiec",
+  "lat": 52.22905,
+  "lon": 20.98451,
+  "years": [
+   2020
+  ],
+  "image": "The warsaw hub sierpień 2020.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/The_Warsaw_Hub",
+  "place": "Wola",
+  "known": true
+ },
+ {
+  "qid": "Q30037135",
+  "name": "Budynek dawnego Banku Gdańskiego we Włocławku",
+  "description": "budynek we Włocławku",
+  "category": "budynek",
+  "lat": 52.65722,
+  "lon": 19.07153,
+  "years": [
+   1911
+  ],
+  "image": "319)A Bank Gospdarstwa krajowego 1911 Włocławek ul. Żabia 2 HWsnajper01.JPG",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Budynek_dawnego_Banku_Gda%C5%84skiego_we_W%C5%82oc%C5%82awku",
+  "place": "Włocławek",
+  "known": true
+ },
+ {
+  "qid": "Q313960",
+  "name": "Międzyrzecki Rejon Umocniony",
+  "description": "fortress",
+  "category": "fortyfikacja",
+  "lat": 52.36667,
+  "lon": 15.5,
+  "years": [
+   1934
+  ],
+  "image": "Poland Boryszyn - MRU.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Mi%C4%99dzyrzecki_Rejon_Umocniony",
+  "place": "Nietoperek",
+  "known": true
+ },
+ {
+  "qid": "Q2860812",
+  "name": "Arena Częstochowa",
+  "description": "wielofunkcyjny stadion w Częstochowie",
+  "category": "stadion",
+  "lat": 50.8025,
+  "lon": 19.15361,
+  "years": [
+   2007
+  ],
+  "image": "Arena czestochowa 2.JPG",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Arena_Cz%C4%99stochowa",
+  "place": "Częstochowa",
+  "known": true
+ },
+ {
+  "qid": "Q2470765",
+  "name": "Stadion Miejski w Białymstoku",
+  "description": "stadion piłkarski w Białymstoku, Polska",
+  "category": "stadion",
+  "lat": 53.10556,
+  "lon": 23.14889,
+  "years": [
+   1972
+  ],
+  "image": "Stadion Miejski - Białystok1.jpg",
+  "sitelinks": 19,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Miejski_w_Bia%C5%82ymstoku",
+  "place": "Białystok",
+  "known": true
+ },
+ {
+  "qid": "Q247642",
+  "name": "Szczecin Główny",
+  "description": "stacja kolejowa w Szczecinie",
+  "category": "dworzec",
+  "lat": 53.41861,
+  "lon": 14.54972,
+  "years": [
+   1843
+  ],
+  "image": "Szczecin 05-2017 img01 Railway station.jpg",
+  "sitelinks": 16,
+  "wiki": "https://pl.wikipedia.org/wiki/Szczecin_G%C5%82%C3%B3wny",
+  "place": "Szczecin",
+  "known": true
+ },
+ {
+  "qid": "Q240138",
+  "name": "Most Kotlarski w Krakowie",
+  "description": "bridge in Poland",
+  "category": "most",
+  "lat": 50.0525,
+  "lon": 19.9608,
+  "years": [
+   2001
+  ],
+  "image": "Bridge Kotlarski.JPG",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_Kotlarski_w_Krakowie",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q387805",
+  "name": "Most Świętokrzyski",
+  "description": "most drogowy nad Wisłą w Warszawie",
+  "category": "most",
+  "lat": 52.2414,
+  "lon": 21.03317,
+  "years": [
+   2000
+  ],
+  "image": "Most Świętokrzyski w Warszawie 2019.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_%C5%9Awi%C4%99tokrzyski",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q317211",
+  "name": "Most Kierbedzia",
+  "description": "nieistniejący most w Warszawie",
+  "category": "most",
+  "lat": 52.24925,
+  "lon": 21.022,
+  "years": [
+   1859
+  ],
+  "image": "Kierbedź Bridge (1900).jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_Kierbedzia",
+  "place": "Warszawa",
+  "known": true,
+  "demolished": true
+ },
+ {
+  "qid": "Q3283746",
+  "name": "Częstochowa",
+  "description": "główna stacja kolejowa w Częstochowie",
+  "category": "dworzec",
+  "lat": 50.8087,
+  "lon": 19.1193,
+  "years": [
+   1846
+  ],
+  "image": "Częstochowa (dworzec główny PKP).JPG",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Cz%C4%99stochowa_(stacja_kolejowa)",
+  "place": "Częstochowa",
+  "known": true
+ },
+ {
+  "qid": "Q3386955",
+  "name": "Kościół Wszystkich Świętych w Bliznem",
+  "description": "UNESCO World Heritage Site",
+  "category": "kościół",
+  "lat": 49.75062,
+  "lon": 21.97628,
+  "years": [
+   1470
+  ],
+  "image": "Blizne, kościół Wszystkich Świętych (HB1).jpg",
+  "sitelinks": 8,
+  "wiki": "https://pl.wikipedia.org/wiki/Ko%C5%9Bci%C3%B3%C5%82_Wszystkich_%C5%9Awi%C4%99tych_w_Bliznem",
+  "place": "Blizne",
+  "known": true
+ },
+ {
+  "qid": "Q3496230",
+  "name": "Stadion Ludowy",
+  "description": "stadion piłkarski w Sosnowcu, Polska",
+  "category": "stadion",
+  "lat": 50.27722,
+  "lon": 19.10361,
+  "years": [
+   1956
+  ],
+  "image": "Stadion Ludowy w trakcie mczu Zagłebie Sosnowiec - Wisła Kraków, widok z narożnika, 22 października 2022.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Ludowy",
+  "place": "Sosnowiec",
+  "known": true
+ },
+ {
+  "qid": "Q3661717",
+  "name": "Hala Legionów",
+  "description": "sport hall in Kielce",
+  "category": "hala",
+  "lat": 50.8559,
+  "lon": 20.6106,
+  "years": [
+   2006
+  ],
+  "image": "Hala sportowa w Kielcach 01 ssj 20060914.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Hala_Legion%C3%B3w",
+  "place": "Kielce",
+  "known": true
+ },
+ {
+  "qid": "Q387127",
+  "name": "Most Śląsko-Dąbrowski",
+  "description": "most drogowy w Warszawie",
+  "category": "most",
+  "lat": 52.24926,
+  "lon": 21.022,
+  "years": [
+   1949
+  ],
+  "image": "Most Śląsko-Dąbrowski 2017.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_%C5%9Al%C4%85sko-D%C4%85browski",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q33305871",
+  "name": "Piłsudskiego 7 w Szczecinie",
+  "description": "Kamienica w Szczecinie",
+  "category": "budynek",
+  "lat": 53.43252,
+  "lon": 14.55114,
+  "years": [
+   1897
+  ],
+  "image": "7 Piłsudskiego Street in Szczecin, November 2022.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Kamienica_przy_ul._Marsza%C5%82ka_J%C3%B3zefa_Pi%C5%82sudskiego_7_w_Szczecinie",
+  "place": "Szczecin",
+  "known": true
+ },
+ {
+  "qid": "Q3671990",
+  "name": "Pomnik Mikołaja Kopernika w Warszawie",
+  "description": "pomnik w Warszawie",
+  "category": "pomnik",
+  "lat": 52.23817,
+  "lon": 21.01799,
+  "years": [
+   1830
+  ],
+  "image": "Copernicus by Thorwaldsen Warsaw 02.jpg",
+  "sitelinks": 14,
+  "wiki": "https://pl.wikipedia.org/wiki/Pomnik_Miko%C5%82aja_Kopernika_w_Warszawie",
+  "place": "Śródmieście",
+  "known": true
+ },
+ {
+  "qid": "Q4195686",
+  "name": "Twierdza Dęblin",
+  "description": "19th century fortress in Poland",
+  "category": "fortyfikacja",
+  "lat": 51.5575,
+  "lon": 21.8375,
+  "years": [
+   1845
+  ],
+  "image": "2024 Dęblin, Brama Lubelska 01.jpg",
+  "sitelinks": 8,
+  "wiki": "https://pl.wikipedia.org/wiki/Twierdza_D%C4%99blin",
+  "place": "Dęblin",
+  "known": true
+ },
+ {
+  "qid": "Q4573260",
+  "name": "Hotel Polonia Palast w Łodzi",
+  "description": "hotel w Łodzi",
+  "category": "budynek",
+  "lat": 51.77143,
+  "lon": 19.46342,
+  "years": [
+   1912
+  ],
+  "image": "SM Łódź Narutowicza 38 Kilińskiego 52 Hotel Polonia Palast 2017 (0) ID 613165.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Hotel_Polonia_Palast_w_%C5%81odzi",
+  "place": "Śródmieście-Wschód",
+  "known": true
+ },
+ {
+  "qid": "Q4573306",
+  "name": "Hotel Savoy",
+  "description": "hotel w Łodzi",
+  "category": "budynek",
+  "lat": 51.7691,
+  "lon": 19.4586,
+  "years": [
+   1911
+  ],
+  "image": "Hotel Savoy Łódź.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Hotel_Savoy_w_%C5%81odzi",
+  "place": "Katedralna",
+  "known": true
+ },
+ {
+  "qid": "Q3967958",
+  "name": "Stadion Miejski w Rybniku",
+  "description": "stadium in Eskilstuna, Sweden",
+  "category": "stadion",
+  "lat": 50.10861,
+  "lon": 18.54806,
+  "years": [
+   1939
+  ],
+  "image": "Amfiteatr i główna.JPG",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_MOSiR_Rybnik",
+  "place": "Rybnik",
+  "known": true
+ },
+ {
+  "qid": "Q4867418",
+  "name": "Bazylika Najświętszego Serca Pana Jezusa w Krakowie",
+  "description": "kościół w Krakowie",
+  "category": "kościół",
+  "lat": 50.06194,
+  "lon": 19.94861,
+  "years": [
+   1921
+  ],
+  "image": "Kościół Najświętszego Serca Pana Jezusa (widok z wieży kościoła Mariackiego); A-299, A-221-M; PL-MA, Kraków, ul. Kopernika 26.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Ko%C5%9Bci%C3%B3%C5%82_Naj%C5%9Bwi%C4%99tszego_Serca_Pana_Jezusa_w_Krakowie_(ul._Kopernika)",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q47796",
+  "name": "Twierdza Modlin",
+  "description": "zespół fortyfikacji w Polsce",
+  "category": "fortyfikacja",
+  "lat": 52.43833,
+  "lon": 20.68194,
+  "years": [
+   1806
+  ],
+  "image": "White Tower in Modlin Fortress.jpg",
+  "sitelinks": 22,
+  "wiki": "https://pl.wikipedia.org/wiki/Twierdza_Modlin",
+  "place": "Nowy Dwór Mazowiecki",
+  "known": true
+ },
+ {
+  "qid": "Q48842378",
+  "name": "Olivia Star",
+  "description": "biurowiec w Gdańsku, Polska",
+  "category": "wieżowiec",
+  "lat": 54.40364,
+  "lon": 18.57046,
+  "years": [
+   2018
+  ],
+  "image": "Gdansk Olivia BC.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Olivia_Star",
+  "place": "Oliwa",
+  "known": true
+ },
+ {
+  "qid": "Q5529387",
+  "name": "Most Gdański",
+  "description": "most na Wiśle w Warszawie",
+  "category": "most",
+  "lat": 52.26107,
+  "lon": 21.01061,
+  "years": [
+   1959
+  ],
+  "image": "2019 Warszawa most Gdański, góra.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_Gda%C5%84ski",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q62552",
+  "name": "Orlen Arena",
+  "description": "hala widowiskowo-sportowa w Płocku",
+  "category": "hala",
+  "lat": 52.56,
+  "lon": 19.68361,
+  "years": [
+   2010
+  ],
+  "image": "Orlen Arena (1).jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Orlen_Arena",
+  "place": "Płock",
+  "known": true
+ },
+ {
+  "qid": "Q555792",
+  "name": "Pomnik Małego Powstańca w Warszawie",
+  "description": "Statue by Jerzy Jarnuszkiewicz in Warsaw, Poland",
+  "category": "pomnik",
+  "lat": 52.24972,
+  "lon": 21.00944,
+  "years": [
+   1946
+  ],
+  "image": "Pomnik Malego Powstanca.JPG",
+  "sitelinks": 16,
+  "wiki": "https://pl.wikipedia.org/wiki/Pomnik_Ma%C5%82ego_Powsta%C5%84ca_w_Warszawie",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q62592",
+  "name": "Most Solidarności w Płocku",
+  "description": "Polish cable-stayed bridge carrying two national roads over the Vistula River",
+  "category": "most",
+  "lat": 52.52167,
+  "lon": 19.7275,
+  "years": [
+   2007
+  ],
+  "image": "Most Solidarności w Płocku 4040.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_Solidarno%C5%9Bci_w_P%C5%82ocku",
+  "place": "Płock",
+  "known": true
+ },
+ {
+  "qid": "Q606059",
+  "name": "Stadion im. Ernesta Pohla",
+  "description": "stadion piłkarski w Zabrzu, Polska",
+  "category": "stadion",
+  "lat": 50.29632,
+  "lon": 18.76856,
+  "years": [
+   1934
+  ],
+  "image": "Ernest Pohl Stadium - Zabrze 2.jpg",
+  "sitelinks": 14,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_im._Ernesta_Pohla_w_Zabrzu",
+  "place": "Zabrze",
+  "known": true
+ },
+ {
+  "qid": "Q6699038",
+  "name": "Teatr Ludowy w Krakowie",
+  "description": "teatr krakowski",
+  "category": "budynek",
+  "lat": 50.08032,
+  "lon": 20.03371,
+  "years": [
+   1955
+  ],
+  "image": "Ludowy (People's) Theater, 34 Teatralne Estate, Nowa Huta,Krakow,Poland.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Teatr_Ludowy_w_Krakowie",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q6761586",
+  "name": "Most Marii Skłodowskiej-Curie w Warszawie",
+  "description": "most drogowy nad Wisłą w Warszawie",
+  "category": "most",
+  "lat": 52.30722,
+  "lon": 20.95083,
+  "years": [
+   2012
+  ],
+  "image": "Sklodowska-Curie bridge Warsaw 2023 aerial.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_Marii_Sk%C5%82odowskiej-Curie_w_Warszawie",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q738643",
+  "name": "Stadion Cracovii",
+  "description": "stadion piłkarski w Krakowie, Polska",
+  "category": "stadion",
+  "lat": 50.05806,
+  "lon": 19.91972,
+  "years": [
+   2010
+  ],
+  "image": "Stade Józef Piłsudski.jpg",
+  "sitelinks": 16,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Cracovii",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q693346",
+  "name": "Rondo 1",
+  "description": "wieżowiec w Warszawie",
+  "category": "budynek",
+  "lat": 52.2331,
+  "lon": 20.9997,
+  "years": [
+   2006
+  ],
+  "image": "Biurowiec Rondo 1 w Warszawie 2022a.jpg",
+  "sitelinks": 17,
+  "wiki": "https://pl.wikipedia.org/wiki/Rondo_1",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q7386915",
+  "name": "Most Rędziński",
+  "description": "most autostradowy nad Odrą we Wrocławiu",
+  "category": "most",
+  "lat": 51.15667,
+  "lon": 16.95972,
+  "years": [
+   2011
+  ],
+  "image": "Most Rędziński we Wroclawiu.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_R%C4%99dzi%C5%84ski",
+  "place": "Wrocław",
+  "known": true
+ },
+ {
+  "qid": "Q644791",
+  "name": "Stadion MOSiR Bystrzyca",
+  "description": "Lublin, Poland",
+  "category": "stadion",
+  "lat": 51.23889,
+  "lon": 22.565,
+  "years": [
+   2010
+  ],
+  "image": "Motor Lublin Płyta Główna Boiska.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_MOSiR_Bystrzyca_w_Lublinie",
+  "place": "Lublin",
+  "known": true
+ },
+ {
+  "qid": "Q7596308",
+  "name": "Stadion Górnika Łęczna",
+  "description": "stadion piłkarski w Łęcznej, Polska",
+  "category": "stadion",
+  "lat": 51.3016,
+  "lon": 22.876,
+  "years": [
+   2003
+  ],
+  "image": "Górnik Łęczna photo 2.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_G%C3%B3rnika_%C5%81%C4%99czna",
+  "place": "Łęczna",
+  "known": true
+ },
+ {
+  "qid": "Q7596336",
+  "name": "Stadion Stali Mielec",
+  "description": "wielofunkcyjny stadion sportowy w Mielcu, Polska",
+  "category": "stadion",
+  "lat": 50.29861,
+  "lon": 21.43583,
+  "years": [
+   1953
+  ],
+  "image": "Stal Mielec stadion 1.JPG",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Miejski_im._Grzegorza_Lato_w_Mielcu",
+  "place": "Mielec",
+  "known": true
+ },
+ {
+  "qid": "Q7209996",
+  "name": "Teatr Polski we Wrocławiu",
+  "description": "budynek",
+  "category": "budynek",
+  "lat": 51.1012,
+  "lon": 17.0264,
+  "years": [
+   1906
+  ],
+  "image": "Teatr Polski we Wrocławiu.jpg",
+  "sitelinks": 8,
+  "wiki": "https://pl.wikipedia.org/wiki/Teatr_Polski_we_Wroc%C5%82awiu",
+  "place": "Wrocław",
+  "known": true
+ },
+ {
+  "qid": "Q882840",
+  "name": "most kolejowy w Tczewie",
+  "description": "most kolejowy na Wiśle",
+  "category": "most",
+  "lat": 54.0931,
+  "lon": 18.8059,
+  "years": [
+   1891
+  ],
+  "image": "Tczew, oblouky železničního mostu.JPG",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_kolejowy_w_Tczewie",
+  "place": "Tczew",
+  "known": true
+ },
+ {
+  "qid": "Q888749",
+  "name": "Wiadukt kolejowy w Bolesławcu",
+  "description": "arch bridge",
+  "category": "most",
+  "lat": 51.26821,
+  "lon": 15.55217,
+  "years": [
+   1846,
+   1947
+  ],
+  "image": "Wiadukt w Bolesławcu po remoncie 01.JPG",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Wiadukt_kolejowy_w_Boles%C5%82awcu",
+  "place": "Bolesławiec",
+  "known": true
+ },
+ {
+  "qid": "Q801305",
+  "name": "Opole Główne",
+  "description": "stacja kolejowa w Polsce",
+  "category": "dworzec",
+  "lat": 50.6623,
+  "lon": 17.9267,
+  "years": [
+   1845
+  ],
+  "image": "Opole Dworzec 01 (cropped).jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Opole_G%C5%82%C3%B3wne",
+  "place": "Opole",
+  "known": true
+ },
+ {
+  "qid": "Q800602",
+  "name": "Bydgoszcz Główna",
+  "description": "stacja kolejowa w Bydgoszczy",
+  "category": "dworzec",
+  "lat": 53.13528,
+  "lon": 17.99139,
+  "years": [
+   1851
+  ],
+  "image": "Dworcowa - Bydgoszcz Glowna 2023 2.jpg",
+  "sitelinks": 13,
+  "wiki": "https://pl.wikipedia.org/wiki/Bydgoszcz_G%C5%82%C3%B3wna",
+  "place": "Bydgoszcz",
+  "known": true
+ },
+ {
+  "qid": "Q800808",
+  "name": "Gdynia Główna",
+  "description": "stacja kolejowa w Polsce",
+  "category": "dworzec",
+  "lat": 54.5212,
+  "lon": 18.5286,
+  "years": [
+   1894,
+   1926,
+   1939,
+   2010,
+   2012
+  ],
+  "image": "Dworzec Gdynia Główna (cropped).jpg",
+  "sitelinks": 13,
+  "wiki": "https://pl.wikipedia.org/wiki/Gdynia_G%C5%82%C3%B3wna",
+  "place": "Gdynia",
+  "known": true
+ },
+ {
+  "qid": "Q9150888",
+  "name": "Andersia Tower",
+  "description": "wieżowiec w Poznaniu oddany w 2007 roku",
+  "category": "budynek",
+  "lat": 52.4011,
+  "lon": 16.9258,
+  "years": [
+   2007
+  ],
+  "image": "Stary Browar widok z Collegium Altum 01 (cropped).jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Andersia_Tower",
+  "place": "Poznań",
+  "known": true
+ },
+ {
+  "qid": "Q910055",
+  "name": "Stadion Dyskobolii Grodzisk Wielkopolski",
+  "description": "stadion piłkarski w Grodzisku Wielkopolskim, Polska",
+  "category": "stadion",
+  "lat": 52.22903,
+  "lon": 16.37813,
+  "years": [
+   1925
+  ],
+  "image": "Stadion Dyskobolii.jpg",
+  "sitelinks": 9,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Dyskobolii_Grodzisk_Wielkopolski",
+  "place": "Grodzisk Wielkopolski",
+  "known": true
+ },
+ {
+  "qid": "Q9294110",
+  "name": "Hotel Pod Orłem w Bydgoszczy",
+  "description": "hotel in Poland, Poland",
+  "category": "budynek",
+  "lat": 53.12583,
+  "lon": 18.00388,
+  "years": [
+   1896
+  ],
+  "image": "Bdg hotelPodOrlem 3 11-2013.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Hotel_Pod_Or%C5%82em_w_Bydgoszczy",
+  "place": "Bydgoszcz",
+  "known": true
+ },
+ {
+  "qid": "Q9356207",
+  "name": "Teatr im. Wojciecha Bogusławskiego w Kaliszu",
+  "description": "teatr w Kaliszu",
+  "category": "budynek",
+  "lat": 51.75874,
+  "lon": 18.09343,
+  "years": [
+   1936
+  ],
+  "image": "6 Kalisz 32.jpg",
+  "sitelinks": 5,
+  "wiki": "https://pl.wikipedia.org/wiki/Teatr_im._Wojciecha_Bogus%C5%82awskiego_w_Kaliszu",
+  "place": "Kalisz",
+  "known": true
+ },
+ {
+  "qid": "Q9663386",
+  "name": "Brama Krakowska w Lublinie",
+  "description": "City gate in Lublin, Poland",
+  "category": "brama miejska",
+  "lat": 51.24756,
+  "lon": 22.56642,
+  "years": [
+   1341
+  ],
+  "image": "Krakowska Gate (5613990184).jpg",
+  "sitelinks": 14,
+  "wiki": "https://pl.wikipedia.org/wiki/Brama_Krakowska_w_Lublinie",
+  "place": "Lublin",
+  "known": true
+ },
+ {
+  "qid": "Q9394512",
+  "name": "Łuczniczka (pomnik w Bydgoszczy)",
+  "description": "statue in Poland",
+  "category": "pomnik",
+  "lat": 53.13086,
+  "lon": 18.01211,
+  "years": [
+   1910
+  ],
+  "image": "Bdg Luczniczka 11 10-2013.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/%C5%81uczniczka_(pomnik_w_Bydgoszczy)",
+  "place": "Bydgoszcz",
+  "known": true
+ },
+ {
+  "qid": "Q9361981",
+  "name": "Trybunał Koronny w Lublinie",
+  "description": "",
+  "category": "budynek",
+  "lat": 51.2479,
+  "lon": 22.5679,
+  "years": [
+   1389
+  ],
+  "image": "Lublin Trybunał Koronny.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Trybuna%C5%82_G%C5%82%C3%B3wny_Koronny_w_Lublinie",
+  "place": "Lublin",
+  "known": true
+ },
+ {
+  "qid": "Q9386613",
+  "name": "Zamek w Bytowie",
+  "description": "historic site in Pomerania, Poland",
+  "category": "zamek",
+  "lat": 54.16861,
+  "lon": 17.49167,
+  "years": [
+   1383
+  ],
+  "image": "KB Zamek Krzyżacki w Bytowie.jpg",
+  "sitelinks": 12,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_w_Bytowie",
+  "place": "Bytów",
+  "known": true
+ },
+ {
+  "qid": "Q9386726",
+  "name": "Zamek w Reszlu",
+  "description": "historic site",
+  "category": "zamek",
+  "lat": 54.04835,
+  "lon": 21.14783,
+  "years": [
+   1373
+  ],
+  "image": "Zamek Reszel.jpg",
+  "sitelinks": 8,
+  "wiki": "https://pl.wikipedia.org/wiki/Zamek_w_Reszlu",
+  "place": "Reszel",
+  "known": true
+ },
+ {
+  "qid": "Q9344362",
+  "name": "Stary Teatr im. Heleny Modrzejewskiej w Krakowie",
+  "description": "budynek teatru w Krakowie",
+  "category": "budynek",
+  "lat": 50.06321,
+  "lon": 19.93545,
+  "years": [
+   1799
+  ],
+  "image": "National Old Theatre, 5 Jagiellońska Street, Old Town, Kraków, Poland.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Stary_Teatr_im._Heleny_Modrzejewskiej_w_Krakowie",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q9356213",
+  "name": "Amfiteatr w Łazienkach Królewskich",
+  "description": "amfiteatr w Warszawie",
+  "category": "amfiteatr",
+  "lat": 52.2138,
+  "lon": 21.0365,
+  "years": [
+   1792
+  ],
+  "image": "4 Warszawa-Lazienki Krolewskie 062.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Amfiteatr_w_%C5%81azienkach_Kr%C3%B3lewskich",
+  "place": "Warszawa",
+  "known": true
+ },
+ {
+  "qid": "Q921996",
+  "name": "Most Grunwaldzki w Krakowie",
+  "description": "most w Krakowie",
+  "category": "most",
+  "lat": 50.0497,
+  "lon": 19.9344,
+  "years": [
+   1972
+  ],
+  "image": "MostGrunwaldzki-WidokZPołudnia-POL, Kraków.jpg",
+  "sitelinks": 7,
+  "wiki": "https://pl.wikipedia.org/wiki/Most_Grunwaldzki_w_Krakowie",
+  "place": "Kraków",
+  "known": true
+ },
+ {
+  "qid": "Q9339035",
+  "name": "Sobór św. Mikołaja w Białymstoku",
+  "description": "świątynia prawosławna",
+  "category": "katedra",
+  "lat": 53.13273,
+  "lon": 23.15458,
+  "years": [
+   1846
+  ],
+  "image": "Cerkiew sw.Mikolaja.jpg",
+  "sitelinks": 11,
+  "wiki": "https://pl.wikipedia.org/wiki/Sob%C3%B3r_%C5%9Bw._Miko%C5%82aja_w_Bia%C5%82ymstoku",
+  "place": "Białystok",
+  "known": true
+ },
+ {
+  "qid": "Q928642",
+  "name": "Stadion Miejski Legii Warszawa im. Marszałka Józefa Piłsudskiego",
+  "description": "stadion piłkarski w Warszawie, Polska",
+  "category": "stadion",
+  "lat": 52.22046,
+  "lon": 21.04063,
+  "years": [
+   1930
+  ],
+  "image": "Warsaw Polish Army Stadium 9.jpg",
+  "sitelinks": 27,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Wojska_Polskiego_w_Warszawie",
+  "place": "Śródmieście",
+  "known": true
+ },
+ {
+  "qid": "Q9341160",
+  "name": "Motor Lublin Arena",
+  "description": "stadion piłkarski w Lublinie",
+  "category": "stadion",
+  "lat": 51.2319,
+  "lon": 22.5575,
+  "years": [
+   2014
+  ],
+  "image": "Arena Lublin z lotu ptaka.jpg",
+  "sitelinks": 19,
+  "wiki": "https://pl.wikipedia.org/wiki/Motor_Lublin_Arena",
+  "place": "Lublin",
+  "known": true
+ },
+ {
+  "qid": "Q9341191",
+  "name": "Stadion Miejski w Tychach",
+  "description": "Football stadium in Tychy, Poland",
+  "category": "stadion",
+  "lat": 50.12417,
+  "lon": 18.99056,
+  "years": [
+   2013
+  ],
+  "image": "Tychy stadion wewn.jpg",
+  "sitelinks": 10,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_Miejski_w_Tychach",
+  "place": "Tychy",
+  "known": true
+ },
+ {
+  "qid": "Q9341200",
+  "name": "Stadion Nieciecza KS",
+  "description": "stadion piłkarski w Niecieczy, Polska",
+  "category": "stadion",
+  "lat": 50.1584,
+  "lon": 20.8492,
+  "years": [
+   2007
+  ],
+  "image": "Stadion KS Nieciecza elewacja.jpg",
+  "sitelinks": 6,
+  "wiki": "https://pl.wikipedia.org/wiki/Stadion_sportowy_w_Niecieczy",
+  "place": "Żabno",
+  "known": true
+ },
+ {
+  "qid": "Q959999",
+  "name": "Krzywy Domek",
+  "description": "budynek w Sopocie, Polska",
+  "category": "budynek",
+  "lat": 54.44416,
+  "lon": 18.56668,
+  "years": [
+   2004
+  ],
+  "image": "Krzywy Domek w Sopocie.jpg",
+  "sitelinks": 23,
+  "wiki": "https://pl.wikipedia.org/wiki/Krzywy_Domek",
+  "place": "Sopot",
+  "known": true
  }
 ]

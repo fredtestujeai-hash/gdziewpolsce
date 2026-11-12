@@ -99,7 +99,7 @@ Pipeline:
 npm run map                               # obrys Polski, główne rzeki, mapa awaryjna i granice województw
 npm run intro                             # uproszczony obrys Polski (ok. 300 punktów) dla animacji startowej -> index.html
 python3 scripts/fetch_places.py           # miejscowości w trzech rangach z Wikidata -> public/map/places.json
-python3 scripts/fetch_wikidata.py         # kandydaci: ~40 klas obiektów w Polsce (zamki, kościoły, ratusze…)
+python3 scripts/fetch_wikidata.py         # kandydaci: ~40 klas obiektów w Polsce (zamki, kościoły, ratusze…) + znane obiekty innych typów
 python3 scripts/fetch_commons.py          # licencje i miniatury zdjęć + wstępy artykułów z plwiki
 python3 scripts/build_puzzles.py          # filtrowanie, województwo każdej zagadki i pula -> public/data/puzzles.json
 python3 scripts/build_schedule.py         # harmonogram dni -> public/data/schedule.json
@@ -115,11 +115,15 @@ Reguły jakości w `build_puzzles.py`:
 - każda zagadka dostaje pole `woj` (np. „małopolskie”): punkt jest sprawdzany w wielokątach z `public/map/wojewodztwa.json`, czyli tych samych, które gra podświetla; skrypt uzupełnia to pole także w `public/data/sponsored.json`. Granice z Natural Earth okazały się za mało dokładne (ok. 1% zagadek przy granicach trafiało do złego województwa), dlatego użyto Państwowego Rejestru Granic,
 - trudność wynika z rozpoznawalności, czyli liczby wersji językowych Wikipedii: łatwe ≥ 9, średnie 4–8, trudne ≤ 3.
 
+Skąd biorą się kandydaci (`fetch_wikidata.py`):
+- obiekty z listy ok. 40 klas (zamek, kościół, ratusz…) z min. 3 wersjami językowymi Wikipedii,
+- dodatkowo **znane obiekty dowolnego typu** (min. 5 wersji językowych): stadiony, mosty, hale, twierdze, skocznie, główne dworce itp. Typ jest rozpoznawany po nazwie klasy w Wikidata; gdy brakuje daty powstania, brana jest data otwarcia. Instytucje (teatry, filharmonie, muzea, uczelnie) są pomijane, bo ich data to zwykle założenie, a nie budowa. Samo to dobieranie uruchamia `python3 scripts/fetch_wikidata.py --only-known`.
+
 Ręczne poprawki redakcyjne:
 - `data/exclude.txt` to czarna lista QID, jeden na linię, np. obiekty z błędną datą,
 - `data/curated.json` to obiekty dodane ręcznie, z rokiem podanym przez redakcję. Służy dla znanych miejsc, którym w Wikidata brakuje dokładnej daty (np. Wawel ma tam tylko „XI w.”).
 
-**Stan obecny:** 1095 zagadek (185 łatwych, 418 średnich, 492 trudnych). Harmonogram ma 185 dni (od 11.11.2026 do 14.05.2027) bez żadnej powtórki; potem zaczną się powtarzać zagadki łatwe, bo jest ich 185.
+**Stan obecny:** 1173 zagadki (228 łatwych, 455 średnich, 490 trudnych). Harmonogram ma 228 dni (od 11.11.2026 do 26.06.2027) bez żadnej powtórki; potem zaczną się powtarzać zagadki łatwe, bo jest ich 228 (skrypt bierze wtedy te najdawniej użyte). Powtórki są akceptowane.
 
 ### Harmonogram dni
 

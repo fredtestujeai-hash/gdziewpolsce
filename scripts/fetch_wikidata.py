@@ -10,6 +10,7 @@ Użycie:  python3 scripts/fetch_wikidata.py [--min-sitelinks 3]
 """
 import argparse
 import json
+import re
 import sys
 import time
 import urllib.parse
@@ -97,6 +98,112 @@ SELECT ?item ?itemLabel ?itemDescription ?coord ?img ?t ?p ?sl ?article ?locLabe
 """
 
 
+# --- Znane obiekty dowolnej klasy ------------------------------------------------------------
+# Lista CLASSES pomija wiele typów (stadion piłkarski, most drogowy, zamek krzyżacki, hala…),
+# a właśnie znanych, „łatwych” obiektów jest w puli najmniej. Dlatego dodatkowo pobieramy
+# wszystkie obiekty w Polsce z min. KNOWN_MIN_SITELINKS wersjami językowymi, zdjęciem, współrzędnymi
+# i datą z dokładnością do roku, a typ sprawdzamy po polskiej nazwie klasy.
+KNOWN_MIN_SITELINKS = 5
+# P571 = data powstania, P1619 = data otwarcia (używana tylko, gdy brak P571)
+KNOWN_IDS_QUERY = """
+SELECT ?item ?sl ?t WHERE {
+  ?item wdt:P17 wd:Q36; wikibase:sitelinks ?sl. FILTER(?sl >= %(minsl)d)
+  ?item p:%(prop)s/psv:%(prop)s [wikibase:timeValue ?t; wikibase:timePrecision ?p]. FILTER(?p >= 9)
+  ?item wdt:P625 ?coord; wdt:P18 ?img.
+  ?article schema:about ?item; schema:isPartOf <https://pl.wikipedia.org/>.
+}
+"""
+KNOWN_DETAILS_QUERY = """
+SELECT ?item ?itemLabel ?itemDescription ?coord ?img ?sl ?article ?locLabel
+       (GROUP_CONCAT(DISTINCT ?clLabel; separator="|") AS ?classes) WHERE {
+  VALUES ?item { %(ids)s }
+  ?item wdt:P18 ?img; wdt:P625 ?coord; wikibase:sitelinks ?sl; wdt:P31 ?cl.
+  ?cl rdfs:label ?clLabel. FILTER(LANG(?clLabel) = "pl")
+  ?article schema:about ?item; schema:isPartOf <https://pl.wikipedia.org/>.
+  OPTIONAL { ?item wdt:P131 ?loc. }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "pl,en". }
+} GROUP BY ?item ?itemLabel ?itemDescription ?coord ?img ?sl ?article ?locLabel
+"""
+# (wzorzec w nazwie klasy, kategoria w grze) — pierwsze trafienie wygrywa
+KNOWN_CATEGORIES = [
+    (r"wysokościowiec|drapacz chmur|wieżowiec|biurowiec", "wieżowiec"),
+    (r"ruiny zamku", "ruiny zamku"), (r"zamek", "zamek"), (r"pałac", "pałac"), (r"\bdwór", "dwór"), (r"willa", "willa"),
+    (r"katedra|sobór", "katedra"), (r"bazylik", "bazylika"), (r"cerkiew", "cerkiew"), (r"synagog", "synagoga"),
+    (r"meczet", "meczet"), (r"klasztor|opactw", "klasztor"), (r"kaplic", "kaplica"), (r"kości[oó]ł|sanktuari", "kościół"),
+    (r"ratusz", "ratusz"), (r"brama", "brama miejska"), (r"twierdz|cytadel|\bfort", "fortyfikacja"), (r"baszt|mury", "fortyfikacja"),
+    (r"latarnia", "latarnia morska"), (r"wieża ciśnień", "wieża ciśnień"), (r"wież", "wieża"),
+    (r"most|wiadukt", "most"), (r"zapora", "zapora"), (r"stadion", "stadion"), (r"skocznia", "skocznia narciarska"),
+    (r"arena|\bhala", "hala"), (r"dworzec|stacja kolejowa", "dworzec"),
+    (r"teatr na wolnym powietrzu|amfiteatr", "amfiteatr"),
+    (r"pomnik|posąg|mauzoleum", "pomnik"),
+    (r"kopiec", "kopiec"), (r"fontann", "fontanna"), (r"molo", "molo"), (r"młyn|wiatrak|spichlerz", "zabytek techniki"),
+    (r"hotel|kamienica|budyn", "budynek"), (r"zabytek", "zabytek"),
+]
+# Klasy, które wykluczają obiekt (instytucje, miejscowości, wydarzenia, obiekty nieistniejące…).
+# Teatry, filharmonie i obserwatoria też: w Wikidata mają zwykle datę założenia instytucji, nie budowy gmachu.
+KNOWN_EXCLUDE = (
+    r"zburzon|nieistniej|stacja metra|podziemn|muzeum|uczelni|uniwersyt|szkoła|instytu|organizacj|klub|festiwal|wydarzeni"
+    r"|diecezj|parafi|miasto|wieś|gmina|powiat|dzielnic|cmentarz|obóz|getto|zakład karny|więzieni|ministerstw|sąd|trybunał"
+    r"|przedsiębiorstw|biznes|spółka|linia|droga|autostrad|ulica|plac|rynek|park|ogród|port lotniczy|lotnisko|system|trupa"
+    r"|zespół|orkiestr|browar|proponowan|nieukończon|centrum handlowe|granica|okręt|statek|uzdrowisko|cel turystyczny"
+    r"|eparchi|rzeźba|zabytek ruchomy|obraz|fotografia|dzwon|ołtarz|nastawa|przystanek|przyrody|drzewo|targi|akademick"
+    r"|filharmoni|obserwatorium|monaster|instalacja"
+)
+
+
+def known_category(classes: str):
+    if re.search(KNOWN_EXCLUDE, classes, re.I):
+        return None
+    for pattern, category in KNOWN_CATEGORIES:
+        if re.search(pattern, classes, re.I):
+            return category
+    return None
+
+
+def fetch_known(items: dict[str, dict], minsl: int) -> None:
+    """Dodaje znane obiekty spoza listy CLASSES (patrz komentarz przy KNOWN_MIN_SITELINKS)."""
+    years: dict[str, dict[str, set]] = {}
+    for prop in ("P571", "P1619"):
+        res = sparql(KNOWN_IDS_QUERY % {"minsl": minsl, "prop": prop})
+        for b in res["results"]["bindings"]:
+            qid = b["item"]["value"].rsplit("/", 1)[-1]
+            years.setdefault(qid, {}).setdefault(prop, set()).add(parse_year(b["t"]["value"]))
+        time.sleep(2)
+    new = sorted(q for q in years if q not in items)
+    added = 0
+    for i in range(0, len(new), 150):
+        res = sparql(KNOWN_DETAILS_QUERY % {"ids": " ".join("wd:" + q for q in new[i : i + 150])})
+        for b in res["results"]["bindings"]:
+            qid = b["item"]["value"].rsplit("/", 1)[-1]
+            category = known_category(b["classes"]["value"])
+            if qid in items or not category:
+                continue
+            # małe stacje kolejowe mają w Wikidata datę otwarcia linii, a na zdjęciu zwykle peron — bierzemy tylko znane dworce
+            if category == "dworzec" and int(b["sl"]["value"]) < 9:
+                continue
+            # „teatr” jako instytucja ma datę założenia zespołu — zostają tylko amfiteatry
+            if re.search(r"\bteatr\b(?! na wolnym)|\bopera\b", b["classes"]["value"], re.I) and category != "amfiteatr":
+                continue
+            lat, lon = parse_point(b["coord"]["value"])
+            items[qid] = {
+                "qid": qid,
+                "name": b["itemLabel"]["value"],
+                "description": b.get("itemDescription", {}).get("value", ""),
+                "category": category,
+                "lat": lat,
+                "lon": lon,
+                "years": sorted(years[qid].get("P571") or years[qid]["P1619"]),
+                "image": urllib.parse.unquote(b["img"]["value"].rsplit("/", 1)[-1]),
+                "sitelinks": int(b["sl"]["value"]),
+                "wiki": b["article"]["value"],
+                "place": b.get("locLabel", {}).get("value", ""),
+                "known": True,
+            }
+            added += 1
+        time.sleep(2)
+    print(f"Znane obiekty spoza listy klas: +{added} (razem {len(items)})", file=sys.stderr)
+
+
 def sparql(query: str, retries: int = 4) -> dict:
     data = urllib.parse.urlencode({"query": query}).encode()
     for attempt in range(retries):
@@ -173,6 +280,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--min-sitelinks", type=int, default=3)
     ap.add_argument("--only-demolished", action="store_true", help="tylko uzupełnij flagę 'demolished'")
+    ap.add_argument("--only-known", action="store_true", help="tylko dobierz znane obiekty spoza listy klas")
     ap.add_argument("--only", help="pobierz tylko wskazane klasy, np. Q23413,Q16560")
     args = ap.parse_args()
 
@@ -181,6 +289,12 @@ def main():
         items = {i["qid"]: i for i in json.loads(OUT.read_text())}
 
     if args.only_demolished:
+        mark_demolished(items)
+        OUT.write_text(json.dumps(list(items.values()), ensure_ascii=False, indent=1))
+        return
+
+    if args.only_known:
+        fetch_known(items, KNOWN_MIN_SITELINKS)
         mark_demolished(items)
         OUT.write_text(json.dumps(list(items.values()), ensure_ascii=False, indent=1))
         return
@@ -221,6 +335,8 @@ def main():
         OUT.write_text(json.dumps(list(items.values()), ensure_ascii=False, indent=1))
         time.sleep(2)  # bądźmy uprzejmi dla serwera
 
+    if not args.only:
+        fetch_known(items, KNOWN_MIN_SITELINKS)
     fetch_curated(items)
     mark_demolished(items)
     OUT.write_text(json.dumps(list(items.values()), ensure_ascii=False, indent=1))
