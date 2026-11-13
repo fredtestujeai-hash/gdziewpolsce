@@ -1,12 +1,12 @@
 # Gdzie w Polsce? — codzienna gra o Polsce
 
-Przeglądarkowa gra o Polsce. Codziennie **3 zdjęcia** zabytków i atrakcji (łatwe, średnie i trudne), takie same dla wszystkich graczy.
+Przeglądarkowa gra o Polsce. Codziennie **6 zdjęć** zabytków i atrakcji (2 łatwe, 2 średnie i 2 trudne), takie same dla wszystkich graczy.
 Dla każdego zdjęcia gracz:
 
 1. **wbija pinezkę** na mapie Polski **bez żadnych nazw**: widać rzeki, jeziora, lasy, drogi i tory, a kropki oznaczają miasta wojewódzkie, powiatowe i siedziby gmin. Mapę można przybliżyć aż do pojedynczych ulic i budynków,
 2. **ustawia na suwaku rok powstania** obiektu.
 
-Im bliżej prawdy, tym więcej punktów: do 500 za miejsce i do 500 za rok, czyli maks. 3000 dziennie.
+Im bliżej prawdy, tym więcej punktów: do 500 za miejsce i do 500 za rok, czyli maks. 6000 dziennie.
 Po każdej rundzie gracz poznaje nazwę, miejsce, datę, krótki opis z Wikipedii i przycisk „Wikipedia” (także gdy zagadkę pominął).
 
 W każdej rundzie są też:
@@ -35,7 +35,7 @@ Przydatne parametry adresu:
 
 | Parametr | Działanie |
 |---|---|
-| `?demo` | włącza demonstracyjną kampanię partnera (zagadka sponsorowana w 2. rundzie) |
+| `?demo` | włącza demonstracyjną kampanię partnera (zagadka sponsorowana w 3. rundzie) |
 | `?dzien=2026-12-24` | podgląd wyzwania z dowolnego dnia, bez zapisywania wyniku; przydatny dla redakcji i na prezentacje dla partnerów |
 
 ## Jak to jest zbudowane
@@ -123,12 +123,13 @@ Ręczne poprawki redakcyjne:
 - `data/exclude.txt` to czarna lista QID, jeden na linię, np. obiekty z błędną datą,
 - `data/curated.json` to obiekty dodane ręcznie, z rokiem podanym przez redakcję (pole `note` mówi, skąd rok). Służy dla znanych miejsc, którym w Wikidata brakuje dokładnej daty (Wawel, Książ, Żuraw…). Rok bywa przybliżony albo umowny, np. ukończenie budowy; to świadoma decyzja. Po dopisaniu obiektów: `python3 scripts/fetch_wikidata.py --only-curated`, potem `fetch_commons.py` i `build_puzzles.py`.
 
-**Stan obecny:** 1211 zagadek (269 łatwych, 452 średnie, 490 trudnych). Harmonogram ma 269 dni (od 11.11.2026 do 6.08.2027) bez żadnej powtórki; potem zaczną się powtarzać zagadki łatwe, bo jest ich 269 (skrypt bierze wtedy te najdawniej użyte). Powtórki są akceptowane.
+**Stan obecny:** 1211 zagadek (269 łatwych, 452 średnie, 490 trudnych). Harmonogram sięga do 12.11.2027. Pierwsze trzy dni (11–13.11.2026) rozegrano według wcześniejszych reguł i mają po 3 zagadki; od 14.11.2026 każdy dzień ma 6. Przy 2 łatwych dziennie pierwsze powtórki pojawiają się po ok. 130 dniach (skrypt bierze wtedy najdawniej użyte zagadki). Powtórki są akceptowane.
 
 ### Harmonogram dni
 
-`build_schedule.py` układa każdy dzień według tych zasad: 1 łatwa, 1 średnia i 1 trudna zagadka, w tej kolejności; trzy różne kategorie, trzy różne województwa i trzy różne stulecia; nic bliżej niż 15 km od siebie.
-Plik jest **tylko dopisywany**, więc odświeżenie danych nie zmienia graczom dzisiejszego wyzwania. Wyjątkiem jest `python3 scripts/build_schedule.py --rebuild`, które układa wszystko od nowa z zachowaniem daty startu (do użycia tylko przed premierą). Gdy harmonogram się skończy, gra sama dobiera zagadki deterministycznie z daty.
+`build_schedule.py` układa każdy dzień według tych zasad: 2 łatwe, 2 średnie i 2 trudne zagadki, w tej kolejności; maks. 2 z tej samej kategorii i 2 z tego samego stulecia; każda z innego województwa; nic bliżej niż 15 km od siebie.
+Liczbę rund danego dnia wyznacza harmonogram, a nie konfiguracja: dni rozegrane według starszych reguł zachowują swoją liczbę zagadek, więc zapisane gry i ranking tamtych dni się nie psują.
+Plik jest **tylko dopisywany**, więc odświeżenie danych nie zmienia graczom dzisiejszego wyzwania. Po zmianie reguł używa się `python3 scripts/build_schedule.py --rebuild-from RRRR-MM-DD`: dni przed tą datą zostają bez zmian, resztę skrypt układa od nowa (data musi być późniejsza niż dziś). `--rebuild` układa wszystko od nowa z zachowaniem daty startu (tylko przed premierą). Gdy harmonogram się skończy, gra sama dobiera zagadki deterministycznie z daty.
 Workflow `.github/workflows/data.yml` co miesiąc dopisuje kolejne dni.
 
 ## Zapis gry (dla rankingu i innych modułów)
@@ -137,7 +138,7 @@ Postęp dnia jest w `localStorage` pod kluczem `gdziewpolsce:day` jako `DayState
 
 | Pole | Znaczenie |
 |---|---|
-| `locPts`, `yearPts` | punkty za miejsce i za rok **po odjęciu kosztu podpowiedzi**. Wynik dnia to zawsze suma `locPts + yearPts` ze wszystkich rund (`totalPoints` w `src/score.ts`), maks. 3000 |
+| `locPts`, `yearPts` | punkty za miejsce i za rok **po odjęciu kosztu podpowiedzi**. Wynik dnia to zawsze suma `locPts + yearPts` ze wszystkich rund (`totalPoints` w `src/score.ts`), maks. 6000 (w dniach z 3 zagadkami 3000) |
 | `lat`, `lon`, `year`, `km`, `yearDiff` | odpowiedź gracza; dla rund z `gaveUp` są zerami bez znaczenia |
 | `hintLoc`, `hintYear` | `true`, gdy gracz użył podpowiedzi „Województwo” / „Wiek” (pola nieobecne = bez podpowiedzi) |
 | `gaveUp` | `"round"` = zagadka pominięta, `"day"` = runda nierozegrana po „Przerwij dzisiejsze wyzwanie” (znika, gdy gracz wróci do gry); w obu przypadkach 0 punktów |
@@ -161,7 +162,7 @@ Kampanie partnerów są w `public/data/sponsored.json`:
 }
 ```
 
-- Zagadka sponsorowana zastępuje **2. rundę** (z trzech). Dziennie jest maks. jedna; kilka aktywnych kampanii rotuje.
+- Zagadka sponsorowana zastępuje **3. rundę** (z sześciu; w dniach z 3 zagadkami 2. rundę). Dziennie jest maks. jedna; kilka aktywnych kampanii rotuje.
 - Zagadka ma etykietę **„Zagadka sponsorowana”** na zdjęciu i w wyniku, a link do partnera ma `rel="sponsored"` i parametry UTM.
 - Po ustawieniu `statsEndpoint` w `src/config.ts` gra wysyła anonimowe zdarzenia (`start`, `finish`, `sponsor_view`, `sponsor_click`) z dniem i id kampanii. Nie ma w nich identyfikatorów ani ciasteczek, więc nie potrzeba banera zgód.
 

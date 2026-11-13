@@ -18,7 +18,7 @@ export function renderStart(game: Game): void {
         <div class="hero-pin">${PIN_SVG}</div>
         <p class="eyebrow">Wyzwanie #${challenge.number} · ${esc(formatDayLong(challenge.key))}</p>
         <h1>${esc(CONFIG.name)}</h1>
-        <p class="lead">${CONFIG.rounds} ${placesWord(CONFIG.rounds)} z całej Polski, od łatwego do trudnego. Rozpoznaj je na zdjęciu, wbij pinezkę na mapie i zgadnij, w którym roku powstały.</p>
+        <p class="lead">${challenge.puzzles.length} ${placesWord(challenge.puzzles.length)} z całej Polski, od łatwego do trudnego. Rozpoznaj je na zdjęciu, wbij pinezkę na mapie i zgadnij, w którym roku powstały.</p>
 
         <ol class="steps">
           <li><span class="step-n">1</span><div><b>Obejrzyj zdjęcie</b><span>zamek, kościół, ratusz, latarnia…</span></div></li>

@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-"""Krok 4: układa harmonogram wyzwań dnia (3 zagadki na dzień).
+"""Krok 4: układa harmonogram wyzwań dnia (6 zagadek na dzień).
 
 Harmonogram jest *dopisywany* — dni już ułożone (w tym przeszłe) nie zmieniają się,
 więc odświeżenie puli danych nigdy nie podmieni graczom dzisiejszego wyzwania.
-Wyjątek: `--rebuild` układa cały plik od nowa (tylko przed premierą albo po zmianie reguł).
+Po zmianie reguł: `--rebuild-from RRRR-MM-DD` zostawia dni wcześniejsze bez zmian
+(np. rozegrane wyzwania z 3 zagadkami), a od tej daty układa harmonogram od nowa.
+`--rebuild` układa cały plik od nowa (tylko przed premierą).
 
 Zasady doboru na dzień:
-  * 1 łatwa, 1 średnia, 1 trudna (wg rozpoznawalności), w tej kolejności
-  * bez powtórek, dopóki dany poziom trudności się nie wyczerpie
-  * trzy różne kategorie, trzy różne województwa i trzy różne stulecia
+  * 2 łatwe, 2 średnie, 2 trudne (wg rozpoznawalności), w tej kolejności
+  * najpierw zagadki jeszcze nie grane, potem najrzadziej grane (powtórki są dozwolone)
+  * maks. 2 z tej samej kategorii i 2 z tego samego stulecia, każda z innego województwa
   * zagadki w promieniu 15 km od siebie nie trafiają na ten sam dzień
   (gdy żadna zagadka nie spełnia warunków różnorodności, są one luzowane)
 
-Wyjście: public/data/schedule.json  {"start": "YYYY-MM-DD", "days": [[id × 3], ...]}
+Wyjście: public/data/schedule.json  {"start": "YYYY-MM-DD", "days": [[id × 6], ...]}
 """
 import argparse
 import json
@@ -20,13 +22,19 @@ import math
 import random
 import sys
 from collections import Counter
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 POOL = ROOT / "public" / "data" / "puzzles.json"
 OUT = ROOT / "public" / "data" / "schedule.json"
-LAYOUT = [1, 2, 3]  # poziomy trudności kolejnych rund: łatwa, średnia, trudna
+def today_pl() -> date:
+    """Dzisiejsza data w Polsce (wyzwanie zmienia się o północy czasu polskiego, nie UTC)."""
+    return datetime.now(ZoneInfo("Europe/Warsaw")).date()
+
+
+LAYOUT = [1, 1, 2, 2, 3, 3]  # poziomy trudności kolejnych rund (jak difficultyLayout w src/daily.ts)
 
 
 def km(a, b):
@@ -37,9 +45,11 @@ def km(a, b):
 
 
 def fits(p, chosen):
+    if sum(c["category"] == p["category"] for c in chosen) >= 2:
+        return False
+    if sum(c["year"] // 100 == p["year"] // 100 for c in chosen) >= 2:
+        return False
     for c in chosen:
-        if p["category"] == c["category"] or p["year"] // 100 == c["year"] // 100:
-            return False
         if p.get("woj") and p.get("woj") == c.get("woj"):
             return False
         if p["place"] and p["place"] == c["place"]:
@@ -55,16 +65,22 @@ def main():
     ap.add_argument("--days", type=int, default=120, help="ile dni zaplanować naprzód od dziś")
     ap.add_argument("--seed", default="gdziewpolsce")
     ap.add_argument("--rebuild", action="store_true", help="ułóż cały harmonogram od nowa (zachowuje datę startu)")
+    ap.add_argument("--rebuild-from", default=None, help="zostaw dni przed tą datą (RRRR-MM-DD), resztę ułóż od nowa")
     args = ap.parse_args()
 
     pool = {p["id"]: p for p in json.loads(POOL.read_text())["puzzles"]}
-    sched = json.loads(OUT.read_text()) if OUT.exists() else {"start": args.start or date.today().isoformat(), "days": []}
+    sched = json.loads(OUT.read_text()) if OUT.exists() else {"start": args.start or today_pl().isoformat(), "days": []}
     if args.start:
         sched["start"] = args.start
     if args.rebuild:
         sched["days"] = []
     start = date.fromisoformat(sched["start"])
-    today_idx = (date.today() - start).days
+    if args.rebuild_from:
+        keep = (date.fromisoformat(args.rebuild_from) - start).days
+        if keep <= (today_pl() - start).days:
+            sys.exit("--rebuild-from musi wskazywać dzień po dzisiejszym — nie zmieniamy wyzwań już rozgrywanych")
+        sched["days"] = sched["days"][:keep]
+    today_idx = (today_pl() - start).days
 
     # Dni od dziś wzwyż, w których zniknęła jakaś zagadka (usunięta z puli), układamy od nowa
     for i in range(max(0, today_idx), len(sched["days"])):

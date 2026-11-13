@@ -52,8 +52,7 @@ export function fallbackIds(pool: Puzzle[], key: string, n = CONFIG.rounds): str
   const rand = rng(hash("fallback:" + key));
   const tiers: Record<number, Puzzle[]> = { 1: [], 2: [], 3: [] };
   for (const p of [...pool].sort((a, b) => a.id.localeCompare(b.id))) tiers[p.difficulty].push(p);
-  // łatwa, średnia, trudna — tak samo jak LAYOUT w scripts/build_schedule.py
-  const layout = Array.from({ length: n }, (_, i) => [1, 2, 3][i % 3]);
+  const layout = difficultyLayout(n);
   const out: string[] = [];
   for (const t of layout) {
     const list = tiers[t].filter((p) => !out.includes(p.id));
@@ -69,8 +68,22 @@ export function activeCampaign(campaigns: Campaign[], key: string, demo: boolean
   return active[hash(key) % active.length];
 }
 
-/** Slot, w którym pojawia się zagadka sponsorowana: 2. runda (środek wyzwania), liczone od zera. */
-export const SPONSOR_SLOT = 1;
+/**
+ * Poziomy trudności kolejnych rund, od łatwych do trudnych, po równo:
+ * 3 rundy → [1, 2, 3], 6 rund → [1, 1, 2, 2, 3, 3]. Tak samo jak LAYOUT w scripts/build_schedule.py.
+ */
+export function difficultyLayout(n: number): (1 | 2 | 3)[] {
+  return Array.from({ length: n }, (_, i) => (1 + Math.floor((i * 3) / n)) as 1 | 2 | 3);
+}
+
+/**
+ * Runda (liczona od zera), w której pojawia się zagadka sponsorowana: środek wyzwania,
+ * zaokrąglony w stronę początku, żeby zobaczyło ją jak najwięcej graczy.
+ * 3 rundy → 2. runda, 6 rund → 3. runda.
+ */
+export function sponsorSlot(rounds: number): number {
+  return Math.max(0, Math.floor((rounds - 1) / 2));
+}
 
 export interface Challenge {
   key: string;
@@ -99,16 +112,20 @@ export function buildChallenge(
   const cp = campaign ? campaign.puzzles[Math.abs(index) % campaign.puzzles.length] : undefined;
   const sponsoredToday: Puzzle | undefined = cp && campaign ? { ...cp, sponsor: campaign.sponsor, campaign: campaign.id } : undefined;
 
+  // Liczbę rund danego dnia wyznacza harmonogram: dni sprzed zmiany reguł zachowują swoją liczbę zagadek
+  const scheduled = index >= 0 && index < schedule.days.length ? schedule.days[index] : fallbackIds(pool, key);
+  const rounds = scheduled.length || CONFIG.rounds;
+
   let ids: string[];
-  // Zapis o innej liczbie rund (np. sprzed zmiany reguł) jest ignorowany
-  if (opts.savedIds?.length === CONFIG.rounds && opts.savedIds.every((id) => byId.has(id) || id === sponsoredToday?.id)) {
+  // Zapis o innej liczbie rund niż w harmonogramie tego dnia (np. sprzed zmiany reguł) jest ignorowany
+  if (opts.savedIds?.length === rounds && opts.savedIds.every((id) => byId.has(id) || id === sponsoredToday?.id)) {
     ids = opts.savedIds;
   } else {
-    ids = index >= 0 && index < schedule.days.length ? [...schedule.days[index]] : fallbackIds(pool, key);
-    ids = ids.filter((id) => byId.has(id)).slice(0, CONFIG.rounds);
+    ids = scheduled.filter((id) => byId.has(id));
     if (sponsoredToday) {
+      // Jeśli obiekt partnera był już w harmonogramie dnia, tylko go przesuwamy; inaczej zastępuje zagadkę w swoim slocie
       ids = ids.filter((id) => id !== sponsoredToday.id);
-      ids.splice(Math.min(SPONSOR_SLOT, ids.length), ids.length >= CONFIG.rounds ? 1 : 0, sponsoredToday.id);
+      ids.splice(Math.min(sponsorSlot(rounds), ids.length), ids.length >= rounds ? 1 : 0, sponsoredToday.id);
     }
   }
   const puzzles = ids

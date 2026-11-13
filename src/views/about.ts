@@ -13,7 +13,7 @@ export function openAbout(section?: string): void {
     <div class="about-body">
       <button class="icon-btn about-close" aria-label="Zamknij">✕</button>
       <h2>Jak grać</h2>
-      <p>Codziennie o północy czeka nowe wyzwanie: <b>${CONFIG.rounds} ${placesWord(CONFIG.rounds)} z całej Polski</b> — zamki, kościoły, ratusze, latarnie, dworce, wieżowce… Zagadki są coraz trudniejsze: łatwa, średnia i trudna. Wyzwanie jest takie samo dla wszystkich graczy i można je rozegrać tylko raz.</p>
+      <p>Codziennie o północy czeka nowe wyzwanie: <b>${CONFIG.rounds} ${placesWord(CONFIG.rounds)} z całej Polski</b> — zamki, kościoły, ratusze, latarnie, dworce, wieżowce… Zagadki są coraz trudniejsze: najpierw łatwe, potem średnie, na końcu trudne. Wyzwanie jest takie samo dla wszystkich graczy i można je rozegrać tylko raz.</p>
       <ol>
         <li>Obejrzyj zdjęcie (możesz je powiększyć).</li>
         <li>Wbij pinezkę na mapie. Mapa nie ma <b>żadnych nazw</b>, ale pokazuje rzeki, jeziora, lasy, drogi i tory, a kropki oznaczają miasta wojewódzkie, powiatowe i siedziby gmin. Możesz ją przybliżyć aż do pojedynczych ulic i budynków, a pinezkę przesuwać.</li>

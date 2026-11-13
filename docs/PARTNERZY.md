@@ -11,7 +11,7 @@ Gra nie ma reklam. Utrzymują ją **partnerzy**: urzędy miast i gmin, wydziały
 
 ## Zasady (wiarygodność gry jest wspólnym interesem)
 
-1. **Maks. jedna zagadka sponsorowana dziennie**, zawsze w 2. rundzie (wyzwanie dnia ma 3 zagadki).
+1. **Maks. jedna zagadka sponsorowana dziennie**, zawsze w 3. rundzie (wyzwanie dnia ma 6 zagadek).
 2. **Zawsze oznaczona:** etykieta „Zagadka sponsorowana” na zdjęciu i w wyniku, a link ma `rel="sponsored"`. Ukryta reklama byłaby nieuczciwą praktyką rynkową.
 3. **Takie same reguły jak w każdej zagadce:** prawdziwe miejsce i prawdziwa data powstania, punktacja bez taryfy ulgowej, te same podpowiedzi i możliwość pominięcia.
 4. **Zdjęcie:** z Wikimedia Commons albo dostarczone przez partnera wraz z prawem do publikacji (autor i licencja są podpisywane przy zdjęciu).

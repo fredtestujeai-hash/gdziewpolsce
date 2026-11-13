@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { CONFIG } from "../src/config";
-import { buildChallenge, daysBetween, fallbackIds, msUntilNextChallenge, SPONSOR_SLOT, todayKey } from "../src/daily";
+import { buildChallenge, daysBetween, difficultyLayout, fallbackIds, msUntilNextChallenge, sponsorSlot, todayKey } from "../src/daily";
 import type { Campaign, Puzzle, Schedule } from "../src/types";
 
 const pool: Puzzle[] = JSON.parse(readFileSync("public/data/puzzles.json", "utf8")).puzzles;
@@ -21,19 +21,27 @@ describe("data i czas polski", () => {
 });
 
 describe("wyzwanie dnia", () => {
-  it("harmonogram: 3 różne, istniejące zagadki każdego dnia — łatwa, średnia, trudna", () => {
-    const byId = new Map(pool.map((p) => [p.id, p]));
+  const byId = new Map(pool.map((p) => [p.id, p]));
+  const keyOf = (i: number) => new Date(Date.parse(schedule.start + "T00:00:00Z") + i * 86_400_000).toISOString().slice(0, 10);
+  // Od 14 listopada 2026 wyzwanie ma 6 zagadek; dni 11–13 listopada rozegrano według starych reguł (3 zagadki)
+  const SIX_FROM = daysBetween(schedule.start, "2026-11-14");
+
+  it("harmonogram: rozegrane dni po 3 zagadki, od 14.11 po 6 — od łatwych do trudnych", () => {
     expect(schedule.start).toBe("2026-11-11");
-    expect(schedule.days.length).toBeGreaterThanOrEqual(180);
-    for (const day of schedule.days) {
-      expect(day).toHaveLength(CONFIG.rounds);
-      expect(new Set(day).size).toBe(3);
-      expect(day.map((id) => byId.get(id)?.difficulty)).toEqual([1, 2, 3]);
-    }
+    expect(SIX_FROM).toBe(3);
+    expect(schedule.days.length).toBeGreaterThanOrEqual(300);
+    schedule.days.forEach((day, i) => {
+      const n = i < SIX_FROM ? 3 : CONFIG.rounds;
+      expect(day).toHaveLength(n);
+      expect(new Set(day).size).toBe(n);
+      expect(day.map((id) => byId.get(id)?.difficulty)).toEqual(difficultyLayout(n));
+    });
+    expect(CONFIG.rounds).toBe(6);
+    expect(difficultyLayout(6)).toEqual([1, 1, 2, 2, 3, 3]);
   });
-  it("brak powtórek w pierwszych 220 dniach", () => {
+  it("brak powtórek przez pierwsze 130 dni z 6 zagadkami", () => {
     const seen = new Set<string>();
-    for (const day of schedule.days.slice(0, 220)) for (const id of day) {
+    for (const day of schedule.days.slice(SIX_FROM, SIX_FROM + 130)) for (const id of day) {
       expect(seen.has(id)).toBe(false);
       seen.add(id);
     }
@@ -42,45 +50,58 @@ describe("wyzwanie dnia", () => {
     const a = buildChallenge(pool, schedule, campaigns, "2026-11-20");
     const b = buildChallenge(pool, schedule, campaigns, "2026-11-20");
     expect(a.number).toBe(10);
+    expect(a.puzzles).toHaveLength(6);
     expect(a.puzzles.map((p) => p.id)).toEqual(b.puzzles.map((p) => p.id));
   });
-  it("kampania demo tylko z ?demo, zawsze w 2. rundzie, nadal 3 rundy", () => {
+  it("dzień rozegrany według starych reguł zostaje z 3 zagadkami, a zapis gracza jest honorowany", () => {
+    const c = buildChallenge(pool, schedule, campaigns, "2026-11-13");
+    expect(c.puzzles.map((p) => p.id)).toEqual(schedule.days[2]);
+    const saved = buildChallenge(pool, schedule, campaigns, "2026-11-13", { savedIds: schedule.days[2] });
+    expect(saved.puzzles.map((p) => p.id)).toEqual(schedule.days[2]);
+  });
+  it("kampania demo tylko z ?demo, zawsze w środku wyzwania, liczba rund bez zmian", () => {
+    expect(sponsorSlot(3)).toBe(1);
+    expect(sponsorSlot(6)).toBe(2);
     const normal = buildChallenge(pool, schedule, campaigns, "2026-11-20");
     const demo = buildChallenge(pool, schedule, campaigns, "2026-11-20", { demo: true });
     expect(normal.puzzles.some((p) => p.sponsor)).toBe(false);
-    expect(SPONSOR_SLOT).toBe(1);
-    expect(demo.puzzles).toHaveLength(3);
-    expect(demo.puzzles[1].sponsor?.name).toBeTruthy();
+    expect(demo.puzzles).toHaveLength(6);
+    expect(demo.puzzles[2].sponsor?.name).toBeTruthy();
     expect(demo.puzzles.filter((p) => p.sponsor)).toHaveLength(1);
+    // w starym dniu z 3 zagadkami sponsor nadal trafia do 2. rundy
+    const old = buildChallenge(pool, schedule, campaigns, "2026-11-12", { demo: true });
+    expect(old.puzzles).toHaveLength(3);
+    expect(old.puzzles[1].sponsor).toBeTruthy();
   });
   it("obiekt kampanii w zwykłym harmonogramie nie dostaje oznaczenia partnera poza kampanią", () => {
     const sp = campaigns[0].puzzles[0];
     const day = schedule.days.findIndex((d) => d.includes(sp.id));
     expect(day).toBeGreaterThanOrEqual(0); // w obecnych danych obiekt demo jest też w harmonogramie
-    const key = new Date(Date.parse(schedule.start + "T00:00:00Z") + day * 86_400_000).toISOString().slice(0, 10);
+    const key = keyOf(day);
     const normal = buildChallenge(pool, schedule, campaigns, key);
     expect(normal.puzzles.some((p) => p.id === sp.id)).toBe(true);
     expect(normal.puzzles.some((p) => p.sponsor)).toBe(false);
     const demo = buildChallenge(pool, schedule, campaigns, key, { demo: true });
-    expect(demo.puzzles).toHaveLength(3);
+    const n = schedule.days[day].length;
+    expect(demo.puzzles).toHaveLength(n);
     expect(demo.puzzles.filter((p) => p.id === sp.id)).toHaveLength(1);
-    expect(demo.puzzles[1].sponsor).toBeTruthy();
+    expect(demo.puzzles[sponsorSlot(n)].sponsor).toBeTruthy();
   });
   it("zapisana lista wygrywa z harmonogramem (aktualizacja danych w trakcie dnia)", () => {
-    const saved = schedule.days[0].slice().reverse();
-    const c = buildChallenge(pool, schedule, campaigns, "2026-11-11", { savedIds: saved });
+    const saved = schedule.days[5].slice().reverse();
+    const c = buildChallenge(pool, schedule, campaigns, keyOf(5), { savedIds: saved });
     expect(c.puzzles.map((p) => p.id)).toEqual(saved);
   });
-  it("zapis sprzed zmiany reguł (inna liczba rund) jest ignorowany", () => {
-    const old = pool.slice(0, 10).map((p) => p.id);
-    const c = buildChallenge(pool, schedule, campaigns, "2026-11-11", { savedIds: old });
-    expect(c.puzzles.map((p) => p.id)).toEqual(schedule.days[0]);
+  it("zapis o innej liczbie rund niż harmonogram dnia jest ignorowany", () => {
+    const old = schedule.days[5].slice(0, 3);
+    const c = buildChallenge(pool, schedule, campaigns, keyOf(5), { savedIds: old });
+    expect(c.puzzles.map((p) => p.id)).toEqual(schedule.days[5]);
   });
   it("awaryjny dobór po końcu harmonogramu jest deterministyczny", () => {
     expect(fallbackIds(pool, "2030-01-01")).toEqual(fallbackIds(pool, "2030-01-01"));
-    expect(new Set(fallbackIds(pool, "2030-01-01")).size).toBe(3);
+    expect(new Set(fallbackIds(pool, "2030-01-01")).size).toBe(6);
     const c = buildChallenge(pool, schedule, campaigns, "2030-01-01");
-    expect(c.puzzles.map((p) => p.difficulty)).toEqual([1, 2, 3]);
+    expect(c.puzzles.map((p) => p.difficulty)).toEqual([1, 1, 2, 2, 3, 3]);
   });
 });
 

@@ -11,8 +11,12 @@ export const CONFIG = {
   /** Adres API rankingu (Cloudflare Workers). Puste = ranking wyłączony. */
   rankingApi: "/api",
   timezone: "Europe/Warsaw",
-  /** Liczba zagadek w wyzwaniu dnia: 1 łatwa, 1 średnia, 1 trudna. */
-  rounds: 3,
+  /**
+   * Liczba zagadek w nowych dniach harmonogramu: 2 łatwe, 2 średnie, 2 trudne.
+   * Liczbę rund danego dnia wyznacza harmonogram (public/data/schedule.json) — dni rozegrane
+   * według starszych reguł (np. 3 zagadki) zostają takie, jakie były.
+   */
+  rounds: 6,
   minYear: 1000,
   maxYear: new Date().getFullYear(),
   defaultYear: 1750,
