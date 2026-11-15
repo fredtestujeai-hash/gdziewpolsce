@@ -2,7 +2,7 @@
 //
 // Źródło: public/map/poland.json (Natural Earth, patrz build_map.mjs). Obrys jest upraszczany
 // do kilkuset punktów, przeliczany na odwzorowanie Mercatora i zapisywany jako zwarta ścieżka SVG.
-// Skrypt podmienia w index.html atrybuty viewBox i d oraz położenia pinezki; reszta
+// Zapisuje też src/outline.ts (dla obrazka z wynikiem). Skrypt podmienia w index.html atrybuty viewBox i d oraz położenia pinezki; reszta
 // animacji (style, znaczniki) jest pisana ręcznie w index.html.
 //
 // Użycie: npm run intro
@@ -14,6 +14,7 @@ import mapshaper from "mapshaper";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SRC = join(ROOT, "public", "map", "poland.json");
 const HTML = join(ROOT, "index.html");
+const OUTLINE_TS = join(ROOT, "src", "outline.ts");
 
 const POINTS = 300; // docelowa liczba punktów obrysu
 const WIDTH = 600; // szerokość rysunku w jednostkach SVG (współrzędne są zaokrąglane do całości)
@@ -94,4 +95,13 @@ swap(/(<path class="intro-outline"[^>]*? d=")[^"]*(")/, `$1${d}$2`, "ścieżkę 
 swap(/(<g class="intro-pin" transform=")[^"]*(")/, `$1translate(${pinX} ${pinY})$2`, "pinezkę");
 swap(/(<g class="intro-pin"[^>]*? data-spots=")[^"]*(")/, `$1${spots.map((p) => p.join(",")).join(" ")}$2`, "listę miejsc pinezki");
 await writeFile(HTML, html);
+
+// 5. Ten sam obrys dla obrazków z wynikiem (canvas, src/share-image.ts) i obrazka podglądu linku (scripts/build_og.mjs)
+await writeFile(
+  OUTLINE_TS,
+  `// Plik generowany przez scripts/build_intro.mjs (npm run intro) — nie edytuj ręcznie.
+/** Uproszczony obrys Polski (odwzorowanie Mercatora) jako ścieżka SVG, ten sam co w animacji startowej. */
+export const OUTLINE = { width: ${WIDTH}, height: ${height}, d: "${d}", pin: [${pinX}, ${pinY}] as const };
+`,
+);
 console.log(`obrys: ${total} -> ${pts.length} punktów, ścieżka ${d.length} B, viewBox 0 0 ${WIDTH} ${height}, pinezka ${pinX},${pinY}`);

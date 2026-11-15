@@ -401,3 +401,46 @@ dialog.giveup::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter: blur(
 .hints-title { margin: 0 0 -2px; font-size: .8rem; font-weight: 650; }
 .hints-title span { font-weight: 400; color: var(--muted); }
 .hint-btn:not(.used) b::after { content: " ›"; color: var(--muted); }
+
+/* ---------- Udostępnianie wyniku ---------- */
+dialog.share-dialog { border: 0; padding: 0; border-radius: var(--radius); background: var(--surface); color: var(--ink); width: min(460px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); box-shadow: var(--shadow); }
+dialog.share-dialog::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter: blur(2px); }
+.share-body { padding: 20px; position: relative; display: grid; gap: 14px; }
+.share-body h2 { font-size: 1.3rem; margin: 0; padding-right: 44px; }
+.share-close { position: absolute; top: 14px; right: 14px; }
+.share-preview { margin: 0; padding: 10px 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; font: .9rem/1.45 var(--font); white-space: pre-wrap; overflow-wrap: anywhere; user-select: all; }
+.share-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.share-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 4px 10px; min-width: 0;
+  font: 600 .85rem var(--font); color: var(--ink); text-decoration: none; text-align: center; line-height: 1.2;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; cursor: pointer;
+  transition: border-color .15s, background .15s, transform .08s;
+}
+.share-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--surface-2); }
+.share-btn:active { transform: scale(.97); }
+.share-ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: #fff; background: var(--muted); }
+.share-ico svg { width: 24px; height: 24px; }
+.ico-x { background: var(--ink); color: var(--surface); }
+.ico-facebook { background: #1877f2; }
+.ico-facebook svg { width: 28px; height: 28px; }
+.ico-whatsapp { background: #25d366; }
+.ico-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+.ico-copy, .ico-system { background: var(--surface-2); color: var(--ink); }
+.share-status { margin: -4px 0 0; min-height: 1.3em; font-size: .9rem; font-weight: 600; color: var(--good); text-align: center; }
+.share-status:empty { display: none; }
+.share-ig { display: grid; gap: 10px; justify-items: center; padding: 14px; background: var(--surface-2); border-radius: 12px; }
+.share-ig[hidden] { display: none; }
+.share-ig .btn { width: 100%; }
+.share-ig p { margin: 0; text-align: center; }
+.seg { display: inline-flex; padding: 3px; gap: 2px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; }
+.seg button { font: 600 .85rem var(--font); color: var(--muted); background: none; border: 0; border-radius: 999px; padding: .4em 1em; cursor: pointer; }
+.seg button[aria-checked="true"] { background: var(--ink); color: var(--surface); }
+.ig-preview { display: grid; place-items: center; height: 260px; }
+.ig-preview img { max-height: 260px; max-width: 100%; border-radius: 10px; box-shadow: var(--shadow); background: var(--line); }
+.ig-preview img:not([src]) { width: 146px; height: 260px; }
+.share-ig[data-format="square"] .ig-preview img:not([src]) { width: 260px; }
+.share-privacy { margin: 0; text-align: center; }
+@media (max-width: 380px) {
+  .share-body { padding: 16px; }
+  .share-ico { width: 40px; height: 40px; }
+}

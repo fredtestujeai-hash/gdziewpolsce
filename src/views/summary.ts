@@ -1,18 +1,14 @@
 import { CONFIG } from "../config";
 import { msUntilNextChallenge } from "../daily";
-import { $, esc, mount, partnerLink, toast } from "../dom";
+import { $, esc, mount, partnerLink } from "../dom";
 import type { Game } from "../main";
 import { createMap } from "../map";
-import { formatPoints, hintCostText, locTile, rating, shareLines, totalPoints, yearTile } from "../score";
+import { formatPoints, hintCostText, locTile, rating, totalPoints, yearTile } from "../score";
 import { loadStats, recordResult } from "../storage";
 import { formatDayLong, topbar, wikiButton } from "./common";
 import { track } from "../track";
 import { attachRanking } from "./ranking";
-
-export function shareText(game: Game): string {
-  const { challenge, state } = game;
-  return shareLines(challenge.number, state.guesses, challenge.puzzles.length, CONFIG.siteUrl || location.origin + location.pathname);
-}
+import { openShare } from "./share";
 
 export function renderSummary(game: Game): void {
   const { challenge, state } = game;
@@ -148,19 +144,7 @@ export function renderSummary(game: Game): void {
   const timer = window.setInterval(tick, 1000);
   tick();
 
-  $("#share", app).addEventListener("click", async () => {
-    const text = shareText(game);
-    try {
-      if (navigator.share && matchMedia("(pointer: coarse)").matches) {
-        await navigator.share({ text });
-        return;
-      }
-      await navigator.clipboard.writeText(text);
-      toast("Wynik skopiowany — wklej go znajomym!");
-    } catch {
-      toast("Nie udało się skopiować wyniku");
-    }
-  });
+  $("#share", app).addEventListener("click", () => openShare(game));
 
   app.querySelectorAll<HTMLAnchorElement>(".partner-mini").forEach((a, i) =>
     a.addEventListener("click", () => {

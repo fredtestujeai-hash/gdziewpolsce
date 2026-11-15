@@ -62,14 +62,26 @@ export function totalPoints(guesses: { locPts: number; yearPts: number }[]): num
 /** Kafelek rundy, z której gracz zrezygnował. */
 export const TILE_GAVE_UP = "⬛";
 
+/** Poziom kafelka: 0 = zielony (≥80% punktów), 1 = żółty (≥50%), 2 = pomarańczowy (≥20%), 3 = czerwony. */
+export function tileLevel(points: number, max: number): 0 | 1 | 2 | 3 {
+  const r = points / max;
+  if (r >= 0.8) return 0;
+  if (r >= 0.5) return 1;
+  if (r >= 0.2) return 2;
+  return 3;
+}
+
+const TILES = ["🟩", "🟨", "🟧", "🟥"] as const;
+
 /** Kafelek do udostępniania wyniku (jak w Wordle). */
 export function tile(points: number, max: number): string {
-  const r = points / max;
-  if (r >= 0.8) return "🟩";
-  if (r >= 0.5) return "🟨";
-  if (r >= 0.2) return "🟧";
-  return "🟥";
+  return TILES[tileLevel(points, max)];
 }
+
+/** Poziomy kafelków rundy (miejsce, rok) do rysowania; "x" = runda bez odpowiedzi (⬛). */
+export type TileLevel = 0 | 1 | 2 | 3 | "x";
+export const locLevel = (g: Guess): TileLevel => (g.gaveUp ? "x" : tileLevel(g.locPts, CONFIG.maxLocationPoints));
+export const yearLevel = (g: Guess): TileLevel => (g.gaveUp ? "x" : tileLevel(g.yearPts, CONFIG.maxYearPoints));
 
 /** Kafelki rundy: za miejsce i za rok (⬛ = runda bez odpowiedzi). */
 export const locTile = (g: Guess) => (g.gaveUp ? TILE_GAVE_UP : tile(g.locPts, CONFIG.maxLocationPoints));

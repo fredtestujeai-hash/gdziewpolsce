@@ -12,6 +12,7 @@
     "data": "python3 scripts/fetch_wikidata.py && python3 scripts/fetch_commons.py && python3 scripts/build_puzzles.py && python3 scripts/build_schedule.py",
     "map": "node scripts/build_map.mjs",
     "intro": "node scripts/build_intro.mjs",
+    "og": "node scripts/build_og.mjs",
     "schedule": "python3 scripts/build_schedule.py",
     "places": "python3 scripts/fetch_places.py"
   },

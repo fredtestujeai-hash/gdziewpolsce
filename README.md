@@ -47,6 +47,9 @@ src/
   main.ts          start aplikacji, wczytanie danych, przełączanie ekranów
   daily.ts         data w czasie polskim, wyzwanie dnia, wstawianie zagadki sponsorowanej
   score.ts         punktacja (odległość po kole wielkim, różnica lat, koszt podpowiedzi), tekst do udostępnienia
+  share.ts         adresy udostępniania (X, Facebook, WhatsApp)
+  share-image.ts   obrazek z wynikiem do Instagrama (canvas: relacja 1080×1920, post 1080×1080)
+  outline.ts       obrys Polski dla obrazków (generowany przez npm run intro)
   map.ts           mapa MapLibre GL: pinezki, przybliżanie, tryb awaryjny przy braku kafelków
   mapstyle.ts      styl mapy bez napisów (kafelki wektorowe OpenStreetMap) + kropki miejscowości
   intro.ts         chowa animację startową (obrys Polski w index.html), gdy gra jest gotowa
@@ -97,7 +100,8 @@ Pipeline:
 
 ```bash
 npm run map                               # obrys Polski, główne rzeki, mapa awaryjna i granice województw
-npm run intro                             # uproszczony obrys Polski (ok. 300 punktów) dla animacji startowej -> index.html
+npm run intro                             # uproszczony obrys Polski (ok. 300 punktów) dla animacji startowej -> index.html i src/outline.ts
+npm run og                                # obrazek podglądu linku 1200×630 -> public/og.png (wymaga Playwright)
 python3 scripts/fetch_places.py           # miejscowości w trzech rangach z Wikidata -> public/map/places.json
 python3 scripts/fetch_wikidata.py         # kandydaci: ~40 klas obiektów w Polsce (zamki, kościoły, ratusze…) + znane obiekty innych typów
 python3 scripts/fetch_commons.py          # licencje i miniatury zdjęć + wstępy artykułów z plwiki
@@ -146,6 +150,20 @@ Postęp dnia jest w `localStorage` pod kluczem `gdziewpolsce:day` jako `DayState
 Punkty rundy liczy jedna funkcja `scoreRound` w `src/score.ts`; używa jej i gra, i serwer rankingu (`recomputeScore` w `src/ranking-core.ts`), który dostaje całe `guesses` i sam przelicza wynik z pól `lat`, `lon`, `year`, `hintLoc`, `hintYear`, `gaveUp`.
 
 `DayState.hints` przechowuje podpowiedzi użyte w trwającej rundzie, żeby odświeżenie strony ich nie cofało. Po przerwaniu dnia tablica `guesses` jest pełna (rundy `"day"`), ale wynik tylko czeka w `Stats.pending` (`src/storage.ts`): gdy gracz wróci i dokończy, dzień liczy się normalnie; gdy nie dokończy do północy, dzień trafia do statystyk z osiągniętym wynikiem, a seria się zeruje. Takiego wyniku nie da się zgłosić do rankingu, dopóki gra nie jest dokończona. Dopóki można wrócić, podsumowanie ukrywa odpowiedzi nierozegranych zagadek; link „Nie wracam do gry — pokaż odpowiedzi” ustawia `DayState.closed` i odsłania je (z przyciskami „Wikipedia”), ale zamyka powrót. Pominięcie pojedynczej zagadki („Pomiń tę zagadkę”) nie przerywa serii.
+
+## Udostępnianie wyniku
+
+Przycisk „Udostępnij wynik” w podsumowaniu otwiera okno (`src/views/share.ts`) z przyciskami:
+
+| Przycisk | Jak działa |
+|---|---|
+| X | link `x.com/intent/post` z gotowym tekstem i adresem gry |
+| Facebook | link `facebook.com/sharer` z samym adresem (Facebook nie przyjmuje gotowego tekstu); gra kopiuje tekst wyniku do schowka, żeby gracz wkleił go w poście |
+| WhatsApp | link `wa.me` z tekstem i adresem |
+| Instagram | obrazek z wynikiem (bez nazw miejsc). Na telefonie systemowe „Udostępnij” z plikiem (gracz wybiera Instagram), gdzie indziej pobranie pliku i krótka instrukcja |
+| Kopiuj tekst, Więcej… | schowek; systemowe menu udostępniania (tylko na ekranach dotykowych) |
+
+Bez SDK, pikseli i skryptów serwisów: to zwykłe linki w nowej karcie. Podgląd linku (obrazek, tytuł, opis) pochodzi z metadanych `og:*` i `twitter:*` w `index.html`; obrazek `public/og.png` generuje `npm run og`. Po jego zmianie trzeba odświeżyć podgląd w Facebook Sharing Debugger (developers.facebook.com/tools/debug).
 
 ## Zagadki sponsorowane
 
