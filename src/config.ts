@@ -7,7 +7,7 @@ export const CONFIG = {
   /** Adres publiczny gry — trafia do tekstu udostępniania wyniku. */
   siteUrl: EN ? "https://gdziewpolsce.com/en/" : "https://gdziewpolsce.com/",
   /** Kontakt dla miast i regionów zainteresowanych partnerstwem (puste = ukryte). */
-  partnerEmail: "",
+  partnerEmail: "kontakt@gdziewpolsce.com",
   /**
    * Adres anonimowego licznika zdarzeń (POST JSON; odczyt sum dnia pod tym samym adresem z „s” na końcu).
    * Liczymy rozgrywki, nie ludzi: bez identyfikatorów i ciasteczek. Puste = żadnych statystyk.

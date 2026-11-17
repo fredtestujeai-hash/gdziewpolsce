@@ -8,7 +8,7 @@ Stan na 17.11.2026. Plan i szkice do akceptacji; nic nie zostało opublikowane a
 - **Nazwisko:** właściciel występuje pod imieniem i nazwiskiem.
 - **Pomiar:** zgoda na anonimowe liczniki. **Zrobione:** liczniki działają, obietnica w „O grze” ma dopisek „liczymy rozgrywki, nie ludzi” (opis w README, sekcja „Liczniki”).
 - **Zmiany w grze:** **zrobione** wynik na tle innych graczy (pokazuje się od 10 ukończonych gier dziennie), łagodniejsze progi stopni, stopień w udostępnianym wyniku, mierzenie kanałów linkiem `?z=nazwa`.
-- **Kanały:** bez Facebooka (konto właściciela bywa blokowane); Instagram tak; e-mail gry na koncie Zoho właściciela. Posty w grupach na Facebooku odpadają, chyba że opublikuje je ktoś życzliwy.
+- **Kanały:** bez Facebooka (konto właściciela bywa blokowane); Instagram tak; e-mail gry `kontakt@gdziewpolsce.com` działa (przekierowanie w Cloudflare Email Routing na prywatną skrzynkę właściciela; tylko odbiór). Posty w grupach na Facebooku odpadają, chyba że opublikuje je ktoś życzliwy.
 - **Podział pracy:** kampanię prowadzi Claude (plan, teksty, liczby, zmiany w grze); właściciel podejmuje decyzje i klika „opublikuj” na swoich kontach.
 - **Próg zamówień publicznych** w docs/PARTNERZY.md poprawiony na 170 000 zł.
 
