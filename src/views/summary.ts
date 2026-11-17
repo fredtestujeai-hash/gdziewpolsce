@@ -1,6 +1,7 @@
 import { CONFIG } from "../config";
 import { msUntilNextChallenge } from "../daily";
 import { $, esc, mount, partnerLink } from "../dom";
+import { EN, tr } from "../i18n";
 import type { Game } from "../main";
 import { createMap } from "../map";
 import { formatPoints, hintCostText, locTile, rating, totalPoints, yearTile } from "../score";
@@ -27,41 +28,41 @@ export function renderSummary(game: Game): void {
   const sponsors = challenge.puzzles.filter((p) => p.sponsor);
 
   const app = mount(`
-    ${topbar(`<div class="round-meta"><span>Wyzwanie #${challenge.number}</span></div>`)}
+    ${topbar(`<div class="round-meta"><span>${tr("Wyzwanie", "Challenge")} #${challenge.number}</span></div>`)}
     <main class="summary">
       <section class="card hero-score">
         <p class="eyebrow">${esc(formatDayLong(challenge.key))}</p>
         <div class="total"><span class="total-n" id="total-n">0</span><span class="total-max">/ ${formatPoints(max)}</span></div>
         <p class="rating">${esc(rating(total, max))}</p>
         <p class="versus" id="versus" hidden></p>
-        <div class="tiles" aria-label="Wyniki rund">
+        <div class="tiles" aria-label="${tr("Wyniki rund", "Round results")}">
           <div><span>📍</span>${state.guesses.map((g) => `<i>${locTile(g)}</i>`).join("")}</div>
           <div><span>📅</span>${state.guesses.map((g) => `<i>${yearTile(g)}</i>`).join("")}</div>
         </div>
-        ${anyHint ? `<p class="hint-note">💡 Z podpowiedzią (−${hintCostText()} pkt): ${state.guesses.map((g, i) => (g.hintLoc || g.hintYear ? `runda ${i + 1}` : "")).filter(Boolean).join(", ")}</p>` : ""}
+        ${anyHint ? `<p class="hint-note">💡 ${tr("Z podpowiedzią", "With a hint")} (−${hintCostText()} ${tr("pkt", "pts")}): ${state.guesses.map((g, i) => (g.hintLoc || g.hintYear ? `${tr("runda", "round")} ${i + 1}` : "")).filter(Boolean).join(", ")}</p>` : ""}
         ${
           resumable
             ? `<div class="resume">
-                <p><b>Wyzwanie niedokończone.</b> Do północy możesz wrócić do nierozegranych zagadek. Niedokończone wyzwanie przerywa serię.</p>
-                <button class="btn primary big" id="resume">Wróć do gry</button>
+                <p>${tr("<b>Wyzwanie niedokończone.</b> Do północy możesz wrócić do nierozegranych zagadek. Niedokończone wyzwanie przerywa serię.", "<b>Challenge unfinished.</b> You can return to the unplayed puzzles until midnight (Polish time). An unfinished challenge breaks your streak.")}</p>
+                <button class="btn primary big" id="resume">${tr("Wróć do gry", "Back to the game")}</button>
               </div>`
             : ""
         }
-        <button class="btn ${resumable ? "secondary" : "primary"} big" id="share">Udostępnij wynik</button>
-        <p class="countdown">Następne wyzwanie za <b id="countdown">--:--:--</b></p>
+        <button class="btn ${resumable ? "secondary" : "primary"} big" id="share">${tr("Udostępnij wynik", "Share your score")}</button>
+        <p class="countdown">${tr("Następne wyzwanie za", "Next challenge in")} <b id="countdown">--:--:--</b></p>
       </section>
 
       <section class="card stats">
-        <div><b>${stats.played}</b><span>rozegrane</span></div>
-        <div><b>${stats.streak}</b><span>seria dni</span></div>
-        <div><b>${stats.maxStreak}</b><span>najdłuższa seria</span></div>
-        <div><b>${formatPoints(avg)}</b><span>średni wynik</span></div>
-        <div><b>${formatPoints(stats.best)}</b><span>najlepszy</span></div>
+        <div><b>${stats.played}</b><span>${tr("rozegrane", "played")}</span></div>
+        <div><b>${stats.streak}</b><span>${tr("seria dni", "day streak")}</span></div>
+        <div><b>${stats.maxStreak}</b><span>${tr("najdłuższa seria", "longest streak")}</span></div>
+        <div><b>${formatPoints(avg)}</b><span>${tr("średni wynik", "average score")}</span></div>
+        <div><b>${formatPoints(stats.best)}</b><span>${tr("najlepszy", "best")}</span></div>
       </section>
 
       <section class="card recap">
-        <h2>Dzisiejsza trasa</h2>
-        <p class="muted">Wszystkie te miejsca możesz odwiedzić. Może weekendowy wypad?</p>
+        <h2>${tr("Dzisiejsza trasa", "Today's route")}</h2>
+        <p class="muted">${tr("Wszystkie te miejsca możesz odwiedzić. Może weekendowy wypad?", "You can visit every one of these places. A weekend trip, perhaps?")}</p>
         <div class="recap-map" id="recap-map"></div>
         <ol class="places">
           ${challenge.puzzles
@@ -69,16 +70,16 @@ export function renderSummary(game: Game): void {
               const g = state.guesses[i];
               const pts = g ? g.locPts + g.yearPts : 0;
               const tags = [
-                !g || g.gaveUp === "day" ? `<span class="tag">nierozegrana</span>` : g.gaveUp ? `<span class="tag">pominięta</span>` : "",
-                g?.hintLoc ? `<span class="tag hint">💡 województwo</span>` : "",
-                g?.hintYear ? `<span class="tag hint">💡 wiek</span>` : "",
+                !g || g.gaveUp === "day" ? `<span class="tag">${tr("nierozegrana", "unplayed")}</span>` : g.gaveUp ? `<span class="tag">${tr("pominięta", "skipped")}</span>` : "",
+                g?.hintLoc ? `<span class="tag hint">💡 ${tr("województwo", "region")}</span>` : "",
+                g?.hintYear ? `<span class="tag hint">💡 ${tr("wiek", "century")}</span>` : "",
               ].join("");
               if (hidden(i))
                 return `<li class="place">
                 <span class="thumb thumb-hidden" aria-hidden="true">?</span>
                 <div class="place-body">
-                  <b class="place-name">Zagadka ${i + 1} — nierozegrana</b>
-                  <span class="muted">Odpowiedź jest ukryta, dopóki możesz wrócić do gry.</span>
+                  <b class="place-name">${tr("Zagadka", "Puzzle")} ${i + 1} — ${tr("nierozegrana", "unplayed")}</b>
+                  <span class="muted">${tr("Odpowiedź jest ukryta, dopóki możesz wrócić do gry.", "The answer stays hidden while you can still return to the game.")}</span>
                 </div>
                 <span class="place-pts">0</span>
               </li>`;
@@ -88,23 +89,23 @@ export function renderSummary(game: Game): void {
                   <b class="place-name">${esc(p.name)}</b>
                   <span class="muted">${p.place ? esc(p.place) + " · " : ""}${p.year}</span>
                   <span class="place-links">${wikiButton(p, true)}${tags}</span>
-                  ${p.sponsor ? `<a class="partner-mini" href="${esc(partnerLink(p.sponsor.url, p.campaign ?? `podsumowanie-${challenge.key}`))}" target="_blank" rel="noopener sponsored">Sponsorowane · ${esc(p.sponsor.cta)} ↗</a>` : ""}
+                  ${p.sponsor ? `<a class="partner-mini" href="${esc(partnerLink(p.sponsor.url, p.campaign ?? `podsumowanie-${challenge.key}`))}" target="_blank" rel="noopener sponsored">${tr("Sponsorowane", "Sponsored")} · ${esc(p.sponsor.cta)} ↗</a>` : ""}
                 </div>
                 <span class="place-pts">${pts}</span>
               </li>`;
             })
             .join("")}
         </ol>
-        ${resumable ? `<p class="small reveal-all"><a href="#" id="reveal-all">Nie wracam do gry — pokaż odpowiedzi</a></p>` : ""}
+        ${resumable ? `<p class="small reveal-all"><a href="#" id="reveal-all">${tr("Nie wracam do gry — pokaż odpowiedzi", "I am not coming back — show the answers")}</a></p>` : ""}
       </section>
 
       ${
         sponsors.length
-          ? `<p class="partner-line center-text">Dzisiejsze wyzwanie współtworzy: ${sponsors.map((p) => `<b>${esc(p.sponsor!.name)}</b>`).join(", ")}. Dziękujemy!</p>`
+          ? `<p class="partner-line center-text">${tr("Dzisiejsze wyzwanie współtworzy", "Today's challenge is supported by")}: ${sponsors.map((p) => `<b>${esc(p.sponsor!.name)}</b>`).join(", ")}. ${tr("Dziękujemy!", "Thank you!")}</p>`
           : ""
       }
       <footer class="foot">
-        <a href="#" data-about>Jak grać</a> · <a href="#" data-about="partnerzy">Dla miast i regionów</a> · <a href="#" data-about="zrodla">Źródła i licencje</a>
+        <a href="#" data-about>${tr("Jak grać", "How to play")}</a> · <a href="#" data-about="partnerzy">${tr("Dla miast i regionów", "For cities and regions")}</a> · <a href="#" data-about="zrodla">${tr("Źródła i licencje", "Sources and licences")}</a>
       </footer>
     </main>`);
 
@@ -116,7 +117,9 @@ export function renderSummary(game: Game): void {
       const c = s && compare(s.hist, total);
       const el = app.querySelector<HTMLElement>("#versus");
       if (!c || !el) return;
-      el.textContent = `${c.pct >= 50 ? `Lepiej niż ${c.pct}% dzisiejszych graczy` : `Dziś ukończono już ${formatPoints(c.n)} gier`} · średnia dnia ok. ${formatPoints(c.avg)} pkt`;
+      el.textContent = EN
+        ? `${c.pct >= 50 ? `Better than ${c.pct}% of today's players` : `${formatPoints(c.n)} games finished today`} · today's average: about ${formatPoints(c.avg)} pts`
+        : `${c.pct >= 50 ? `Lepiej niż ${c.pct}% dzisiejszych graczy` : `Dziś ukończono już ${formatPoints(c.n)} gier`} · średnia dnia ok. ${formatPoints(c.avg)} pkt`;
       el.hidden = false;
     });
 
@@ -128,7 +131,7 @@ export function renderSummary(game: Game): void {
 
   app.querySelector("#reveal-all")?.addEventListener("click", (e) => {
     e.preventDefault();
-    if (!confirm("Pokazać odpowiedzi? Nie będzie już można wrócić do dzisiejszego wyzwania, a seria zostanie przerwana.")) return;
+    if (!confirm(tr("Pokazać odpowiedzi? Nie będzie już można wrócić do dzisiejszego wyzwania, a seria zostanie przerwana.", "Show the answers? You will not be able to return to today's challenge and your streak will be broken."))) return;
     state.closed = true;
     game.save();
     game.go("summary");

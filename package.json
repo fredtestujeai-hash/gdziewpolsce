@@ -5,8 +5,9 @@
   "type": "module",
   "description": "Codzienna gra o Polsce: zgadnij gdzie i kiedy powstał obiekt ze zdjęcia",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "dev": "node scripts/build_en_html.mjs && vite",
+    "build": "tsc --noEmit && node scripts/build_en_html.mjs && vite build",
+    "en": "python3 scripts/fetch_en.py",
     "preview": "vite preview",
     "test": "vitest run",
     "data": "python3 scripts/fetch_wikidata.py && python3 scripts/fetch_commons.py && python3 scripts/build_puzzles.py && python3 scripts/build_schedule.py",

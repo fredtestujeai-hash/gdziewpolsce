@@ -37,6 +37,8 @@ jobs:
           python3 scripts/fetch_wikidata.py
           python3 scripts/fetch_commons.py
           python3 scripts/build_puzzles.py
+      - name: Angielskie nazwy i opisy (dociąga tylko nowe obiekty)
+        run: python3 scripts/fetch_en.py
       - name: Harmonogram na kolejne miesiące
         run: python3 scripts/build_schedule.py --days 120
       - run: npm test

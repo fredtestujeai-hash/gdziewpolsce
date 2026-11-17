@@ -1,4 +1,5 @@
 import { CONFIG } from "./config";
+import { EN, LOCALE, tr } from "./i18n";
 import type { Guess } from "./types";
 
 /** Odległość po kole wielkim w km. */
@@ -86,14 +87,14 @@ export const yearLevel = (g: Guess): TileLevel => (g.gaveUp ? "x" : tileLevel(g.
 /** Kafelki rundy: za miejsce i za rok (⬛ = runda bez odpowiedzi). */
 export const locTile = (g: Guess) => (g.gaveUp ? TILE_GAVE_UP : tile(g.locPts, CONFIG.maxLocationPoints));
 export const yearTile = (g: Guess) => (g.gaveUp ? TILE_GAVE_UP : tile(g.yearPts, CONFIG.maxYearPoints));
-const hintsWord = (n: number) => (n === 1 ? "podpowiedź" : "podpowiedzi");
+const hintsWord = (n: number) => (EN ? (n === 1 ? "hint" : "hints") : n === 1 ? "podpowiedź" : "podpowiedzi");
 
 /** Tekst do udostępnienia wyniku: kafelki, liczba podpowiedzi i rund bez odpowiedzi. */
 export function shareLines(number: number, guesses: Guess[], rounds: number, url: string): string {
   const max = rounds * (CONFIG.maxLocationPoints + CONFIG.maxYearPoints);
   const hints = guesses.reduce((s, g) => s + (g.hintLoc ? 1 : 0) + (g.hintYear ? 1 : 0), 0);
   const skipped = guesses.filter((g) => g.gaveUp).length;
-  const notes = [hints ? `💡 ${hints} ${hintsWord(hints)}` : "", skipped ? `⬛ ${skipped} bez odpowiedzi` : ""].filter(Boolean).join(" · ");
+  const notes = [hints ? `💡 ${hints} ${hintsWord(hints)}` : "", skipped ? `⬛ ${skipped} ${tr("bez odpowiedzi", "unanswered")}` : ""].filter(Boolean).join(" · ");
   return [
     `${CONFIG.name} #${number} — ${formatPoints(totalPoints(guesses))}/${formatPoints(max)}`,
     `📍 ${guesses.map(locTile).join("")}`,
@@ -114,22 +115,31 @@ export function formatKm(km: number): string {
 }
 
 export function formatPoints(n: number): string {
-  return n.toLocaleString("pl-PL");
+  return n.toLocaleString(LOCALE);
 }
 
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "XXII"];
+/** Liczebnik porządkowy po angielsku: 1st, 2nd, 3rd, 14th, 21st. */
+export function ordinal(n: number): string {
+  const t = n % 100;
+  const s = t >= 11 && t <= 13 ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th");
+  return `${n}${s}`;
+}
+
 export function century(year: number): string {
-  return `${ROMAN[Math.floor((year - 1) / 100)] ?? "?"} w.`;
+  const c = Math.floor((year - 1) / 100);
+  return EN ? `${ordinal(c + 1)} c.` : `${ROMAN[c] ?? "?"} w.`;
 }
 
 /** Stulecie jako podpowiedź: nazwa i zakres lat, np. 1364 -> „XIV wiek”, 1301–1400. */
 export function centuryRange(year: number): { label: string; from: number; to: number } {
   const c = Math.floor((year - 1) / 100);
-  return { label: `${ROMAN[c] ?? "?"} wiek`, from: c * 100 + 1, to: (c + 1) * 100 };
+  return { label: EN ? `${ordinal(c + 1)} century` : `${ROMAN[c] ?? "?"} wiek`, from: c * 100 + 1, to: (c + 1) * 100 };
 }
 
 /** „miejsc” z poprawną polską odmianą: 1 miejsce, 3 miejsca, 5 miejsc. */
 export function placesWord(n: number): string {
+  if (EN) return n === 1 ? "place" : "places";
   if (n === 1) return "miejsce";
   const u = n % 10;
   const t = n % 100;
@@ -139,6 +149,7 @@ export function placesWord(n: number): string {
 /** „lat” z poprawną polską odmianą: 1 rok, 2 lata, 5 lat, 22 lata. */
 export function yearsWord(n: number): string {
   const a = Math.abs(n);
+  if (EN) return a === 1 ? "year" : "years";
   if (a === 1) return "rok";
   const u = a % 10;
   const t = a % 100;
@@ -151,10 +162,10 @@ export function yearsWord(n: number): string {
  */
 export function rating(total: number, max: number): string {
   const r = total / max;
-  if (r >= 0.8) return "Kustosz";
-  if (r >= 0.65) return "Przewodnik z uprawnieniami";
-  if (r >= 0.5) return "Obieżyświat";
-  if (r >= 0.35) return "Krajoznawca";
-  if (r >= 0.2) return "Turysta z mapą";
-  return "Niedzielny wycieczkowicz";
+  if (r >= 0.8) return tr("Kustosz", "Curator");
+  if (r >= 0.65) return tr("Przewodnik z uprawnieniami", "Licensed guide");
+  if (r >= 0.5) return tr("Obieżyświat", "Globetrotter");
+  if (r >= 0.35) return tr("Krajoznawca", "Explorer");
+  if (r >= 0.2) return tr("Turysta z mapą", "Tourist with a map");
+  return tr("Niedzielny wycieczkowicz", "Sunday day-tripper");
 }

@@ -1,15 +1,58 @@
 import { CONFIG } from "../config";
 import { esc } from "../dom";
+import { EN, LOCALE, tr } from "../i18n";
 import { hintCostText, locationPoints, placesWord, yearPoints } from "../score";
 
 export function openAbout(section?: string): void {
   document.querySelector("dialog.about")?.remove();
   const d = document.createElement("dialog");
   d.className = "about";
-  d.setAttribute("aria-label", "O grze");
-  const ex = (km: number) => `${km} km → ${locationPoints(km)} pkt`;
-  const ey = (y: number) => `${y} lat → ${yearPoints(y)} pkt`;
-  d.innerHTML = `
+  d.setAttribute("aria-label", tr("O grze", "About the game"));
+  const ex = (km: number) => `${km} km → ${locationPoints(km)} ${tr("pkt", "pts")}`;
+  const ey = (y: number) => `${y} ${tr("lat", "years")} → ${yearPoints(y)} ${tr("pkt", "pts")}`;
+  d.innerHTML = EN ? `
+    <div class="about-body">
+      <button class="icon-btn about-close" aria-label="Close">✕</button>
+      <h2>How to play</h2>
+      <p>A new challenge is waiting every day at midnight Polish time: <b>${CONFIG.rounds} ${placesWord(CONFIG.rounds)} from all over Poland</b> — castles, churches, town halls, lighthouses, railway stations, skyscrapers… The puzzles get harder as you go: easy first, then medium, then hard. Everyone gets the same challenge and you can play it only once.</p>
+      <ol>
+        <li>Look at the photo (you can enlarge it).</li>
+        <li>Drop a pin on the map. The map has <b>no names at all</b>, but it shows rivers, lakes, forests, roads and railways, and the dots mark regional capitals, county towns and municipal seats. You can zoom in down to single streets and buildings, and move the pin.</li>
+        <li>Set the year the place was built on the slider and click <b>Check</b>.</li>
+      </ol>
+      <p class="small">The game is hard, especially if you do not live in Poland: half of the points is a very good score.</p>
+      <h3>Scoring</h3>
+      <p>Each place gives up to <b>${CONFIG.maxLocationPoints}</b> points for the location and up to <b>${CONFIG.maxYearPoints}</b> for the year — at most ${(CONFIG.rounds * (CONFIG.maxLocationPoints + CONFIG.maxYearPoints)).toLocaleString(LOCALE)} points a day.</p>
+      <p class="muted small">Location: ${[ex(2), ex(25), ex(50), ex(100), ex(200)].join(" · ")}<br/>Year: ${[ey(0), ey(10), ey(25), ey(50), ey(100)].join(" · ")}</p>
+
+      <h3>Hints</h3>
+      <p>You can take two hints in every round. Each costs <b>${hintCostText()}</b> of the points for the part of the round it helps with:</p>
+      <ul>
+        <li><b>Region</b> — you learn the name of the voivodeship (one of Poland's 16 regions) and its area lights up on the map. Location points in this round are ${hintCostText()} lower.</li>
+        <li><b>Century</b> — you learn the century, e.g. “14th century (1301–1400)”, also marked on the slider. Year points in this round are ${hintCostText()} lower.</li>
+      </ul>
+      <p class="small">Hints you used are marked in the round result, in the summary and in the score you share (💡).</p>
+
+      <h3>Giving up</h3>
+      <p>The <b>Give up</b> button lets you <b>skip a puzzle</b> (0 points, you will see the correct answer) or <b>stop today's challenge</b>. You can return to a stopped game until midnight (the “Back to the game” button in the summary); puzzles you do not play score 0 points and their answers stay hidden until you decide not to come back. <b>A challenge left unfinished at the end of the day breaks your streak.</b> After every puzzle, skipped ones included, you get a link to Wikipedia.</p>
+
+      <h3 id="about-partnerzy">For cities and regions</h3>
+      <p>The game has <b>no ads</b>. It is supported by partners — local governments, tourism organisations and cultural institutions — whose places appear as <b>sponsored puzzles</b>. Every such puzzle is clearly labelled, and after answering the player gets a short invitation to visit and a link to the partner's website.</p>
+      ${CONFIG.partnerEmail ? `<p><a class="btn secondary" href="mailto:${esc(CONFIG.partnerEmail)}?subject=${encodeURIComponent("Partnership — " + CONFIG.name)}">Write to us</a></p>` : ""}
+
+      <h3 id="about-zrodla">Sources and licences</h3>
+      <ul class="small">
+        <li>Descriptions and dates: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0) and <a href="https://en.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (CC BY-SA 4.0).</li>
+        <li>Photos: <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a> — the author and licence are given with every photo.</li>
+        <li>Map: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors, tiles by <a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> / <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a>; towns: Wikidata; country outline and fallback map: <a href="https://www.naturalearthdata.com" target="_blank" rel="noopener">Natural Earth</a>.</li>
+      </ul>
+      <p class="small">Dates come from open databases and can be a matter of convention (for example the start of construction or the first mention). Where a place has no English Wikipedia article, the game shows its Polish name and links to the Polish article. Spotted a mistake? Fix it in Wikidata — everyone benefits.</p>
+
+      <h3 id="about-prywatnosc">Privacy</h3>
+      <p class="small">No accounts, no cookies, no tracking. Your scores and streak are stored in this browser.</p>
+      <p class="small"><b>We count games, not people.</b> The game only counts how many times the daily challenge was started and finished, how the scores were distributed (hence “better than X% of players”), how many times a score was shared, and how many times a sponsored puzzle was shown and clicked. These are daily totals only: no identifiers, no IP addresses, no profiles.</p>
+      <p class="small"><b>The leaderboard is optional.</b> If you join it after finishing a challenge, the game server receives your nickname, today's answers (the score is computed from them) and a random identifier of this browser, which ensures one score per device per day. Your nickname and score are visible to everyone. We do not store your IP address or any other data. You can remove your entries at any time with the “Remove my leaderboard entries” link under the leaderboard${CONFIG.partnerEmail ? `, or write to <a href="mailto:${esc(CONFIG.partnerEmail)}">${esc(CONFIG.partnerEmail)}</a>` : ""}.</p>
+    </div>` : `
     <div class="about-body">
       <button class="icon-btn about-close" aria-label="Zamknij">✕</button>
       <h2>Jak grać</h2>

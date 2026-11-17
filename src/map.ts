@@ -1,3 +1,4 @@
+import { ROOT, tr } from "./i18n";
 import type { GeoJSONSource, LngLatBoundsLike, Map as MLMap, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { buildStyle, fallbackLayers, OSM, type PlacesData } from "./mapstyle";
@@ -14,7 +15,7 @@ const MAX_BOUNDS: LngLatBoundsLike = [
 ];
 const FIT = { padding: 10 };
 
-const base = import.meta.env.BASE_URL;
+const base = ROOT;
 const getJSON = <T>(name: string): Promise<T> => fetch(`${base}map/${name}.json`).then((r) => r.json() as Promise<T>);
 
 let overlays: Promise<[PlacesData, GeoJSON.Feature | null]> | null = null;
@@ -112,7 +113,7 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
   map.touchZoomRotate.disableRotation();
   map.keyboard.disableRotation();
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
-  map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: "Miejscowości: Wikidata" }), "bottom-right");
+  map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: tr("Miejscowości: Wikidata", "Places: Wikidata") }), "bottom-right");
   // Podpis źródeł domyślnie zwinięty do przycisku „i” (rozwija się po kliknięciu) — nie zasłania legendy
   const collapseAttribution = () => {
     const a = el.querySelector(".maplibregl-ctrl-attrib");
@@ -173,7 +174,7 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
 
   function setGuess(lat: number, lon: number) {
     if (!guess) {
-      guess = new maplibregl.Marker({ element: pinElement("pin-guess", "Twoja odpowiedź"), anchor: "bottom", draggable: !locked })
+      guess = new maplibregl.Marker({ element: pinElement("pin-guess", tr("Twoja odpowiedź", "Your answer")), anchor: "bottom", draggable: !locked })
         .setLngLat([lon, lat])
         .addTo(map);
       guess.on("dragend", () => {
@@ -197,7 +198,7 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
         guess?.remove();
         guess = null;
         extra.push(
-          new maplibregl.Marker({ element: pinElement("pin-answer", "Poprawna odpowiedź"), anchor: "bottom" }).setLngLat([answer.lon, answer.lat]).addTo(map),
+          new maplibregl.Marker({ element: pinElement("pin-answer", tr("Poprawna odpowiedź", "Correct answer")), anchor: "bottom" }).setLngLat([answer.lon, answer.lat]).addTo(map),
         );
         map.flyTo({ center: [answer.lon, answer.lat], zoom: 9.5, duration: 1200 });
         return;
@@ -208,7 +209,7 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
         geometry: { type: "LineString", coordinates: [[g.lon, g.lat], [answer.lon, answer.lat]] },
       });
       extra.push(
-        new maplibregl.Marker({ element: pinElement("pin-answer", "Poprawna odpowiedź"), anchor: "bottom" }).setLngLat([answer.lon, answer.lat]).addTo(map),
+        new maplibregl.Marker({ element: pinElement("pin-answer", tr("Poprawna odpowiedź", "Correct answer")), anchor: "bottom" }).setLngLat([answer.lon, answer.lat]).addTo(map),
       );
       map.fitBounds(
         [

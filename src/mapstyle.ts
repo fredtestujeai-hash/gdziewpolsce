@@ -1,3 +1,4 @@
+import { ROOT } from "./i18n";
 import type { ExpressionSpecification, LayerSpecification, StyleSpecification } from "maplibre-gl";
 
 /**
@@ -309,7 +310,7 @@ export function buildStyle(places: PlacesData, outside: GeoJSON.Feature | null):
         },
       },
       result: { type: "geojson", data: { type: "FeatureCollection", features: [] } },
-      "ne-rivers": { type: "geojson", data: `${import.meta.env.BASE_URL}map/rivers.json` },
+      "ne-rivers": { type: "geojson", data: `${ROOT}map/rivers.json` },
       ...(outside ? { outside: { type: "geojson", data: outside } } : {}),
     },
     layers,

@@ -1,5 +1,6 @@
 // Wspólne reguły rankingu: używane i w przeglądarce, i na serwerze (Cloudflare Workers), i w testach.
 // Bez zależności od DOM ani od bazy.
+import { tr } from "./i18n";
 import { CONFIG } from "./config";
 import { addDays, todayKey } from "./daily";
 import { scoreRound } from "./score";
@@ -80,14 +81,14 @@ export function isProfane(nick: string): boolean {
 
 /** Sprawdza i porządkuje nick: 2–20 znaków, litery (także polskie), cyfry, spacja, kropka, myślnik, podkreślnik. */
 export function validateNick(raw: unknown): NickResult {
-  if (typeof raw !== "string") return { ok: false, error: "Podaj nick." };
+  if (typeof raw !== "string") return { ok: false, error: tr("Podaj nick.", "Enter a nickname.") };
   const nick = raw.normalize("NFC").replace(/\s+/g, " ").trim();
   const len = [...nick].length;
-  if (len < NICK_MIN) return { ok: false, error: `Nick musi mieć co najmniej ${NICK_MIN} znaki.` };
-  if (len > NICK_MAX) return { ok: false, error: `Nick może mieć najwyżej ${NICK_MAX} znaków.` };
-  if (!/^[\p{L}\p{N} ._-]+$/u.test(nick)) return { ok: false, error: "Nick może zawierać litery, cyfry, spację, kropkę, myślnik i podkreślnik." };
-  if (!/[\p{L}\p{N}]/u.test(nick)) return { ok: false, error: "Nick musi zawierać literę albo cyfrę." };
-  if (isProfane(nick)) return { ok: false, error: "Wybierz inny nick." };
+  if (len < NICK_MIN) return { ok: false, error: tr(`Nick musi mieć co najmniej ${NICK_MIN} znaki.`, `The nickname needs at least ${NICK_MIN} characters.`) };
+  if (len > NICK_MAX) return { ok: false, error: tr(`Nick może mieć najwyżej ${NICK_MAX} znaków.`, `The nickname can have at most ${NICK_MAX} characters.`) };
+  if (!/^[\p{L}\p{N} ._-]+$/u.test(nick)) return { ok: false, error: tr("Nick może zawierać litery, cyfry, spację, kropkę, myślnik i podkreślnik.", "A nickname can contain letters, digits, spaces, dots, hyphens and underscores.") };
+  if (!/[\p{L}\p{N}]/u.test(nick)) return { ok: false, error: tr("Nick musi zawierać literę albo cyfrę.", "A nickname must contain a letter or a digit.") };
+  if (isProfane(nick)) return { ok: false, error: tr("Wybierz inny nick.", "Please choose a different nickname.") };
   return { ok: true, nick };
 }
 

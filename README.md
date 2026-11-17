@@ -55,6 +55,7 @@ src/
   mapstyle.ts      styl mapy bez napisów (kafelki wektorowe OpenStreetMap) + kropki miejscowości
   intro.ts         chowa animację startową (obrys Polski w index.html), gdy gra jest gotowa
   storage.ts       zapis postępu i statystyk w localStorage
+  i18n.ts          wersje językowe: polska i angielska (/en/), funkcja tr(), angielskie nazwy kategorii
   track.ts         anonimowe liczniki po stronie przeglądarki (wysyłka zdarzeń, odczyt sum dnia)
   stats-core.ts    liczniki: reguły wspólne (przedziały wyniku, porównanie „lepiej niż X% graczy”)
   stats-server.ts  liczniki: logika serwera (/api/stat, /api/stats)
@@ -186,6 +187,16 @@ Kampanie partnerów są w `public/data/sponsored.json`:
 - Zagadka sponsorowana zastępuje **3. rundę** (z sześciu; w dniach z 3 zagadkami 2. rundę). Dziennie jest maks. jedna; kilka aktywnych kampanii rotuje.
 - Zagadka ma etykietę **„Zagadka sponsorowana”** na zdjęciu i w wyniku, a link do partnera ma `rel="sponsored"` i parametry UTM.
 - Wyświetlenia i kliknięcia zagadki partnera zliczają anonimowe liczniki (sekcja „Liczniki”): `sponsor_view` i `sponsor_click` z dniem i id kampanii.
+
+## Wersja angielska
+
+Gra ma dwie wersje językowe: polską pod adresem głównym i angielską pod **https://gdziewpolsce.com/en/** („Where in Poland?”). Język wynika wyłącznie z adresu; przełącznik PL/EN jest w nagłówku. Wyzwanie dnia, punktacja, zapis gry i ranking są wspólne.
+
+- **Teksty gry:** `src/i18n.ts` ustala język (`LANG`, `EN`) i daje funkcję `tr("po polsku", "in English")`. Każdy nowy napis w grze trzeba podać w obu językach. Są tam też angielskie nazwy kategorii i katalog główny `ROOT` (wersja angielska leży w podkatalogu, więc dane i mapę wczytuje przez `../`).
+- **Strona startowa:** `en/index.html` powstaje z `index.html` przez `scripts/build_en_html.mjs` (angielski tytuł, opis i podgląd linku). Skrypt uruchamia się sam przed `npm run dev` i `npm run build`; pliku nie ma w repozytorium. Obrazek podglądu linku (`og.png`) jest na razie wspólny, z polskim napisem.
+- **Nazwy i opisy zabytków:** `public/data/puzzles.en.json` generuje `python3 scripts/fetch_en.py` (`npm run en`): angielska nazwa i opis z Wikidata, wstęp i link z angielskiej Wikipedii. Gdy obiekt nie ma angielskiej nazwy albo artykułu, gra pokazuje polską nazwę i link do polskiej Wikipedii. Skrypt dociąga tylko nowe obiekty (surowe dane w `data/raw/en.json`) i jest uruchamiany co miesiąc przez workflow `data.yml`.
+- **Zagadki sponsorowane** są po polsku, chyba że kampania dotyczy obiektu z Wikidata (wtedy nazwa i opis tłumaczą się jak reszta puli). Tekst partnera i przycisk zostają takie, jak je podał partner.
+- Komunikaty serwera rankingu są po polsku; wersja angielska tłumaczy je w przeglądarce (`SERVER_EN` w `src/ranking.ts`).
 
 ## Liczniki
 

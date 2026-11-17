@@ -1,6 +1,7 @@
 // Ranking po stronie przeglądarki: rozmowa z API i lokalna „tożsamość” gracza (bez konta).
 // Gdy API nie odpowiada (np. gra działa na hostingu bez serwera), funkcje zwracają null i ranking się nie pokazuje.
 import { CONFIG } from "./config";
+import { EN, tr } from "./i18n";
 import type { Period, RankingData } from "./ranking-core";
 import type { DayState } from "./types";
 
@@ -68,6 +69,18 @@ export async function fetchRanking(day: string, period: Period = "day"): Promise
   return res && res.status === 200 && isRanking(res.body) ? res.body : null;
 }
 
+/** Komunikaty serwera są po polsku; w wersji angielskiej tłumaczymy je po stronie przeglądarki. */
+const SERVER_EN: Record<string, string> = {
+  "Ranking jest chwilowo niedostępny.": "The leaderboard is temporarily unavailable.",
+  "Za dużo zgłoszeń. Spróbuj za chwilę.": "Too many requests. Try again in a moment.",
+  "Nieprawidłowe zgłoszenie.": "Invalid submission.",
+  "To wyzwanie już się skończyło. Odśwież stronę.": "This challenge is over. Refresh the page.",
+  "Gra została zaktualizowana. Odśwież stronę.": "The game has been updated. Refresh the page.",
+  "Ranking na dziś jest już pełny.": "Today's leaderboard is full.",
+  "Wybierz inny nick.": "Please choose a different nickname.",
+};
+const serverMessage = (msg: string): string => (EN ? (SERVER_EN[msg] ?? "Something went wrong. Please try again.") : msg);
+
 export type SubmitResult = { ok: true; data: RankingData } | { ok: false; error: string };
 
 /** Dołącza do rankingu dnia. Wysyłamy odpowiedzi, a wynik liczy serwer. */
@@ -83,7 +96,7 @@ export async function submitScore(state: DayState, nick: string): Promise<Submit
     return { ok: true, data: res.body };
   }
   const error = (res?.body as { error?: string } | undefined)?.error;
-  return { ok: false, error: typeof error === "string" ? error : "Nie udało się połączyć z rankingiem. Spróbuj ponownie." };
+  return { ok: false, error: typeof error === "string" ? serverMessage(error) : tr("Nie udało się połączyć z rankingiem. Spróbuj ponownie.", "Could not reach the leaderboard. Please try again.") };
 }
 
 /** Usuwa z serwera wszystkie wpisy tej przeglądarki i zapomina jej identyfikator. */

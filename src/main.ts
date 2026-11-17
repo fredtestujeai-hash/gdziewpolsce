@@ -4,6 +4,7 @@ import "./style.css";
 
 import { buildChallenge, todayKey, type Challenge } from "./daily";
 import { mount, toast } from "./dom";
+import { EN, ROOT, tr } from "./i18n";
 import { finishIntro } from "./intro";
 import { loadDay, saveDay } from "./storage";
 import type { Campaign, DayState, Puzzle, Schedule } from "./types";
@@ -12,7 +13,7 @@ import { renderRound } from "./views/round";
 import { renderSummary } from "./views/summary";
 import { openAbout } from "./views/about";
 
-const base = import.meta.env.BASE_URL;
+const base = ROOT;
 
 async function getJSON<T>(path: string, fallback?: T): Promise<T> {
   try {
@@ -22,6 +23,26 @@ async function getJSON<T>(path: string, fallback?: T): Promise<T> {
   } catch (e) {
     if (fallback !== undefined) return fallback;
     throw e;
+  }
+}
+
+/** Angielskie teksty zagadki (public/data/puzzles.en.json, generuje scripts/fetch_en.py). */
+interface EnText {
+  name?: string;
+  extract?: string;
+  wiki?: string;
+}
+
+/**
+ * Wersja angielska: podmienia nazwę, opis i link do Wikipedii tam, gdzie są angielskie. Gdy ich brakuje,
+ * zostaje polska nazwa i link do polskiej Wikipedii, a polski opis jest chowany.
+ */
+function localize(puzzles: Puzzle[], en: Record<string, EnText>): void {
+  for (const p of puzzles) {
+    const t = en[p.id] ?? {};
+    if (t.name) p.name = t.name;
+    p.extract = t.extract ?? "";
+    if (t.wiki) p.wiki = t.wiki;
   }
 }
 
@@ -41,11 +62,14 @@ async function boot() {
   const preview = !!previewDay && /^\d{4}-\d{2}-\d{2}$/.test(previewDay);
   const key = preview ? previewDay! : todayKey();
 
-  const [pool, schedule, sponsored] = await Promise.all([
+  const [pool, schedule, sponsored, en] = await Promise.all([
     getJSON<{ puzzles: Puzzle[] }>("data/puzzles.json"),
     getJSON<Schedule>("data/schedule.json", { start: key, days: [] }),
     getJSON<{ campaigns: Campaign[] }>("data/sponsored.json", { campaigns: [] }),
+    EN ? getJSON<{ puzzles: Record<string, EnText> }>("data/puzzles.en.json", { puzzles: {} }) : null,
   ]);
+
+  if (en) localize(pool.puzzles.concat(sponsored.campaigns.flatMap((c) => c.puzzles)), en.puzzles);
 
   const saved = preview ? null : loadDay(key);
   const challenge = buildChallenge(pool.puzzles, schedule, sponsored.campaigns, key, { demo, savedIds: saved?.ids });
@@ -65,7 +89,7 @@ async function boot() {
       else if (view === "round")
         renderRound(game).catch((err) => {
           console.error(err);
-          mount(`<main class="center"><div class="card narrow"><h1>Ups…</h1><p>Nie udało się uruchomić mapy. Gra wymaga przeglądarki z obsługą WebGL — spróbuj ją zaktualizować albo otwórz grę w innej.</p><button class="btn primary" onclick="location.reload()">Spróbuj ponownie</button></div></main>`);
+          mount(`<main class="center"><div class="card narrow"><h1>${tr("Ups…", "Oops…")}</h1><p>${tr("Nie udało się uruchomić mapy. Gra wymaga przeglądarki z obsługą WebGL — spróbuj ją zaktualizować albo otwórz grę w innej.", "The map could not start. The game needs a browser with WebGL support — try updating it or open the game in another one.")}</p><button class="btn primary" onclick="location.reload()">${tr("Spróbuj ponownie", "Try again")}</button></div></main>`);
         });
       else renderSummary(game);
     },
@@ -80,7 +104,7 @@ async function boot() {
     }
   });
 
-  if (preview) toast(`Podgląd wyzwania z ${key} — wynik nie jest zapisywany`);
+  if (preview) toast(tr(`Podgląd wyzwania z ${key} — wynik nie jest zapisywany`, `Preview of the ${key} challenge — your score is not saved`));
   if (state.guesses.length >= challenge.puzzles.length) game.go("summary");
   else if (state.guesses.length > 0) game.go("round");
   else game.go("start");
@@ -91,5 +115,5 @@ async function boot() {
 boot().catch((err) => {
   console.error(err);
   void finishIntro(false);
-  mount(`<main class="center"><div class="card narrow"><h1>Ups…</h1><p>Nie udało się wczytać gry. Sprawdź połączenie i odśwież stronę.</p><button class="btn primary" onclick="location.reload()">Odśwież</button></div></main>`);
+  mount(`<main class="center"><div class="card narrow"><h1>${tr("Ups…", "Oops…")}</h1><p>${tr("Nie udało się wczytać gry. Sprawdź połączenie i odśwież stronę.", "The game could not load. Check your connection and refresh the page.")}</p><button class="btn primary" onclick="location.reload()">${tr("Odśwież", "Refresh")}</button></div></main>`);
 });

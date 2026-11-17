@@ -3,6 +3,7 @@
  * To zwykłe linki otwierane w nowej karcie: bez SDK, pikseli i skryptów firm trzecich,
  * więc serwis dowiaduje się o grze dopiero wtedy, gdy gracz sam kliknie przycisk.
  */
+import { EN } from "./i18n";
 
 export type SharePlatform = "x" | "facebook" | "whatsapp" | "instagram" | "copy" | "system";
 
@@ -27,5 +28,5 @@ export function whatsappShareUrl(text: string, url: string): string {
 
 /** Nazwa pliku obrazka z wynikiem, np. „gdziewpolsce-5-relacja.png”. */
 export function shareImageName(number: number, format: "story" | "square"): string {
-  return `gdziewpolsce-${number}-${format === "story" ? "relacja" : "kwadrat"}.png`;
+  return EN ? `whereinpoland-${number}-${format}.png` : `gdziewpolsce-${number}-${format === "story" ? "relacja" : "kwadrat"}.png`;
 }

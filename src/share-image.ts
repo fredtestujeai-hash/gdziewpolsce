@@ -3,6 +3,7 @@
  * Kafelki są rysowane (nie emoji, które na canvasie wyglądają różnie w każdym systemie).
  * Na obrazku NIE MA nazw miejsc ani odpowiedzi — nie psuje gry innym.
  */
+import { EN, LOCALE, tr } from "./i18n";
 import { CONFIG } from "./config";
 import { OUTLINE } from "./outline";
 import { formatPoints, locLevel, rating, totalPoints, yearLevel, type TileLevel } from "./score";
@@ -33,13 +34,13 @@ const PIN = "M16 1C8 1 1.5 7.4 1.5 15.3c0 10.6 12.6 25.4 13.4 26.4a1.4 1.4 0 0 0
 
 /** „15 listopada 2026” */
 export function formatDayWithYear(key: string): string {
-  return new Intl.DateTimeFormat("pl-PL", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(key + "T12:00:00Z"));
+  return new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(key + "T12:00:00Z"));
 }
 
 /** Czcionki gry muszą być wczytane, zanim canvas ich użyje (inaczej narysuje zastępcze). */
 export async function loadImageFonts(): Promise<void> {
   if (!document.fonts?.load) return;
-  const sample = "Gdzie w Polsce? ąćęłńóśźż 0123456789";
+  const sample = "Gdzie w Polsce? Where in Poland? ąćęłńóśźż 0123456789";
   await Promise.all([
     document.fonts.load(`700 80px "Fraunces Variable"`, sample),
     document.fonts.load(`600 40px "Inter Variable"`, sample),
@@ -191,7 +192,7 @@ function drawTiles(ctx: CanvasRenderingContext2D, cx: number, y: number, guesses
 function notes(guesses: Guess[]): string {
   const hints = guesses.reduce((s, g) => s + (g.hintLoc ? 1 : 0) + (g.hintYear ? 1 : 0), 0);
   const skipped = guesses.filter((g) => g.gaveUp).length;
-  return [hints ? `${hints} ${hints === 1 ? "podpowiedź" : "podpowiedzi"}` : "", skipped ? `${skipped} bez odpowiedzi` : ""].filter(Boolean).join(" · ");
+  return [hints ? `${hints} ${EN ? (hints === 1 ? "hint" : "hints") : hints === 1 ? "podpowiedź" : "podpowiedzi"}` : "", skipped ? `${skipped} ${tr("bez odpowiedzi", "unanswered")}` : ""].filter(Boolean).join(" · ");
 }
 
 /** Wynik: duża liczba i „/ maks.”, wyśrodkowane razem; y to linia bazowa. */
@@ -211,7 +212,7 @@ function drawScore(ctx: CanvasRenderingContext2D, cx: number, y: number, total: 
 }
 
 function drawUrlPill(ctx: CanvasRenderingContext2D, cx: number, y: number, size: number): void {
-  const label = "Zagraj: gdziewpolsce.com";
+  const label = tr("Zagraj: gdziewpolsce.com", "Play: gdziewpolsce.com/en");
   ctx.font = `700 ${size}px ${SANS}`;
   const w = ctx.measureText(label).width + size * 1.6;
   const h = size * 2;
@@ -235,7 +236,7 @@ export function renderShareImage(data: ShareImageData, format: ImageFormat): HTM
   const cx = W / 2;
   const total = totalPoints(data.guesses);
   const max = data.rounds * (CONFIG.maxLocationPoints + CONFIG.maxYearPoints);
-  const sub = `Wyzwanie #${data.number} · ${formatDayWithYear(data.dayKey)}`;
+  const sub = `${tr("Wyzwanie", "Challenge")} #${data.number} · ${formatDayWithYear(data.dayKey)}`;
   const note = notes(data.guesses);
 
   ctx.fillStyle = C.bg;

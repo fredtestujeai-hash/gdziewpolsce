@@ -1,9 +1,11 @@
 // Ustawienia gry — jedno miejsce do zmiany nazwy, adresu i reguł.
+import { EN, tr } from "./i18n";
+
 export const CONFIG = {
-  name: "Gdzie w Polsce?",
-  tagline: "Codzienna podróż po Polsce",
+  name: tr("Gdzie w Polsce?", "Where in Poland?"),
+  tagline: tr("Codzienna podróż po Polsce", "A daily trip around Poland"),
   /** Adres publiczny gry — trafia do tekstu udostępniania wyniku. */
-  siteUrl: "https://gdziewpolsce.com/",
+  siteUrl: EN ? "https://gdziewpolsce.com/en/" : "https://gdziewpolsce.com/",
   /** Kontakt dla miast i regionów zainteresowanych partnerstwem (puste = ukryte). */
   partnerEmail: "",
   /**

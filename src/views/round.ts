@@ -1,5 +1,6 @@
 import { CONFIG } from "../config";
 import { $, esc, mount, partnerLink } from "../dom";
+import { EN, ROOT, categoryName, regionName, tr } from "../i18n";
 import type { Game } from "../main";
 import { createMap, type GameMap } from "../map";
 import { century, centuryRange, formatKm, formatPoints, hintCostText, scoreRound, totalPoints, yearsWord } from "../score";
@@ -20,9 +21,9 @@ export async function renderRound(game: Game): Promise<void> {
       <section class="photo-pane">
         <figure class="photo" id="photo">
           <div class="photo-skeleton" aria-hidden="true"></div>
-          <img id="photo-img" alt="Zdjęcie miejsca do odgadnięcia" decoding="async" />
-          <span class="badge-sponsored" id="badge-sponsored" hidden>Zagadka sponsorowana</span>
-          <button class="photo-zoom" id="photo-zoom" aria-label="Powiększ zdjęcie">
+          <img id="photo-img" alt="${tr("Zdjęcie miejsca do odgadnięcia", "Photo of the place to guess")}" decoding="async" />
+          <span class="badge-sponsored" id="badge-sponsored" hidden>${tr("Zagadka sponsorowana", "Sponsored puzzle")}</span>
+          <button class="photo-zoom" id="photo-zoom" aria-label="${tr("Powiększ zdjęcie", "Enlarge photo")}">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
           </button>
           <figcaption class="photo-credit" id="photo-credit"></figcaption>
@@ -30,42 +31,42 @@ export async function renderRound(game: Game): Promise<void> {
       </section>
 
       <section class="map-pane">
-        <div class="map-wrap"><div id="map" class="map" aria-label="Mapa Polski — kliknij, aby wbić pinezkę"></div>
-          <p class="map-hint" id="map-hint">Wskaż miejsce na mapie — możesz przybliżyć aż do ulic</p>
-          <ul class="map-legend" aria-label="Legenda: miejscowości bez nazw">
-            <li><i class="lg lg-1"></i>wojewódzkie</li>
-            <li><i class="lg lg-2"></i>powiatowe</li>
-            <li><i class="lg lg-3"></i>gminne</li>
+        <div class="map-wrap"><div id="map" class="map" aria-label="${tr("Mapa Polski — kliknij, aby wbić pinezkę", "Map of Poland — click to drop a pin")}"></div>
+          <p class="map-hint" id="map-hint">${tr("Wskaż miejsce na mapie — możesz przybliżyć aż do ulic", "Pick the place on the map — you can zoom in down to the streets")}</p>
+          <ul class="map-legend" aria-label="${tr("Legenda: miejscowości bez nazw", "Legend: unnamed towns")}">
+            <li><i class="lg lg-1"></i>${tr("wojewódzkie", "regional capitals")}</li>
+            <li><i class="lg lg-2"></i>${tr("powiatowe", "county towns")}</li>
+            <li><i class="lg lg-3"></i>${tr("gminne", "municipal seats")}</li>
           </ul>
         </div>
 
         <div class="controls" id="controls">
-          <p class="hints-title" id="hints-title">💡 Podpowiedzi <span>— każda obniża punkty o ${hintCostText()}</span></p>
+          <p class="hints-title" id="hints-title">💡 ${tr("Podpowiedzi", "Hints")} <span>— ${tr("każda obniża punkty o", "each one cuts the points by")} ${hintCostText()}</span></p>
           <div class="hints" role="group" aria-labelledby="hints-title">
             <button class="hint-btn" id="hint-loc" type="button"></button>
             <button class="hint-btn" id="hint-year" type="button"></button>
           </div>
           <div class="year">
             <div class="year-top">
-              <label for="year-range">Rok powstania</label>
+              <label for="year-range">${tr("Rok powstania", "Year built")}</label>
               <div class="year-readout">
-                <input id="year-input" class="year-input" type="number" inputmode="numeric" min="${CONFIG.minYear}" max="${CONFIG.maxYear}" aria-label="Rok powstania" />
+                <input id="year-input" class="year-input" type="number" inputmode="numeric" min="${CONFIG.minYear}" max="${CONFIG.maxYear}" aria-label="${tr("Rok powstania", "Year built")}" />
                 <span class="century" id="century"></span>
               </div>
             </div>
             <div class="year-row">
-              <button class="step-btn" data-step="-1" aria-label="Rok wcześniej (z Shift: 10 lat)">−</button>
+              <button class="step-btn" data-step="-1" aria-label="${tr("Rok wcześniej (z Shift: 10 lat)", "One year earlier (with Shift: 10 years)")}">−</button>
               <div class="range-wrap">
 <div class="hint-band-wrap" aria-hidden="true"><div class="hint-band" id="hint-band" hidden></div></div>
                 <input id="year-range" type="range" min="${CONFIG.minYear}" max="${CONFIG.maxYear}" step="1" />
                 <div class="ticks" aria-hidden="true">${TICKS.map((t) => `<span style="left:${((t - CONFIG.minYear) / span) * 100}%">${t}</span>`).join("")}</div>
               </div>
-              <button class="step-btn" data-step="1" aria-label="Rok później (z Shift: 10 lat)">+</button>
+              <button class="step-btn" data-step="1" aria-label="${tr("Rok później (z Shift: 10 lat)", "One year later (with Shift: 10 years)")}">+</button>
             </div>
           </div>
           <div class="submit-row">
-            <button class="btn secondary giveup-btn" id="giveup-open" type="button">Rezygnuję</button>
-            <button class="btn primary submit" id="submit" disabled>Wbij pinezkę na mapie</button>
+            <button class="btn secondary giveup-btn" id="giveup-open" type="button">${tr("Rezygnuję", "Give up")}</button>
+            <button class="btn primary submit" id="submit" disabled>${tr("Wbij pinezkę na mapie", "Drop a pin on the map")}</button>
           </div>
         </div>
 
@@ -75,22 +76,22 @@ export async function renderRound(game: Game): Promise<void> {
 
     <dialog class="giveup" id="giveup" aria-labelledby="giveup-title">
       <div class="giveup-body">
-        <h2 id="giveup-title">Rezygnujesz?</h2>
+        <h2 id="giveup-title">${tr("Rezygnujesz?", "Giving up?")}</h2>
         <button class="choice" data-act="skip" type="button">
-          <b>Pomiń tę zagadkę</b>
-          <span>0 punktów za tę rundę. Zobaczysz poprawną odpowiedź i zagrasz dalej.</span>
+          <b>${tr("Pomiń tę zagadkę", "Skip this puzzle")}</b>
+          <span>${tr("0 punktów za tę rundę. Zobaczysz poprawną odpowiedź i zagrasz dalej.", "0 points for this round. You will see the correct answer and carry on.")}</span>
         </button>
         <button class="choice danger" data-act="quit" type="button">
-          <b>Przerwij dzisiejsze wyzwanie</b>
+          <b>${tr("Przerwij dzisiejsze wyzwanie", "Stop today's challenge")}</b>
           <span id="giveup-quit-text"></span>
         </button>
-        <button class="btn primary" data-act="stay" type="button">Gram dalej</button>
+        <button class="btn primary" data-act="stay" type="button">${tr("Gram dalej", "Keep playing")}</button>
       </div>
     </dialog>
 
-    <dialog class="lightbox" id="lightbox" aria-label="Powiększone zdjęcie">
+    <dialog class="lightbox" id="lightbox" aria-label="${tr("Powiększone zdjęcie", "Enlarged photo")}">
       <img id="lightbox-img" alt="" />
-      <button class="icon-btn lightbox-close" aria-label="Zamknij">✕</button>
+      <button class="icon-btn lightbox-close" aria-label="${tr("Zamknij", "Close")}">✕</button>
     </dialog>`);
 
   const els = {
@@ -142,7 +143,7 @@ export async function renderRound(game: Game): Promise<void> {
   gm.onPlace(() => {
     if (revealed) return;
     els.submit.disabled = false;
-    els.submit.textContent = "Sprawdź";
+    els.submit.textContent = tr("Sprawdź", "Check");
     els.hint.classList.add("gone");
   });
 
@@ -150,7 +151,7 @@ export async function renderRound(game: Game): Promise<void> {
   els.img.addEventListener("load", () => els.photo.classList.add("loaded"));
   els.img.addEventListener("error", () => {
     els.photo.classList.add("error");
-    els.credit.textContent = "Nie udało się wczytać zdjęcia — odśwież stronę.";
+    els.credit.textContent = tr("Nie udało się wczytać zdjęcia — odśwież stronę.", "The photo could not load — refresh the page.");
   });
   const openLightbox = () => {
     els.lightboxImg.src = els.img.src;
@@ -171,14 +172,14 @@ export async function renderRound(game: Game): Promise<void> {
     els.hintLoc.disabled = !!h.loc;
     els.hintLoc.classList.toggle("used", !!h.loc);
     els.hintLoc.innerHTML = h.loc
-      ? `<b>${esc(p.woj)}</b><span>podpowiedź: województwo</span>`
-      : `<b>Pokaż województwo</b><span>−${cost} pkt za miejsce</span>`;
+      ? `<b>${esc(regionName(p.woj ?? ""))}</b><span>${tr("podpowiedź: województwo", "hint: region")}</span>`
+      : `<b>${tr("Pokaż województwo", "Show the region")}</b><span>−${cost} ${tr("pkt za miejsce", "of location points")}</span>`;
     const c = centuryRange(p.year);
     els.hintYear.disabled = !!h.year;
     els.hintYear.classList.toggle("used", !!h.year);
     els.hintYear.innerHTML = h.year
-      ? `<b>${c.label} (${c.from}–${c.to})</b><span>podpowiedź: wiek</span>`
-      : `<b>Pokaż wiek</b><span>−${cost} pkt za rok</span>`;
+      ? `<b>${c.label} (${c.from}–${c.to})</b><span>${tr("podpowiedź: wiek", "hint: century")}</span>`
+      : `<b>${tr("Pokaż wiek", "Show the century")}</b><span>−${cost} ${tr("pkt za rok", "of year points")}</span>`;
     const from = Math.max(c.from, CONFIG.minYear);
     const to = Math.min(c.to, CONFIG.maxYear);
     els.hintBand.hidden = !h.year;
@@ -199,7 +200,7 @@ export async function renderRound(game: Game): Promise<void> {
   function header() {
     const total = totalPoints(state.guesses);
     els.roundLabel.textContent = `${Math.min(index + 1, n)}/${n}`;
-    els.scoreLabel.textContent = `${formatPoints(total)} pkt`;
+    els.scoreLabel.textContent = `${formatPoints(total)} ${tr("pkt", "pts")}`;
     els.dots.innerHTML = challenge.puzzles
       .map((_, i) => {
         const g = state.guesses[i];
@@ -217,7 +218,7 @@ export async function renderRound(game: Game): Promise<void> {
     els.img.src = p.img;
     els.photo.style.setProperty("--ratio", `${p.imgW} / ${p.imgH}`);
     // Atrybucja widoczna od razu (wymóg licencji CC BY), bez linku do pliku — jego nazwa zdradzałaby odpowiedź
-    els.credit.textContent = `Fot. ${p.author} · ${p.license}`;
+    els.credit.textContent = `${tr("Fot.", "Photo:")} ${p.author} · ${p.license}`;
     els.badge.hidden = !p.sponsor;
     if (i === 0 && !state.guesses.length && !game.preview) track("start", { day: challenge.key, src: entrySource() });
     if (p.sponsor && !game.preview) track("sponsor_view", { day: challenge.key, campaign: p.campaign ?? "" });
@@ -225,7 +226,7 @@ export async function renderRound(game: Game): Promise<void> {
     els.result.hidden = true;
     els.result.innerHTML = "";
     els.submit.disabled = true;
-    els.submit.textContent = "Wbij pinezkę na mapie";
+    els.submit.textContent = tr("Wbij pinezkę na mapie", "Drop a pin on the map");
     els.hint.classList.toggle("gone", i > 0);
     setYear(CONFIG.defaultYear);
     gm.reset();
@@ -314,10 +315,15 @@ export async function renderRound(game: Game): Promise<void> {
   $("#giveup-open", app).addEventListener("click", () => {
     const left = n - index - 1;
     els.giveupQuitText.textContent =
-      (left > 0
-        ? `Zobaczysz podsumowanie, a ta zagadka i ${left === 1 ? "następna" : `${left} następne`} zostaną nierozegrane. `
-        : "Zobaczysz podsumowanie, a ta zagadka zostanie nierozegrana. ") +
-      "Do północy możesz wrócić i dokończyć grę. Niedokończone wyzwanie przerywa Twoją serię.";
+      EN
+        ? (left > 0
+            ? `You will see the summary, and this puzzle and the next ${left === 1 ? "one" : left} will stay unplayed. `
+            : "You will see the summary, and this puzzle will stay unplayed. ") +
+          "You can come back and finish until midnight (Polish time). An unfinished challenge breaks your streak."
+        : (left > 0
+            ? `Zobaczysz podsumowanie, a ta zagadka i ${left === 1 ? "następna" : `${left} następne`} zostaną nierozegrane. `
+            : "Zobaczysz podsumowanie, a ta zagadka zostanie nierozegrana. ") +
+          "Do północy możesz wrócić i dokończyć grę. Niedokończone wyzwanie przerywa Twoją serię.";
     els.giveup.showModal();
   });
   els.giveup.addEventListener("click", (e) => {
@@ -342,37 +348,37 @@ export async function renderRound(game: Game): Promise<void> {
 function resultCard(p: Puzzle, g: Guess, last: boolean, key: string): string {
   const diff = g.yearDiff;
   const yearText =
-    diff === 0 ? "co do roku!" : `${Math.abs(diff)} ${yearsWord(diff)} ${diff > 0 ? "za późno" : "za wcześnie"}`;
+    diff === 0 ? tr("co do roku!", "spot on!") : `${Math.abs(diff)} ${yearsWord(diff)} ${diff > 0 ? tr("za późno", "too late") : tr("za wcześnie", "too early")}`;
   const s = p.sponsor;
-  const hintTag = (used?: boolean) => (used ? `<em class="hint-tag">💡 podpowiedź −${hintCostText()}</em>` : "");
+  const hintTag = (used?: boolean) => (used ? `<em class="hint-tag">💡 ${tr("podpowiedź", "hint")} −${hintCostText()}</em>` : "");
   return `
     <div class="result-scroll">
       <div class="result-head">
-        <span class="cat">${esc(p.category)}</span>
+        <span class="cat">${esc(categoryName(p.category))}</span>
         <h2>${esc(p.name)}</h2>
         <p class="where">${p.place ? `${esc(p.place)} · ` : ""}<b>${p.year}</b> <span class="muted">(${century(p.year)})</span></p>
       </div>
       <div class="score-row">
-        <div class="chip"><span class="lbl">📍 Miejsce${hintTag(g.hintLoc)}</span><b>+${g.locPts}</b><span>${g.gaveUp ? "zagadka pominięta" : `${formatKm(g.km)} od celu`}</span></div>
-        <div class="chip"><span class="lbl">📅 Rok${hintTag(g.hintYear)}</span><b>+${g.yearPts}</b><span>${g.gaveUp ? "zagadka pominięta" : `${g.year} · ${yearText}`}</span></div>
+        <div class="chip"><span class="lbl">📍 ${tr("Miejsce", "Location")}${hintTag(g.hintLoc)}</span><b>+${g.locPts}</b><span>${g.gaveUp ? tr("zagadka pominięta", "puzzle skipped") : `${formatKm(g.km)} ${tr("od celu", "away")}`}</span></div>
+        <div class="chip"><span class="lbl">📅 ${tr("Rok", "Year")}${hintTag(g.hintYear)}</span><b>+${g.yearPts}</b><span>${g.gaveUp ? tr("zagadka pominięta", "puzzle skipped") : `${g.year} · ${yearText}`}</span></div>
       </div>
       ${
         s
           ? `<aside class="partner">
-              <span class="partner-label">Zagadka sponsorowana</span>
-              ${s.logo ? `<img src="${esc(import.meta.env.BASE_URL + s.logo)}" alt="" class="partner-logo" />` : ""}
+              <span class="partner-label">${tr("Zagadka sponsorowana", "Sponsored puzzle")}</span>
+              ${s.logo ? `<img src="${esc(ROOT + s.logo)}" alt="" class="partner-logo" />` : ""}
               <p><b>${esc(s.name)}</b>${p.sponsorNote ? ` — ${esc(p.sponsorNote)}` : ""}</p>
               <a class="btn secondary" href="${esc(partnerLink(s.url, p.campaign ?? `wyzwanie-${key}`))}" target="_blank" rel="noopener sponsored">${esc(s.cta)} ↗</a>
             </aside>`
           : ""
       }
       ${p.extract ? `<p class="extract">${esc(p.extract)}</p>` : ""}
-      <p class="credit-full">Zdjęcie: ${
+      <p class="credit-full">${tr("Zdjęcie", "Photo")}: ${
         p.filePage ? `<a href="${esc(p.filePage)}" target="_blank" rel="noopener">${esc(p.author)}</a>` : esc(p.author)
       }, ${p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" target="_blank" rel="noopener license">${esc(p.license)}</a>` : esc(p.license)}</p>
     </div>
     <div class="result-actions">
       ${wikiButton(p)}
-      <button class="btn primary next" id="next">${last ? "Zobacz wynik" : "Następne miejsce →"}</button>
+      <button class="btn primary next" id="next">${last ? tr("Zobacz wynik", "See your score") : tr("Następne miejsce →", "Next place →")}</button>
     </div>`;
 }

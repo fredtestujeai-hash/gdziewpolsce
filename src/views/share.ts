@@ -4,6 +4,7 @@
  */
 import { CONFIG } from "../config";
 import { esc } from "../dom";
+import { tr } from "../i18n";
 import type { Game } from "../main";
 import { shareLines } from "../score";
 import { facebookShareUrl, shareImageName, type SharePlatform, whatsappShareUrl, xShareUrl } from "../share";
@@ -62,28 +63,28 @@ export function openShare(game: Game): void {
       : `<button type="button" class="share-btn" data-p="${p}"><span class="share-ico ico-${p}">${icon}</span><span>${label}</span></button>`;
   d.innerHTML = `
     <div class="share-body">
-      <button class="icon-btn share-close" aria-label="Zamknij">✕</button>
-      <h2 id="share-title">Udostępnij wynik</h2>
+      <button class="icon-btn share-close" aria-label="${tr("Zamknij", "Close")}">✕</button>
+      <h2 id="share-title">${tr("Udostępnij wynik", "Share your score")}</h2>
       <pre class="share-preview">${esc(text)}</pre>
       <div class="share-grid">
         ${btn("x", "X", ICONS.x, xShareUrl(textNoUrl, url))}
         ${btn("facebook", "Facebook", ICONS.facebook, facebookShareUrl(url))}
         ${btn("whatsapp", "WhatsApp", ICONS.whatsapp, whatsappShareUrl(text, url))}
         ${btn("instagram", "Instagram", ICONS.instagram)}
-        ${btn("copy", "Kopiuj tekst", ICONS.copy)}
-        ${systemShare ? btn("system", "Więcej…", ICONS.more) : ""}
+        ${btn("copy", tr("Kopiuj tekst", "Copy text"), ICONS.copy)}
+        ${systemShare ? btn("system", tr("Więcej…", "More…"), ICONS.more) : ""}
       </div>
       <p class="share-status" role="status" aria-live="polite"></p>
-      <section class="share-ig" hidden aria-label="Obrazek z wynikiem do Instagrama">
-        <div class="seg" role="radiogroup" aria-label="Format obrazka">
-          <button type="button" role="radio" aria-checked="true" data-f="story">Relacja 9:16</button>
+      <section class="share-ig" hidden aria-label="${tr("Obrazek z wynikiem do Instagrama", "Score image for Instagram")}">
+        <div class="seg" role="radiogroup" aria-label="${tr("Format obrazka", "Image format")}">
+          <button type="button" role="radio" aria-checked="true" data-f="story">${tr("Relacja 9:16", "Story 9:16")}</button>
           <button type="button" role="radio" aria-checked="false" data-f="square">Post 1:1</button>
         </div>
-        <div class="ig-preview"><img alt="Obrazek z dzisiejszym wynikiem (bez odpowiedzi)" /></div>
-        <button type="button" class="btn primary" id="ig-go">Przygotowuję obrazek…</button>
+        <div class="ig-preview"><img alt="${tr("Obrazek z dzisiejszym wynikiem (bez odpowiedzi)", "Image with today's score (no answers)")}" /></div>
+        <button type="button" class="btn primary" id="ig-go">${tr("Przygotowuję obrazek…", "Preparing the image…")}</button>
         <p class="small muted" id="ig-help"></p>
       </section>
-      <p class="small muted share-privacy">Bez śledzenia: przyciski to zwykłe linki, gra nie wczytuje skryptów Facebooka ani X. Obrazek nie zdradza odpowiedzi.</p>
+      <p class="small muted share-privacy">${tr("Bez śledzenia: przyciski to zwykłe linki, gra nie wczytuje skryptów Facebooka ani X. Obrazek nie zdradza odpowiedzi.", "No tracking: the buttons are plain links and the game loads no Facebook or X scripts. The image does not give away the answers.")}</p>
     </div>`;
   document.body.append(d);
   d.showModal();
@@ -131,11 +132,11 @@ export function openShare(game: Game): void {
   d.querySelector('[data-p="facebook"]')!.addEventListener("click", () => {
     // Facebook nie przyjmuje gotowego tekstu — kopiujemy go, a link otwiera się normalnie w nowej karcie
     count("facebook");
-    copy().then((ok) => say(ok ? "Tekst skopiowany — wklej go w poście na Facebooku." : "Facebook pokaże link do gry; tekst wyniku możesz przepisać z okna powyżej."));
+    copy().then((ok) => say(ok ? tr("Tekst skopiowany — wklej go w poście na Facebooku.", "Text copied — paste it into your Facebook post.") : tr("Facebook pokaże link do gry; tekst wyniku możesz przepisać z okna powyżej.", "Facebook will show a link to the game; you can copy the score text from the box above.")));
   });
   d.querySelector('[data-p="copy"]')!.addEventListener("click", async () => {
     count("copy");
-    say((await copy()) ? "Wynik skopiowany — wklej go znajomym!" : "Nie udało się skopiować. Zaznacz tekst powyżej i skopiuj ręcznie.");
+    say((await copy()) ? tr("Wynik skopiowany — wklej go znajomym!", "Score copied — paste it to your friends!") : tr("Nie udało się skopiować. Zaznacz tekst powyżej i skopiuj ręcznie.", "Copying failed. Select the text above and copy it by hand."));
   });
   d.querySelector('[data-p="system"]')?.addEventListener("click", async () => {
     try {
@@ -169,16 +170,16 @@ export function openShare(game: Game): void {
     igImg.src = u;
     const viaSystem = canShareFile(file);
     igGo.disabled = false;
-    igGo.textContent = viaSystem ? "Udostępnij obrazek" : "Pobierz obrazek";
+    igGo.textContent = viaSystem ? tr("Udostępnij obrazek", "Share the image") : tr("Pobierz obrazek", "Download the image");
     igHelp.textContent = viaSystem
-      ? "Wybierz Instagram z listy aplikacji, a potem Relację albo Post."
+      ? tr("Wybierz Instagram z listy aplikacji, a potem Relację albo Post.", "Pick Instagram from the app list, then Story or Post.")
       : isTouch()
-        ? "Zapisz obrazek (albo przytrzymaj go palcem), otwórz Instagram, wybierz + i dodaj go z galerii."
-        : "Instagram nie pozwala publikować ze strony. Pobierz obrazek, prześlij go na telefon i dodaj w aplikacji Instagram.";
+        ? tr("Zapisz obrazek (albo przytrzymaj go palcem), otwórz Instagram, wybierz + i dodaj go z galerii.", "Save the image (or press and hold it), open Instagram, tap + and add it from your gallery.")
+        : tr("Instagram nie pozwala publikować ze strony. Pobierz obrazek, prześlij go na telefon i dodaj w aplikacji Instagram.", "Instagram does not allow posting from a website. Download the image, send it to your phone and add it in the Instagram app.");
   };
   igGo.disabled = true;
   ready.then(showFormat).catch(() => {
-    igGo.textContent = "Nie udało się przygotować obrazka";
+    igGo.textContent = tr("Nie udało się przygotować obrazka", "The image could not be prepared");
   });
 
   d.querySelector('[data-p="instagram"]')!.addEventListener("click", () => {
@@ -214,6 +215,6 @@ export function openShare(game: Game): void {
     d.append(a);
     a.click();
     a.remove();
-    say("Obrazek zapisany w pobranych plikach.");
+    say(tr("Obrazek zapisany w pobranych plikach.", "Image saved to your downloads."));
   };
 }
