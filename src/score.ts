@@ -98,6 +98,7 @@ export function shareLines(number: number, guesses: Guess[], rounds: number, url
     `${CONFIG.name} #${number} — ${formatPoints(totalPoints(guesses))}/${formatPoints(max)}`,
     `📍 ${guesses.map(locTile).join("")}`,
     `📅 ${guesses.map(yearTile).join("")}`,
+    `🏅 ${rating(totalPoints(guesses), max)}`,
     notes,
     url,
   ]
@@ -144,12 +145,16 @@ export function yearsWord(n: number): string {
   return u >= 2 && u <= 4 && !(t >= 12 && t <= 14) ? "lata" : "lat";
 }
 
+/**
+ * Stopień za wynik dnia. Gra jest trudna (połowa punktów to bardzo dobry wynik), więc progi są niskie:
+ * nowy gracz ma dostać stopień, którym da się pochwalić, a nie przytyk.
+ */
 export function rating(total: number, max: number): string {
   const r = total / max;
-  if (r >= 0.9) return "Przewodnik z uprawnieniami!";
-  if (r >= 0.75) return "Obieżyświat";
-  if (r >= 0.6) return "Krajoznawca";
-  if (r >= 0.45) return "Turysta z mapą";
-  if (r >= 0.3) return "Niedzielny wycieczkowicz";
-  return "Czas ruszyć w Polskę!";
+  if (r >= 0.8) return "Kustosz";
+  if (r >= 0.65) return "Przewodnik z uprawnieniami";
+  if (r >= 0.5) return "Obieżyświat";
+  if (r >= 0.35) return "Krajoznawca";
+  if (r >= 0.2) return "Turysta z mapą";
+  return "Niedzielny wycieczkowicz";
 }

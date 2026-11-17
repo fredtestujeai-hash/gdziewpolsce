@@ -283,6 +283,7 @@ html .maplibregl-ctrl-attrib a { color: var(--muted); }
 .tiles div { display: flex; gap: 2px; align-items: center; }
 .tiles span { margin-right: 6px; }
 .tiles i { font-style: normal; }
+.versus { color: var(--muted); margin: -6px 0 14px; font-size: .95rem; }
 .countdown { color: var(--muted); margin: 14px 0 0; font-size: .92rem; }
 .countdown b { font-variant-numeric: tabular-nums; color: var(--ink); }
 .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; text-align: center; padding: 16px 8px; }

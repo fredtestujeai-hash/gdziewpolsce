@@ -6,7 +6,8 @@ import { createMap } from "../map";
 import { formatPoints, hintCostText, locTile, rating, totalPoints, yearTile } from "../score";
 import { loadStats, recordResult } from "../storage";
 import { formatDayLong, topbar, wikiButton } from "./common";
-import { track } from "../track";
+import { compare } from "../stats-core";
+import { fetchDayStats, track } from "../track";
 import { attachRanking } from "./ranking";
 import { openShare } from "./share";
 
@@ -32,6 +33,7 @@ export function renderSummary(game: Game): void {
         <p class="eyebrow">${esc(formatDayLong(challenge.key))}</p>
         <div class="total"><span class="total-n" id="total-n">0</span><span class="total-max">/ ${formatPoints(max)}</span></div>
         <p class="rating">${esc(rating(total, max))}</p>
+        <p class="versus" id="versus" hidden></p>
         <div class="tiles" aria-label="Wyniki rund">
           <div><span>📍</span>${state.guesses.map((g) => `<i>${locTile(g)}</i>`).join("")}</div>
           <div><span>📅</span>${state.guesses.map((g) => `<i>${yearTile(g)}</i>`).join("")}</div>
@@ -107,6 +109,16 @@ export function renderSummary(game: Game): void {
     </main>`);
 
   attachRanking(game);
+
+  // Wynik na tle innych: pokazujemy dopiero, gdy dzień ukończyło dość graczy, żeby porównanie coś znaczyło.
+  if (!unfinished && !game.preview)
+    fetchDayStats(challenge.key).then((s) => {
+      const c = s && compare(s.hist, total);
+      const el = app.querySelector<HTMLElement>("#versus");
+      if (!c || !el) return;
+      el.textContent = `${c.pct >= 50 ? `Lepiej niż ${c.pct}% dzisiejszych graczy` : `Dziś ukończono już ${formatPoints(c.n)} gier`} · średnia dnia ok. ${formatPoints(c.avg)} pkt`;
+      el.hidden = false;
+    });
 
   app.querySelector("#resume")?.addEventListener("click", () => {
     state.guesses.length = firstUnplayed; // nierozegrane rundy wracają do gry; pominięte i rozegrane zostają

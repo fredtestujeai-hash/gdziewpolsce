@@ -93,7 +93,7 @@ export function openShare(game: Game): void {
     status.textContent = msg;
   };
   const count = (p: SharePlatform) => {
-    if (!game.preview) track("share", { platform: p });
+    if (!game.preview) track("share", { day: game.challenge.key, platform: p });
   };
   const copy = async (): Promise<boolean> => {
     try {

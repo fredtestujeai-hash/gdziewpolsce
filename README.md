@@ -16,7 +16,8 @@ W każdej rundzie są też:
 
 Na koniec widzi podsumowanie z mapą „dzisiejszej trasy” i wynik do udostępnienia w stylu Wordle.
 
-- **Bez reklam, bez logowania, bez ciasteczek.** Wynik i seria są zapisywane w przeglądarce (`localStorage`).
+- **Bez reklam, bez logowania, bez ciasteczek, bez śledzenia.** Wynik i seria są zapisywane w przeglądarce (`localStorage`).
+- **Anonimowe liczniki: liczymy rozgrywki, nie ludzi.** Gra zapisuje tylko dzienne sumy (rozpoczęte i ukończone gry, rozkład wyników, udostępnienia, wyświetlenia i kliknięcia zagadki sponsorowanej). Szczegóły w sekcji „Liczniki”.
 - **Dobrowolny ranking** dnia, tygodnia, miesiąca i roku (nick zamiast konta), działa na Cloudflare Workers + D1. Szczegóły: [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md).
 - **Model finansowania: zagadki sponsorowane.** Miasto lub region staje się partnerem, a jego obiekt trafia do wyzwania jako wyraźnie oznaczona zagadka z zachętą do odwiedzin. Szczegóły: [docs/PARTNERZY.md](docs/PARTNERZY.md).
 
@@ -54,10 +55,12 @@ src/
   mapstyle.ts      styl mapy bez napisów (kafelki wektorowe OpenStreetMap) + kropki miejscowości
   intro.ts         chowa animację startową (obrys Polski w index.html), gdy gra jest gotowa
   storage.ts       zapis postępu i statystyk w localStorage
-  track.ts         opcjonalne anonimowe liczniki dla raportów partnerów (domyślnie wyłączone)
+  track.ts         anonimowe liczniki po stronie przeglądarki (wysyłka zdarzeń, odczyt sum dnia)
+  stats-core.ts    liczniki: reguły wspólne (przedziały wyniku, porównanie „lepiej niż X% graczy”)
+  stats-server.ts  liczniki: logika serwera (/api/stat, /api/stats)
   views/           ekrany: start, runda, podsumowanie, „o grze”, ranking
   ranking*.ts      ranking dnia: reguły wspólne (core), klient API, logika serwera (server)
-worker/index.ts    serwer na Cloudflare Workers: /api/score i /api/ranking (reszta to pliki statyczne)
+worker/index.ts    serwer na Cloudflare Workers: /api/score, /api/ranking, /api/stat, /api/stats (reszta to pliki statyczne)
 wrangler.toml      ustawienia wdrożenia na Cloudflare
 public/
   data/puzzles.json     pula zagadek (generowana)
@@ -182,7 +185,25 @@ Kampanie partnerów są w `public/data/sponsored.json`:
 
 - Zagadka sponsorowana zastępuje **3. rundę** (z sześciu; w dniach z 3 zagadkami 2. rundę). Dziennie jest maks. jedna; kilka aktywnych kampanii rotuje.
 - Zagadka ma etykietę **„Zagadka sponsorowana”** na zdjęciu i w wyniku, a link do partnera ma `rel="sponsored"` i parametry UTM.
-- Po ustawieniu `statsEndpoint` w `src/config.ts` gra wysyła anonimowe zdarzenia (`start`, `finish`, `sponsor_view`, `sponsor_click`) z dniem i id kampanii. Nie ma w nich identyfikatorów ani ciasteczek, więc nie potrzeba banera zgód.
+- Wyświetlenia i kliknięcia zagadki partnera zliczają anonimowe liczniki (sekcja „Liczniki”): `sponsor_view` i `sponsor_click` z dniem i id kampanii.
+
+## Liczniki
+
+Gra liczy rozgrywki, nie ludzi. `src/track.ts` wysyła na `/api/stat` (adres w `statsEndpoint` w `src/config.ts`; puste = wyłączone) tylko nazwę zdarzenia, dzień i krótki klucz. Serwer (`src/stats-server.ts`) trzyma w tabeli `events` wyłącznie sumy: dzień, zdarzenie, klucz, licznik. Bez identyfikatorów i ciasteczek; adres IP służy tylko do limitu zgłoszeń w pamięci i nie jest zapisywany.
+
+| Zdarzenie | Kiedy | Klucz |
+|---|---|---|
+| `start` | pierwsza runda dnia | źródło wejścia z linku, np. `gdziewpolsce.com/?z=wykop` (do mierzenia kanałów promocji) |
+| `finish` | ukończone wyzwanie | przedział wyniku co 250 pkt (`b0`, `b1`…) |
+| `quit` | „Przerwij dzisiejsze wyzwanie” | brak |
+| `share` | udostępnienie wyniku | serwis (`x`, `facebook`, `whatsapp`…) |
+| `sponsor_view`, `sponsor_click` | zagadka partnera | id kampanii |
+
+`start`, `finish`, `quit` i `sponsor_view` są liczone najwyżej raz dziennie na przeglądarkę (znacznik w `localStorage`), żeby odświeżenie strony nie zawyżało sum.
+
+Odczyt: `GET https://gdziewpolsce.com/api/stats?day=RRRR-MM-DD` zwraca sumy dnia (`start`, `finish`, `quit`, `share`, histogram `hist`, `sources`, `shares`, `sponsors`). Z histogramu podsumowanie liczy „Lepiej niż X% dzisiejszych graczy” i średnią dnia; pokazuje je, gdy dzień ukończyło co najmniej 10 gier.
+
+Plan promocji i droga do płatnych zagadek: [docs/PROMOCJA.md](docs/PROMOCJA.md).
 
 ## Publikacja
 

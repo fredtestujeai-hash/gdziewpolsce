@@ -6,8 +6,11 @@ export const CONFIG = {
   siteUrl: "https://gdziewpolsce.com/",
   /** Kontakt dla miast i regionów zainteresowanych partnerstwem (puste = ukryte). */
   partnerEmail: "",
-  /** Adres anonimowego licznika zdarzeń (POST JSON). Puste = żadnych statystyk. */
-  statsEndpoint: "",
+  /**
+   * Adres anonimowego licznika zdarzeń (POST JSON; odczyt sum dnia pod tym samym adresem z „s” na końcu).
+   * Liczymy rozgrywki, nie ludzi: bez identyfikatorów i ciasteczek. Puste = żadnych statystyk.
+   */
+  statsEndpoint: "/api/stat",
   /** Adres API rankingu (Cloudflare Workers). Puste = ranking wyłączony. */
   rankingApi: "/api",
   timezone: "Europe/Warsaw",

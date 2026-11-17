@@ -48,6 +48,7 @@ export function openAbout(section?: string): void {
 
       <h3 id="about-prywatnosc">Prywatność</h3>
       <p class="small">Bez kont, bez ciasteczek, bez śledzenia. Twoje wyniki i seria są zapisywane w tej przeglądarce.</p>
+      <p class="small"><b>Liczymy rozgrywki, nie ludzi.</b> Gra zlicza tylko, ile razy danego dnia wyzwanie rozpoczęto i ukończono, jak rozłożyły się wyniki (stąd „lepiej niż X% graczy”), ile razy udostępniono wynik oraz ile razy wyświetlono i kliknięto zagadkę sponsorowaną. To same sumy dzienne: bez identyfikatorów, bez adresów IP, bez profili.</p>
       <p class="small"><b>Ranking jest dobrowolny.</b> Jeśli po ukończeniu wyzwania do niego dołączysz, na serwer gry trafią: Twój nick, dzisiejsze odpowiedzi (z nich liczony jest wynik) oraz losowy identyfikator tej przeglądarki, dzięki któremu jedno urządzenie ma jeden wynik dziennie. Nick i wynik są widoczne dla wszystkich. Nie zapisujemy adresu IP ani żadnych innych danych. Swoje wpisy usuniesz w każdej chwili linkiem „Usuń moje wpisy z rankingu” pod rankingiem${CONFIG.partnerEmail ? `, możesz też napisać na <a href="mailto:${esc(CONFIG.partnerEmail)}">${esc(CONFIG.partnerEmail)}</a>` : ""}.</p>
     </div>`;
   document.body.append(d);

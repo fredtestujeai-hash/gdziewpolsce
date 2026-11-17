@@ -1,5 +1,6 @@
 // Serwer gry na Cloudflare Workers: pliki statyczne z dist/ obsługuje Cloudflare,
-// a ten kod odpowiada tylko na adresy /api/* (ranking).
+// a ten kod odpowiada tylko na adresy /api/* (ranking i anonimowe liczniki).
+import { handleStat, handleStats } from "../src/stats-server";
 import { ensureSchema, handleDelete, handleRanking, handleScore, type Env } from "../src/ranking-server";
 
 interface WorkerEnv extends Env {
@@ -17,6 +18,8 @@ export default {
       if (pathname === "/api/ranking" && request.method === "GET") return await handleRanking(request, env);
       if (pathname === "/api/score" && request.method === "POST") return await handleScore(request, env);
       if (pathname === "/api/score" && request.method === "DELETE") return await handleDelete(request, env);
+      if (pathname === "/api/stat" && request.method === "POST") return await handleStat(request, env.DB);
+      if (pathname === "/api/stats" && request.method === "GET") return await handleStats(request, env.DB);
       return notFound();
     } catch (e) {
       console.error(e);

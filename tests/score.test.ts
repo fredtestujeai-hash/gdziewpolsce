@@ -49,13 +49,14 @@ describe("podpowiedzi i rezygnacja", () => {
   const g = (o: Partial<Guess>): Guess => ({ lat: 50, lon: 20, year: 1500, km: 0, yearDiff: 0, locPts: 500, yearPts: 500, ...o });
   const gaveUp = (kind: "round" | "day"): Guess => g({ lat: 0, lon: 0, year: 0, locPts: 0, yearPts: 0, gaveUp: kind });
   it("udostępniany wynik: maks. 3000, podpowiedzi i rundy bez odpowiedzi są zaznaczone", () => {
-    expect(shareLines(7, [g({}), g({}), g({})], 3, "https://x")).toBe(`${CONFIG.name} #7 — ${formatPoints(3000)}/${formatPoints(3000)}\n📍 🟩🟩🟩\n📅 🟩🟩🟩\nhttps://x`);
+    expect(shareLines(7, [g({}), g({}), g({})], 3, "https://x")).toBe(`${CONFIG.name} #7 — ${formatPoints(3000)}/${formatPoints(3000)}\n📍 🟩🟩🟩\n📅 🟩🟩🟩\n🏅 Kustosz\nhttps://x`);
     const mixed = [g({ locPts: 350, hintLoc: true }), gaveUp("round"), gaveUp("day")];
     expect(totalPoints(mixed)).toBe(850);
     const text = shareLines(7, mixed, 3, "https://x").split("\n");
     expect(text[0]).toContain("850/3");
     expect(text[1]).toBe("📍 🟨⬛⬛");
     expect(text[2]).toBe("📅 🟩⬛⬛");
-    expect(text[3]).toBe("💡 1 podpowiedź · ⬛ 2 bez odpowiedzi");
+    expect(text[3]).toBe("🏅 Turysta z mapą");
+    expect(text[4]).toBe("💡 1 podpowiedź · ⬛ 2 bez odpowiedzi");
   });
 });

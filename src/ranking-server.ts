@@ -62,6 +62,8 @@ export const SCHEMA = [
   "CREATE TABLE IF NOT EXISTS totals (period TEXT NOT NULL, device TEXT NOT NULL, nick TEXT NOT NULL, score INTEGER NOT NULL, days INTEGER NOT NULL, updated_at INTEGER NOT NULL, PRIMARY KEY (period, device))",
   "CREATE INDEX IF NOT EXISTS totals_rank ON totals (period, score DESC, updated_at)",
   "CREATE INDEX IF NOT EXISTS totals_device ON totals (device)",
+  // Anonimowe liczniki gry (src/stats-server.ts): dzień, zdarzenie, krótki klucz, licznik. Bez identyfikatorów.
+  "CREATE TABLE IF NOT EXISTS events (day TEXT NOT NULL, event TEXT NOT NULL, key TEXT NOT NULL DEFAULT '', n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, event, key))",
 ];
 
 // Jednorazowe przeliczenie sum z wyników zapisanych, zanim powstały rankingi tygodnia, miesiąca i roku.

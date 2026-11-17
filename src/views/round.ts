@@ -5,7 +5,7 @@ import { createMap, type GameMap } from "../map";
 import { century, centuryRange, formatKm, formatPoints, hintCostText, scoreRound, totalPoints, yearsWord } from "../score";
 import type { Guess, Puzzle } from "../types";
 import { topbar, wikiButton } from "./common";
-import { track } from "../track";
+import { entrySource, track } from "../track";
 
 const TICKS = [1000, 1200, 1400, 1600, 1800, 2000];
 
@@ -219,7 +219,7 @@ export async function renderRound(game: Game): Promise<void> {
     // Atrybucja widoczna od razu (wymóg licencji CC BY), bez linku do pliku — jego nazwa zdradzałaby odpowiedź
     els.credit.textContent = `Fot. ${p.author} · ${p.license}`;
     els.badge.hidden = !p.sponsor;
-    if (i === 0 && !state.guesses.length && !game.preview) track("start", { day: challenge.key });
+    if (i === 0 && !state.guesses.length && !game.preview) track("start", { day: challenge.key, src: entrySource() });
     if (p.sponsor && !game.preview) track("sponsor_view", { day: challenge.key, campaign: p.campaign ?? "" });
     els.controls.hidden = false;
     els.result.hidden = true;
@@ -269,7 +269,7 @@ export async function renderRound(game: Game): Promise<void> {
     for (let i = index; i < n; i++) state.guesses[i] = gaveUpGuess("day", i === index ? hints() : {});
     delete state.hints;
     game.save();
-    if (!game.preview) track("finish", { day: challenge.key, score: totalPoints(state.guesses) });
+    if (!game.preview) track("quit", { day: challenge.key });
     game.go("summary");
   }
 

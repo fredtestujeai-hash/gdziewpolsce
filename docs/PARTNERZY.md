@@ -7,7 +7,7 @@ Gra nie ma reklam. Utrzymują ją **partnerzy**: urzędy miast i gmin, wydziały
 - **Swoje miejsce w wyzwaniu dnia.** Gracz przez kilkadziesiąt sekund ogląda zdjęcie i szuka miasta na mapie. To aktywne zaangażowanie, nie baner, który się przewija.
 - **Ekran po odpowiedzi:** nazwa obiektu, data, opis, krótki tekst partnera (np. o festiwalu albo szlaku) i przycisk „Zaplanuj wizytę” z linkiem do strony turystycznej.
 - **Wzmiankę w podsumowaniu dnia:** „Dzisiejsze wyzwanie współtworzy: …”, link na liście miejsc „Dzisiejsza trasa” i pinezkę na mapie podsumowania.
-- **Raport po kampanii:** liczba osób, które zobaczyły zagadkę, i liczba kliknięć w link. Dane są anonimowe; ruch z gry partner widzi też w swojej analityce przez parametry UTM.
+- **Raport po kampanii:** liczba wyświetleń zagadki i liczba kliknięć w link (gra liczy rozgrywki, nie osoby). Dane są anonimowe; ruch z gry partner widzi też w swojej analityce przez parametry UTM.
 
 ## Zasady (wiarygodność gry jest wspólnym interesem)
 
@@ -28,7 +28,7 @@ Gra nie ma reklam. Utrzymują ją **partnerzy**: urzędy miast i gmin, wydziały
 ## Wskazówki formalne dla urzędów
 
 - **Promocja jest zadaniem własnym gminy** (art. 7 ust. 1 pkt 18 ustawy o samorządzie gminnym), więc taki zakup ma oczywistą podstawę.
-- Przy wartości zamówienia **poniżej 130 000 zł netto** nie stosuje się ustawy Prawo zamówień publicznych. Urząd kupuje według swojego regulaminu, zwykle przez zapytanie ofertowe. Pakiety warto tak wyceniać, żeby mieściły się w prostych procedurach.
+- Przy wartości zamówienia **poniżej 170 000 zł netto** (próg obowiązujący od 1.01.2026, wcześniej 130 000 zł) nie stosuje się ustawy Prawo zamówień publicznych. Urząd kupuje według swojego regulaminu, zwykle przez zapytanie ofertowe. Pakiety warto tak wyceniać, żeby mieściły się w prostych procedurach.
 - Na fakturze: „usługa promocyjna — publikacja zagadki promującej [miasto] w grze …”.
 
 *To szkic do dopracowania; przed rozmowami z urzędami warto skonsultować go z prawnikiem i księgową.*
