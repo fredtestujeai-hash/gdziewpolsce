@@ -114,7 +114,15 @@ export async function createMap(el: HTMLElement): Promise<GameMap> {
   map.keyboard.disableRotation();
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-left");
   map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: tr("Miejscowości: Wikidata", "Places: Wikidata") }), "bottom-right");
-  // Podpis źródeł domyślnie zwinięty do przycisku „i” (rozwija się po kliknięciu) — nie zasłania legendy
+  // Podpis OpenStreetMap jest zawsze widoczny (wymóg licencji ODbL: bez klikania); pełna lista źródeł pod przyciskiem „i”
+  const osm = document.createElement("a");
+  osm.className = "map-osm";
+  osm.href = "https://www.openstreetmap.org/copyright";
+  osm.target = "_blank";
+  osm.rel = "noopener";
+  osm.textContent = tr("© autorzy OpenStreetMap", "© OpenStreetMap contributors");
+  el.append(osm);
+  // Pozostałe źródła domyślnie zwinięte do przycisku „i” (rozwijają się po kliknięciu) — nie zasłaniają legendy
   const collapseAttribution = () => {
     const a = el.querySelector(".maplibregl-ctrl-attrib");
     a?.classList.remove("maplibregl-compact-show");
