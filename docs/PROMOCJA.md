@@ -12,6 +12,7 @@ Stan na 17.11.2026. Plan i szkice do akceptacji; nic nie zostało opublikowane a
 - **Podział pracy:** kampanię prowadzi Claude (plan, teksty, liczby, zmiany w grze); właściciel podejmuje decyzje i klika „opublikuj” na swoich kontach.
 - **Próg zamówień publicznych** w docs/PARTNERZY.md poprawiony na 170 000 zł.
 - **Zmiany w planie (18.11.2026):** wiadomość do znajomych odpada (właściciel nie chce ich już angażować). Właściciel nie ma kont na Wykopie ani Wikipedii, ma konto na Reddicie, a konto gry na Instagramie czeka na zatwierdzenie. Skutek: Reddit (r/Polska) wchodzi przed Wykop; konto na Wykopie trzeba założyć od razu i przez 3–4 tygodnie zwyczajnie z niego korzystać, zanim pojawi się znalezisko; wpis w Kawiarence Wikipedii wymaga nowego konta, więc pierwszy idzie kontakt z Wikimedia Polska i forum OpenStreetMap.
+- **Reddit r/Polska odpada jako miejsce na post o grze (18.11.2026).** Regulamin, § 8 „Ograniczenie promocji”, wymienia wprost „treści związane z promocją aplikacji, gier lub serwisów” jako promocję niedozwoloną. Jedyna uczciwa droga to pytanie do moderatorów przez modmail przed publikacją. Dodatkowo filtr usuwa wątki kont młodszych niż miesiąc, z łączną karmą poniżej 200 albo niskim CQS.
 - **Kampania dotyczy tylko polskich graczy.** Wersja angielska gry (`/en/`) istnieje, ale nie jest promowana.
 - **Cotygodniowe podsumowanie:** w każdy poniedziałek ok. 7:43 Claude czyta liczniki i przygotowuje zadanie tygodnia z gotowym tekstem.
 
