@@ -1,5 +1,5 @@
 import { CONFIG } from "../config";
-import { $, esc, mount, partnerLink } from "../dom";
+import { $, esc, mount, partnerLink, toast } from "../dom";
 import { EN, ROOT, categoryName, regionName, tr } from "../i18n";
 import type { Game } from "../main";
 import { createMap, type GameMap } from "../map";
@@ -31,13 +31,19 @@ export async function renderRound(game: Game): Promise<void> {
       </section>
 
       <section class="map-pane">
-        <div class="map-wrap"><div id="map" class="map" aria-label="${tr("Mapa Polski — kliknij, aby wbić pinezkę", "Map of Poland — click to drop a pin")}"></div>
-          <p class="map-hint" id="map-hint">${tr("Wskaż miejsce na mapie — możesz przybliżyć aż do ulic", "Pick the place on the map — you can zoom in down to the streets")}</p>
-          <ul class="map-legend" aria-label="${tr("Legenda: miejscowości bez nazw", "Legend: unnamed towns")}">
-            <li><i class="lg lg-1"></i>${tr("wojewódzkie", "regional capitals")}</li>
-            <li><i class="lg lg-2"></i>${tr("powiatowe", "county towns")}</li>
-            <li><i class="lg lg-3"></i>${tr("gminne", "municipal seats")}</li>
-          </ul>
+        <div class="map-wrap" id="map-wrap"><div id="map" class="map" aria-label="${tr("Mapa Polski — kliknij, aby wbić pinezkę", "Map of Poland — click to drop a pin")}"></div>
+          <div class="map-intro">
+            <p class="map-hint" id="map-hint">${tr("Wskaż miejsce na mapie — możesz przybliżyć aż do ulic", "Pick the place on the map — you can zoom in down to the streets")}</p>
+            <ul class="map-legend" aria-label="${tr("Legenda: miejscowości bez nazw", "Legend: unnamed towns")}">
+              <li><i class="lg lg-1"></i>${tr("wojewódzkie", "regional capitals")}</li>
+              <li><i class="lg lg-2"></i>${tr("powiatowe", "county towns")}</li>
+              <li><i class="lg lg-3"></i>${tr("gminne", "municipal seats")}</li>
+            </ul>
+          </div>
+          <button class="map-size" id="map-size" type="button" aria-pressed="false" aria-label="${tr("Większa mapa", "Bigger map")}">
+            <svg class="ico-grow" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 11l6-6 6 6M6 18l6-6 6 6"/></svg>
+            <svg class="ico-shrink" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l6 6 6-6M6 13l6 6 6-6"/></svg>
+          </button>
         </div>
 
         <div class="controls" id="controls">
@@ -66,7 +72,7 @@ export async function renderRound(game: Game): Promise<void> {
           </div>
           <div class="submit-row">
             <button class="btn secondary giveup-btn" id="giveup-open" type="button">${tr("Rezygnuję", "Give up")}</button>
-            <button class="btn primary submit" id="submit" disabled>${tr("Wbij pinezkę na mapie", "Drop a pin on the map")}</button>
+            <button class="btn primary submit" id="submit" type="button" aria-disabled="true">${tr("Sprawdź", "Check")}</button>
           </div>
         </div>
 
@@ -112,6 +118,8 @@ export async function renderRound(game: Game): Promise<void> {
     controls: $("#controls", app),
     result: $("#result", app),
     hint: $("#map-hint", app),
+    mapWrap: $("#map-wrap", app),
+    mapSize: $("#map-size", app) as HTMLButtonElement,
     roundLabel: $("#round-label", app),
     scoreLabel: $("#score-label", app),
     dots: $("#dots", app),
@@ -140,12 +148,27 @@ export async function renderRound(game: Game): Promise<void> {
   );
 
   // --- pinezka -----------------------------------------------------------
+  // Przycisk „Sprawdź” jest zawsze ten sam; bez pinezki jest przygaszony i po dotknięciu podpowiada, co zrobić
+  const setReady = (ready: boolean) => els.submit.setAttribute("aria-disabled", String(!ready));
+  const isReady = () => els.submit.getAttribute("aria-disabled") !== "true";
   gm.onPlace(() => {
     if (revealed) return;
-    els.submit.disabled = false;
-    els.submit.textContent = tr("Sprawdź", "Check");
+    setReady(true);
     els.hint.classList.add("gone");
   });
+
+  // --- mapa na małych ekranach ---------------------------------------------
+  // Wskazówka i legenda znikają przy pierwszym dotknięciu mapy, żeby jej nie zasłaniać
+  els.mapWrap.addEventListener("pointerdown", () => els.mapWrap.classList.add("touched"));
+  // Przycisk „większa mapa”: zdjęcie zwija się do paska, mapa dostaje jego miejsce
+  function setBigMap(on: boolean) {
+    els.game.classList.toggle("map-big", on);
+    els.mapSize.setAttribute("aria-pressed", String(on));
+    els.mapSize.setAttribute("aria-label", on ? tr("Mniejsza mapa, większe zdjęcie", "Smaller map, bigger photo") : tr("Większa mapa", "Bigger map"));
+    for (const ms of [0, 140, 300]) setTimeout(() => gm.invalidate(), ms);
+  }
+  els.mapSize.addEventListener("pointerdown", (e) => e.stopPropagation());
+  els.mapSize.addEventListener("click", () => setBigMap(!els.game.classList.contains("map-big")));
 
   // --- zdjęcie -----------------------------------------------------------
   els.img.addEventListener("load", () => els.photo.classList.add("loaded"));
@@ -172,14 +195,16 @@ export async function renderRound(game: Game): Promise<void> {
     els.hintLoc.disabled = !!h.loc;
     els.hintLoc.classList.toggle("used", !!h.loc);
     els.hintLoc.innerHTML = h.loc
-      ? `<b>${esc(regionName(p.woj ?? ""))}</b><span>${tr("podpowiedź: województwo", "hint: region")}</span>`
-      : `<b>${tr("Pokaż województwo", "Show the region")}</b><span>−${cost} ${tr("pkt za miejsce", "of location points")}</span>`;
+      ? `<b>${esc(regionName(p.woj ?? ""))}</b><span class="wide-only">${tr("podpowiedź: województwo", "hint: region")}</span>`
+      : `<b><i class="wide-only">${tr("Pokaż województwo", "Show the region")}</i><i class="narrow-only"><i class="hint-ico">💡 </i>${tr("Województwo", "Region")}</i></b>` +
+        `<span>−${cost} <i class="wide-only">${tr("pkt za miejsce", "of location points")}</i><i class="narrow-only hint-unit">${tr("pkt", "pts")}</i></span>`;
     const c = centuryRange(p.year);
     els.hintYear.disabled = !!h.year;
     els.hintYear.classList.toggle("used", !!h.year);
     els.hintYear.innerHTML = h.year
-      ? `<b>${c.label} (${c.from}–${c.to})</b><span>${tr("podpowiedź: wiek", "hint: century")}</span>`
-      : `<b>${tr("Pokaż wiek", "Show the century")}</b><span>−${cost} ${tr("pkt za rok", "of year points")}</span>`;
+      ? `<b>${c.label} (${c.from}–${c.to})</b><span class="wide-only">${tr("podpowiedź: wiek", "hint: century")}</span>`
+      : `<b><i class="wide-only">${tr("Pokaż wiek", "Show the century")}</i><i class="narrow-only"><i class="hint-ico">💡 </i>${tr("Wiek", "Century")}</i></b>` +
+        `<span>−${cost} <i class="wide-only">${tr("pkt za rok", "of year points")}</i><i class="narrow-only hint-unit">${tr("pkt", "pts")}</i></span>`;
     const from = Math.max(c.from, CONFIG.minYear);
     const to = Math.min(c.to, CONFIG.maxYear);
     els.hintBand.hidden = !h.year;
@@ -225,8 +250,8 @@ export async function renderRound(game: Game): Promise<void> {
     els.controls.hidden = false;
     els.result.hidden = true;
     els.result.innerHTML = "";
-    els.submit.disabled = true;
-    els.submit.textContent = tr("Wbij pinezkę na mapie", "Drop a pin on the map");
+    setReady(false);
+    setBigMap(false); // nowe zdjęcie ma być widoczne w całości
     els.hint.classList.toggle("gone", i > 0);
     setYear(CONFIG.defaultYear);
     gm.reset();
@@ -309,7 +334,13 @@ export async function renderRound(game: Game): Promise<void> {
     else showRound(index);
   }
 
-  els.submit.addEventListener("click", submit);
+  els.submit.addEventListener("click", () => {
+    if (isReady()) return submit();
+    // bez pinezki: przypomnij, co zrobić, zamiast milczeć
+    els.mapWrap.classList.remove("touched");
+    els.hint.classList.remove("gone");
+    toast(tr("Najpierw wskaż miejsce na mapie", "Pick a place on the map first"));
+  });
 
   // --- rezygnacja ----------------------------------------------------------
   $("#giveup-open", app).addEventListener("click", () => {
@@ -337,8 +368,11 @@ export async function renderRound(game: Game): Promise<void> {
     if (!document.body.contains(els.game)) return document.removeEventListener("keydown", onKey);
     if (e.key !== "Enter" || els.lightbox.open || document.querySelector("dialog[open]")) return;
     if ((e.target as HTMLElement).tagName === "BUTTON") return; // przycisk obsłuży się sam
+    // Bez tego ten sam Enter „klika” jeszcze przycisk „Następne miejsce”, na który przenosi się fokus,
+    // i wynik rundy znika, zanim gracz go zobaczy
+    e.preventDefault();
     if (revealed) next();
-    else if (!els.submit.disabled) submit();
+    else if (isReady()) submit();
   };
   document.addEventListener("keydown", onKey);
 

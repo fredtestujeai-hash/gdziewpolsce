@@ -450,3 +450,68 @@ dialog.share-dialog::backdrop { background: rgb(20 15 5 / 45%); backdrop-filter:
   .share-body { padding: 16px; }
   .share-ico { width: 40px; height: 40px; }
 }
+
+/* ---------- Ekran rundy: zwarty układ na telefonach ---------- */
+/* Na szerokich ekranach pojemnik nakładek jest „przezroczysty”: wskazówka i legenda układają się jak dotąd */
+.map-intro { display: contents; }
+.map-size { display: none; }
+.narrow-only { display: none; }
+.hint-btn i { font-style: normal; }
+/* „Sprawdź” bez pinezki: ten sam przycisk, tylko przygaszony (po dotknięciu podpowiada, co zrobić) */
+.submit[aria-disabled="true"], .submit[aria-disabled="true"]:hover { background: var(--surface-2); color: var(--muted); }
+
+@media (max-width: 899px) {
+  /* więcej miejsca dla mapy: niższe zdjęcie i dużo niższy panel na dole */
+  .game { grid-template-rows: 27dvh minmax(0, 1fr); }
+  .game.map-big { grid-template-rows: 64px minmax(0, 1fr); }
+  .game.map-big .photo img { object-fit: cover; }
+  .game.revealed, .game.revealed.map-big { grid-template-rows: 16dvh minmax(0, 1fr); }
+
+  /* wskazówka i legenda razem u góry mapy, między przyciskami; znikają przy pierwszym dotknięciu */
+  .map-intro { display: flex; flex-direction: column; align-items: center; gap: 6px; position: absolute; top: 8px; left: 52px; right: 52px; z-index: 5; pointer-events: none; transition: opacity .3s; }
+  .map-wrap.touched .map-intro { opacity: 0; }
+  .map-intro .map-hint, .map-intro .map-legend { position: static; transform: none; }
+  .map-intro .map-hint { white-space: normal; text-align: center; font-size: .74rem; line-height: 1.3; padding: 5px 12px; border-radius: 14px; }
+  .map-intro .map-hint.gone { display: none; }
+  .map-intro .map-legend { flex-wrap: wrap; justify-content: center; white-space: normal; font-size: .68rem; gap: 2px 9px; padding: 3px 9px; border-radius: 12px; }
+  .map-osm { right: 40px; bottom: 12px; }
+
+  /* przycisk „większa mapa” */
+  .map-size { display: grid; place-items: center; position: absolute; top: 10px; right: 10px; z-index: 6; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 10px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); cursor: pointer; }
+  .map-size svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .map-size .ico-shrink, .map-size[aria-pressed="true"] .ico-grow { display: none; }
+  .map-size[aria-pressed="true"] .ico-shrink { display: block; }
+  .game.revealed .map-size { display: none; }
+
+  /* panel na dole: podpowiedzi w jednym wierszu, ciaśniejszy suwak i przyciski */
+  .controls { padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); gap: 6px; }
+  .hints-title, .wide-only { display: none; }
+  .narrow-only { display: inline; }
+  .hints { gap: 6px; }
+  .hint-btn { flex-direction: row; align-items: baseline; justify-content: center; gap: 6px; padding: 6px 8px; min-height: 34px; white-space: nowrap; }
+  .hint-btn b { font-size: .82rem; overflow: hidden; text-overflow: ellipsis; }
+  .hint-btn:not(.used) b::after { content: none; }
+  .hint-btn span { font-size: .7rem; flex: none; }
+  .year-top label { font-size: .8rem; }
+  .year-input { font-size: 1.25rem; }
+  .century { font-size: .8rem; min-width: 0; }
+  .year-row { gap: 8px; }
+  .step-btn { width: 30px; height: 30px; }
+  .range-wrap { padding-bottom: 12px; }
+  .ticks { font-size: .62rem; height: 12px; }
+  .submit-row { gap: 6px; }
+  .submit { font-size: 1rem; padding: .62em; }
+  .giveup-btn { font-size: .82rem; padding: .55em .95em; }
+}
+@media (max-width: 380px) {
+  /* bardzo wąskie ekrany: podpowiedzi bez ikony i jednostki, żeby nazwa się nie ucinała */
+  .hint-ico, .narrow-only.hint-unit { display: none; }
+  .hint-btn { gap: 5px; padding: 6px; }
+}
+@media (max-width: 520px) {
+  /* niższy pasek górny */
+  :root { --topbar-h: 43px; }
+  .topbar { padding: 5px 12px; gap: 8px; }
+  .topbar .icon-btn { width: 32px; height: 32px; }
+  .lang-switch { padding: 5px 7px; }
+}
